@@ -13,6 +13,8 @@ clearScreen:
     */
     mov r8, #1024
     mov r9, #768
+    mov r5, #0
+    mov r6, #0
     bl drawBlock
     pop {r3}
     mov pc, r3
@@ -109,29 +111,35 @@ di_end:
 .globl DrawPixel
 DrawPixel:
     push    {r4}
-    push {r6}
-    push {r7}
+    push    {r3}
     offset  .req    r4
 
     // offset = (y * 1024) + x = x + (y << 10)
+
+    // check if pixel part of green
+    // screen
+    ldr r3, =greenScreen
+    ldrh r3, [r3]
+    cmp r2, r3
+    // if it is, do not print anything
+    beq dp_skipPrint
+
     add     offset, r0, r1, lsl #10
     // offset *= 2 (for 16 bits per pixel = 2 bytes per pixel)
+
     lsl     offset, #1
-    //beq dp_noDraw
     // store the colour (half word) at framebuffer pointer + offset
+
     ldr r0, =FrameBufferPointer
     ldr r0, [r0]
-    ldr r6, =greenScreen
-    ldr r7, [r6]
-    cmp r2, r7
-    beq dp_noDraw
     strh    r2, [r0, offset]
-dp_noDraw:
-    pop {r7}
-    pop {r6}
+
+dp_skipPrint:
+    pop     {r3}
     pop     {r4}
     bx      lr
 
+
 .section .data
 
-greenScreen:    .hword  0xffff
+greenScreen:    .ascii "\3407"
