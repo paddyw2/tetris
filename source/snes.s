@@ -198,7 +198,7 @@ Write_Latch:
     pop {r3}
     mov pc, r3
 
-
+.globl Wait
 //--------------- Wait-------------//
 //Parameters: r5=wait time
 //Registers: r0,r3,r4,r5
