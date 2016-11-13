@@ -40,7 +40,8 @@ Game_Screen:
 
 
 InsertNewBlock:
-
+    /*
+    // commented out for debugging
     // draw image at 0,0
     ldr r3, =i_block
     mov r1, #300
@@ -48,7 +49,7 @@ InsertNewBlock:
     mov r4, #128
     mov r5, #32
     bl drawImage
-
+*/
 
     // first coords are
     // 0, 1, 2, 3
@@ -88,6 +89,7 @@ InsertNewBlock:
     strb r1, [r0, r2] 
     
     bl moveBlockDown
+    mov r11, #99
     b InsertNewBlock  
 
 
@@ -112,6 +114,8 @@ moveBlockLoop:
     ldr r0, =gameState
     strb r1, [r0, r2] 
 
+/*
+    // commented out for debugging
     // draw black image
     ldr r3, =i_block_black
     // divide coordinate by 10
@@ -141,7 +145,7 @@ endMod:
     mov r5, #32
     bl drawImage
 
-
+*/
 
     ldr r2, =currentBlock2
     ldrb r2, [r2] 
@@ -169,8 +173,8 @@ endMod:
     ldr r0, =gameState
     strb r1, [r0, r2] 
 
-
-// draw black image
+/*
+    // draw regular image
     ldr r3, =i_block
     // divide coordinate by 10
     // to get y
@@ -199,7 +203,7 @@ endMod2:
     mov r5, #32
     bl drawImage
 
-
+*/
 
 
     ldr r3, =currentBlock2

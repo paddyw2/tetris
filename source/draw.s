@@ -68,8 +68,8 @@ drawImage:
     r5 = image height
     r4 = image width
     r3 = image address
-    r2 = x
-    r0 = y
+    r1 = start y
+    r0 = start x
     */
     mov r7, r0
     mov r6, #0
