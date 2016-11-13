@@ -12,20 +12,13 @@ main:
     bl      EnableJTAG
     bl      InitFrameBuffer
 
-// clear screen
+    // clear screen
 
     mov r7, #0x0000
     bl clearScreen
 
-
-// sets up intial screen
-Game_Screen:
-    ldr r3, =start_screen
-    mov r1, #0
-    mov r0, #0
-    mov r4, #1024
-    mov r5, #768
-    bl drawImage
+    // draw intro screen
+    bl drawIntroScreen
 
 
     // delay to show start screen
@@ -34,70 +27,47 @@ Game_Screen:
     mov r5, #1000
     bl Wait
 
-    // clear start screen
+
+StartGame:
+    // clear on game
+    // start
     mov r7, #0x0000
     bl clearScreen
 
-
 InsertNewBlock:
-    /*
-    // commented out for debugging
-    // draw image at 0,0
-    ldr r3, =i_block
-    mov r1, #300
-    mov r0, #300
-    mov r4, #128
-    mov r5, #32
-    bl drawImage
-*/
-
-    // first coords are
-    // 0, 1, 2, 3
-    
-    ldr r0, =currentBlock1
+    // initializes new ibeam
+    // at 0,0
+    bl insertNewIBeam 
+    // set initial coords
     mov r1, #0
-    strb r1, [r0]
-    ldr r0, =currentBlock2
-    mov r1, #1
-    strb r1, [r0]
-    ldr r0, =currentBlock3
-    mov r1, #2
-    strb r1, [r0]
-    ldr r0, =currentBlock4
-    mov r1, #3
-    strb r1, [r0]
-    // update game state
-    mov r1, #1
-    ldr r2, =currentBlock1
-    ldrb r2, [r2] 
-    ldr r0, =gameState
-    strb r1, [r0, r2] 
+    mov r0, #300
+    // draws intial block position
+    bl drawCurrentBlock
 
-    ldr r2, =currentBlock2
-    ldrb r2, [r2] 
-    ldr r0, =gameState
-    strb r1, [r0, r2] 
-
-    ldr r2, =currentBlock3
-    ldrb r2, [r2] 
-    ldr r0, =gameState
-    strb r1, [r0, r2] 
-
-    ldr r2, =currentBlock4
-    ldrb r2, [r2] 
-    ldr r0, =gameState
-    strb r1, [r0, r2] 
-    
+    // moves current block down
+    // until it cannot move further 
     bl moveBlockDown
-    mov r11, #99
+    
+    // loops until moveBlockDown
+    // detects end of game state
     b InsertNewBlock  
 
 
 
 
+//
+//-------- SUB ROUTINES --------//
+//
+
+
 // moves current block down until
 // either hits another, or game
 // over
+// it does this by drawing erasing
+// at current position, then
+// incrementing the coords, then
+// drawing at new location, each
+// time updating the game state
 moveBlockDown:
     mov r3, lr
     push {r3}
@@ -114,10 +84,8 @@ moveBlockLoop:
     ldr r0, =gameState
     strb r1, [r0, r2] 
 
-/*
     // commented out for debugging
     // draw black image
-    ldr r3, =i_block_black
     // divide coordinate by 10
     // to get y
     mov r7, r2
@@ -132,20 +100,16 @@ endMod:
     // counter is division
     // r7 is remainder
 
-    mov r1, #300
-    lsl r6, #6
+    mov r1, #0
+    lsl r6, #5
     add r1, r6
     // now calc x
 
     mov r0, #300
-    lsl r7, #6
+    lsl r7, #5
     add r1, r7
 
-    mov r4, #128
-    mov r5, #32
-    bl drawImage
-
-*/
+    bl eraseCurrentBlock
 
     ldr r2, =currentBlock2
     ldrb r2, [r2] 
@@ -173,9 +137,7 @@ endMod:
     ldr r0, =gameState
     strb r1, [r0, r2] 
 
-/*
     // draw regular image
-    ldr r3, =i_block
     // divide coordinate by 10
     // to get y
     mov r7, r2
@@ -190,20 +152,16 @@ endMod2:
     // counter is division
     // r7 is remainder
 
-    mov r1, #300
-    lsl r6, #6
+    mov r1, #0
+    lsl r6, #5
     add r1, r6
     // now calc x
 
     mov r0, #300
-    lsl r7, #6
+    lsl r7, #5
     add r1, r7
 
-    mov r4, #128
-    mov r5, #32
-    bl drawImage
-
-*/
+    bl drawCurrentBlock
 
 
     ldr r3, =currentBlock2
@@ -227,11 +185,17 @@ endMod2:
     ldr r0, =gameState
     strb r1, [r0, r2] 
 
+    // delay after each block draw
+    mov r5, #1000
+    bl Wait
+    mov r5, #1000
+    bl Wait
+    mov r5, #1000
+    bl Wait
+    mov r5, #1000
+    bl Wait
+    // end delay
 
-    mov r5, #1000
-    bl Wait
-    mov r5, #1000
-    bl Wait
     b moveBlockLoop 
 
 NoMove:
@@ -239,16 +203,7 @@ NoMove:
     pop {r3}
     mov pc, r3
 
-
-
-
-
-
- 
-haltLoop$:
-    b       haltLoop$
-
-
+//----------------------------
 
 
 // checks if a block can move
@@ -310,12 +265,14 @@ endCheckBlock:
     pop {r3}
     mov pc, r3
 
+//----------------------------
+
 
 
 // checks if block did not make
 // it past first row
 CheckGameOver:
-    mov r2, lr
+    mov r3, lr
     push {r3}
     
     ldr r3, =currentBlock1
@@ -337,21 +294,176 @@ CheckGameOver:
     b FinishCheckGameOver
 GameIsOver:
     // insert game over code here
+    // commented out for debugging
+    // draw image at 0,0
+    ldr r3, =i_block
+    mov r1, #0
+    mov r0, #300
+    mov r4, #128
+    mov r5, #32
+    bl drawImage
+
+    ldr r3, =i_block
+    mov r1, #32
+    mov r0, #300
+    mov r4, #128
+    mov r5, #32
+    bl drawImage
+
+    mov r6, #1 
+    lsl r6, #5
+    mov r11, r6
+
     b haltLoop$
 FinishCheckGameOver:
     pop {r3}
     mov pc, r3
 
+//----------------------------
+
+
+// draws the current block
+// to screen
+drawCurrentBlock:
+    /*
+    takes coordinates
+    as parameters
+    */
+    mov r3, lr
+    push {r3}
+    // get block width
+    ldr r3, =currentBlockSizeX
+    ldrb r3, [r3]
+    mov r4, r3
+    // get block height
+    ldr r3, =currentBlockSizeY
+    ldrb r3, [r3]
+    mov r5, r3
+    // load pointer to image 
+    // address 
+    ldr r3, =currentBlockImage
+    ldr r3, [r3]
+    bl drawImage
+    pop {r3}
+    mov pc, r3
+
+
+// draws the black version
+// of the current block
+eraseCurrentBlock:
+    /*
+    takes coordinates
+    as parameters
+    */
+    mov r3, lr
+    push {r3}
+    // get block width
+    ldr r3, =currentBlockSizeX
+    ldrb r3, [r3]
+    mov r4, r3
+    // get block height
+    ldr r3, =currentBlockSizeY
+    ldrb r3, [r3]
+    mov r5, r3
+    // load pointer to image 
+    // address 
+    ldr r3, =currentBlockImageBlack
+    ldr r3, [r3]
+    bl drawImage
+    pop {r3}
+    mov pc, r3
+
+//----------------------------
+
+
+
+// initializes a new ibeam
+// block at 0,0 on the screen
+// and game state
+insertNewIBeam:
+    mov r4, lr
+    push {r4}
+    // first coords are
+    // 0, 1, 2, 3
+    
+    ldr r0, =currentBlock1
+    mov r1, #0
+    strb r1, [r0]
+    ldr r0, =currentBlock2
+    mov r1, #1
+    strb r1, [r0]
+    ldr r0, =currentBlock3
+    mov r1, #2
+    strb r1, [r0]
+    ldr r0, =currentBlock4
+    mov r1, #3
+    strb r1, [r0]
+    // update game state
+    // with block at initial
+    // position
+    mov r1, #1
+    ldr r2, =currentBlock1
+    ldrb r2, [r2] 
+    ldr r0, =gameState
+    strb r1, [r0, r2] 
+
+    ldr r2, =currentBlock2
+    ldrb r2, [r2] 
+    ldr r0, =gameState
+    strb r1, [r0, r2] 
+
+    ldr r2, =currentBlock3
+    ldrb r2, [r2] 
+    ldr r0, =gameState
+    strb r1, [r0, r2] 
+
+    ldr r2, =currentBlock4
+    ldrb r2, [r2] 
+    ldr r0, =gameState
+    strb r1, [r0, r2] 
+ 
+    // update current block image
+    // pointer, and size
+    ldr r3, =i_block
+    ldr r2, =currentBlockImage
+    str r3, [r2]
+    ldr r3, =i_block_black
+    ldr r2, =currentBlockImageBlack
+    str r3, [r2]
+    mov r3, #128
+    ldr r2, =currentBlockSizeX
+    strb r3, [r2]
+    mov r3, #32
+    ldr r5, =currentBlockSizeY
+    strb r3, [r5]
+
+    pop {r4}
+    mov pc, r4
+
+//----------------------------
 
 
 
 
+// sets up intial screen
+drawIntroScreen:
+    mov r3, lr
+    push {r3}
+    ldr r3, =start_screen
+    mov r1, #0
+    mov r0, #0
+    mov r4, #1024
+    mov r5, #768
+    bl drawImage
+    pop {r3}
+    mov pc, r3
+
+//----------------------------
 
 
+haltLoop$:
+    b       haltLoop$
 
-
-
-   
 
 
 .section .data
@@ -377,4 +489,12 @@ currentBlock2:
 currentBlock3:
     .byte   0
 currentBlock4:
+    .byte   0
+currentBlockImage:
+    .word   0
+currentBlockImageBlack:
+    .word   0
+currentBlockSizeX:
+    .byte   0
+currentBlockSizeY:
     .byte   0

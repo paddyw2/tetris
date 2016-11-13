@@ -18,7 +18,7 @@ LOAD build/main.o
  .init          0x00008000        0x4 build/main.o
                 0x00008000                _start
 
-.data           0x00009080   0x185ce0
+.data           0x00009080   0x185cea
  *(.data)
  .data          0x00009080        0x0 build/jtag.o
  .data          0x00009080       0x70 build/framebuffer.o
@@ -27,59 +27,59 @@ LOAD build/main.o
  *fill*         0x000090f2        0xe 3f3f3f3f
  .data          0x00009100      0x800 build/write.o
  .data          0x00009900        0x0 build/snes.o
- .data          0x00009900   0x185460 build/main.o
+ .data          0x00009900   0x18546a build/main.o
  *.c.o(*)
 
-.igot.plt       0x0018ed60        0x0
+.igot.plt       0x0018ed6c        0x0
  .igot.plt      0x00000000        0x0 build/jtag.o
 
-.text           0x0018ed60      0x7f4
+.text           0x0018ed6c      0x8ec
  *.c.o(.text)
  *(.text)
- .text          0x0018ed60       0x8c build/jtag.o
-                0x0018ed60                EnableJTAG
- .text          0x0018edec       0x80 build/framebuffer.o
-                0x0018edec                InitFrameBuffer
- .text          0x0018ee6c      0x110 build/draw.o
-                0x0018ee6c                clearScreen
-                0x0018ee90                drawBlock
-                0x0018eedc                drawImage
-                0x0018ef3c                DrawPixel
- .text          0x0018ef7c       0x88 build/write.o
-                0x0018ef7c                drawString
- .text          0x0018f004      0x1e8 build/snes.o
-                0x0018f004                Set_Lines
-                0x0018f08c                Read_Data
-                0x0018f100                Check_Buttons
-                0x0018f184                Wait
- .text          0x0018f1ec      0x368 build/main.o
+ .text          0x0018ed6c       0x8c build/jtag.o
+                0x0018ed6c                EnableJTAG
+ .text          0x0018edf8       0x80 build/framebuffer.o
+                0x0018edf8                InitFrameBuffer
+ .text          0x0018ee78      0x110 build/draw.o
+                0x0018ee78                clearScreen
+                0x0018ee9c                drawBlock
+                0x0018eee8                drawImage
+                0x0018ef48                DrawPixel
+ .text          0x0018ef88       0x88 build/write.o
+                0x0018ef88                drawString
+ .text          0x0018f010      0x1e8 build/snes.o
+                0x0018f010                Set_Lines
+                0x0018f098                Read_Data
+                0x0018f10c                Check_Buttons
+                0x0018f190                Wait
+ .text          0x0018f1f8      0x460 build/main.o
 OUTPUT(build/output.elf elf32-littlearm)
 
-.glue_7         0x0018f554        0x0
+.glue_7         0x0018f658        0x0
  .glue_7        0x00000000        0x0 linker stubs
 
-.glue_7t        0x0018f554        0x0
+.glue_7t        0x0018f658        0x0
  .glue_7t       0x00000000        0x0 linker stubs
 
-.vfp11_veneer   0x0018f554        0x0
+.vfp11_veneer   0x0018f658        0x0
  .vfp11_veneer  0x00000000        0x0 linker stubs
 
-.v4_bx          0x0018f554        0x0
+.v4_bx          0x0018f658        0x0
  .v4_bx         0x00000000        0x0 linker stubs
 
-.iplt           0x0018f554        0x0
+.iplt           0x0018f658        0x0
  .iplt          0x00000000        0x0 build/jtag.o
 
-.rel.dyn        0x0018f554        0x0
+.rel.dyn        0x0018f658        0x0
  .rel.iplt      0x00000000        0x0 build/jtag.o
 
-.bss            0x0018f554        0x0
- .bss           0x0018f554        0x0 build/jtag.o
- .bss           0x0018f554        0x0 build/framebuffer.o
- .bss           0x0018f554        0x0 build/draw.o
- .bss           0x0018f554        0x0 build/write.o
- .bss           0x0018f554        0x0 build/snes.o
- .bss           0x0018f554        0x0 build/main.o
+.bss            0x0018f658        0x0
+ .bss           0x0018f658        0x0 build/jtag.o
+ .bss           0x0018f658        0x0 build/framebuffer.o
+ .bss           0x0018f658        0x0 build/draw.o
+ .bss           0x0018f658        0x0 build/write.o
+ .bss           0x0018f658        0x0 build/snes.o
+ .bss           0x0018f658        0x0 build/main.o
 
 .ARM.attributes
                 0x00000000       0x29
@@ -96,13 +96,13 @@ OUTPUT(build/output.elf elf32-littlearm)
  .ARM.attributes
                 0x000000cd       0x29 build/main.o
 
-.debug_line     0x00000000      0x3ad
+.debug_line     0x00000000      0x3fa
  .debug_line    0x00000000       0x61 build/jtag.o
  .debug_line    0x00000061       0x67 build/framebuffer.o
  .debug_line    0x000000c8       0x86 build/draw.o
  .debug_line    0x0000014e       0x63 build/write.o
  .debug_line    0x000001b1       0xca build/snes.o
- .debug_line    0x0000027b      0x132 build/main.o
+ .debug_line    0x0000027b      0x17f build/main.o
 
 .debug_info     0x00000000      0x2aa
  .debug_info    0x00000000       0x71 build/jtag.o
