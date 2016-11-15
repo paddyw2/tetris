@@ -37,7 +37,7 @@ StartGame:
 InsertNewBlock:
     // initializes new ibeam
     // at 0,0
-    bl insertNewIBeam 
+    bl insertNewSBeam 
     // set initial coords
     mov r1, #0
     mov r0, #300
@@ -111,6 +111,8 @@ endMod:
 
     bl eraseCurrentBlock
 
+
+    mov r1, #0
     ldr r2, =currentBlock2
     ldrb r2, [r2] 
     ldr r0, =gameState
@@ -164,6 +166,7 @@ endMod2:
     bl drawCurrentBlock
 
 
+    mov r1, #1
     ldr r3, =currentBlock2
     ldrb r2, [r3] 
     add r2, #10
@@ -186,13 +189,7 @@ endMod2:
     strb r1, [r0, r2] 
 
     // delay after each block draw
-    mov r5, #1000
-    bl Wait
-    mov r5, #1000
-    bl Wait
-    mov r5, #1000
-    bl Wait
-    mov r5, #1000
+    mvn r5, #0
     bl Wait
     // end delay
 
@@ -296,20 +293,7 @@ GameIsOver:
     // insert game over code here
     // commented out for debugging
     // draw image at 0,0
-    ldr r3, =i_block
-    mov r1, #0
-    mov r0, #300
-    mov r4, #128
-    mov r5, #32
-    bl drawImage
-
-    ldr r3, =i_block
-    mov r1, #32
-    mov r0, #300
-    mov r4, #128
-    mov r5, #32
-    bl drawImage
-
+    
     mov r6, #1 
     lsl r6, #5
     mov r11, r6
@@ -369,6 +353,7 @@ eraseCurrentBlock:
     // address 
     ldr r3, =currentBlockImageBlack
     ldr r3, [r3]
+
     bl drawImage
     pop {r3}
     mov pc, r3
@@ -443,6 +428,71 @@ insertNewIBeam:
 //----------------------------
 
 
+// initializes a new ibeam
+// block at 0,0 on the screen
+// and game state
+insertNewSBeam:
+    mov r4, lr
+    push {r4}
+    // first coords are
+    // 0, 1, 2, 3
+    
+    ldr r0, =currentBlock1
+    mov r1, #2
+    strb r1, [r0]
+    ldr r0, =currentBlock2
+    mov r1, #3
+    strb r1, [r0]
+    ldr r0, =currentBlock3
+    mov r1, #10
+    strb r1, [r0]
+    ldr r0, =currentBlock4
+    mov r1, #11
+    strb r1, [r0]
+    // update game state
+    // with block at initial
+    // position
+    mov r1, #1
+    ldr r2, =currentBlock1
+    ldrb r2, [r2] 
+    ldr r0, =gameState
+    strb r1, [r0, r2] 
+
+    ldr r2, =currentBlock2
+    ldrb r2, [r2] 
+    ldr r0, =gameState
+    strb r1, [r0, r2] 
+
+    ldr r2, =currentBlock3
+    ldrb r2, [r2] 
+    ldr r0, =gameState
+    strb r1, [r0, r2] 
+
+    ldr r2, =currentBlock4
+    ldrb r2, [r2] 
+    ldr r0, =gameState
+    strb r1, [r0, r2] 
+ 
+    // update current block image
+    // pointer, and size
+    ldr r3, =s_block_green
+    ldr r2, =currentBlockImage
+    str r3, [r2]
+    ldr r3, =s_block_green_black
+    ldr r2, =currentBlockImageBlack
+    str r3, [r2]
+    mov r3, #96
+    ldr r2, =currentBlockSizeX
+    strb r3, [r2]
+    mov r3, #64
+    ldr r5, =currentBlockSizeY
+    strb r3, [r5]
+
+    pop {r4}
+    mov pc, r4
+
+//----------------------------
+
 
 
 // sets up intial screen
@@ -474,6 +524,8 @@ myString:       .ascii "Hey there!"
 test:           .ascii "\3407"
 i_block:        .include "images/i_block.txt"
 i_block_black:  .include "images/i_block_black.txt"
+s_block_green:        .include "images/s_block_green.txt"
+s_block_green_black:  .include "images/s_block_green_black.txt"
 
 // game state has 1 values for blocks, and 0 for
 // empty space
