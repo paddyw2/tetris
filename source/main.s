@@ -34,6 +34,8 @@ StartGame:
     mov r7, #0x0000
     bl clearScreen
 
+    mov r11, #0
+
 InsertNewBlock:
     // initializes new ibeam
     // at 0,0
@@ -47,6 +49,7 @@ InsertNewBlock:
     // moves current block down
     // until it cannot move further 
     bl moveBlockDown
+    add r11, #1
     
     // loops until moveBlockDown
     // detects end of game state
@@ -71,6 +74,7 @@ InsertNewBlock:
 moveBlockDown:
     mov r3, lr
     push {r3}
+    mov r11, #0
 
 moveBlockLoop:
     
@@ -188,11 +192,40 @@ endMod2:
     ldr r0, =gameState
     strb r1, [r0, r2] 
 
+    ldr r0, =currentBorders
+    ldrb r1, [r0]
+    cmp r1, #255
+    beq incSecond
+    add r1, #10
+    strb r1, [r0]
+incSecond:
+    add r0, #1
+    ldrb r1, [r0]
+    cmp r1, #255
+    beq incThird
+    add r1, #10
+    strb r1, [r0]
+incThird:
+    add r0, #1
+    ldrb r1, [r0]
+    cmp r1, #255
+    beq incFourth
+    add r1, #10
+    strb r1, [r0]
+incFourth:
+    add r0, #1
+    ldrb r1, [r0]
+    cmp r1, #255
+    beq finishInc
+    add r1, #10
+    strb r1, [r0]
+finishInc:
     // delay after each block draw
     mvn r5, #0
     bl Wait
     // end delay
-
+    
+    add r11, #1
     b moveBlockLoop 
 
 NoMove:
@@ -209,9 +242,28 @@ NoMove:
 CheckBlockMove:
     mov r3, lr
     push {r3}
-    
-    ldr r3, =currentBlock1
+    mov r10, #99
+   
+checkFirstCoord: 
+    ldr r3, =currentBorders
     ldrb r2, [r3] 
+    mov r10, r2
+    cmp r2, #255
+    beq checkSecondCoord
+    add r2, #10
+    cmp r2, #200
+    bge bottomOfGrid
+    ldr r0, =gameState
+    ldrb r1, [r0, r2]
+    mov r10, r1
+    cmp r1, #1
+    beq hitOtherBlock
+
+checkSecondCoord: 
+    ldr r3, =currentBorders
+    ldrb r2, [r3, #1] 
+    cmp r2, #255
+    beq checkThirdCoord
     add r2, #10
     cmp r2, #200
     bge bottomOfGrid
@@ -220,8 +272,11 @@ CheckBlockMove:
     cmp r1, #1
     beq hitOtherBlock
 
-    ldr r3, =currentBlock2
-    ldrb r2, [r3] 
+checkThirdCoord:
+    ldr r3, =currentBorders
+    ldrb r2, [r3, #2] 
+    cmp r2, #255
+    beq checkFourthCoord
     add r2, #10
     cmp r2, #200
     bge bottomOfGrid
@@ -230,18 +285,11 @@ CheckBlockMove:
     cmp r1, #1
     beq hitOtherBlock
 
-    ldr r3, =currentBlock3
-    ldrb r2, [r3] 
-    add r2, #10
-    cmp r2, #200
-    bge bottomOfGrid
-    ldr r0, =gameState
-    ldrb r1, [r0, r2]
-    cmp r1, #1
-    beq hitOtherBlock
-
-    ldr r3, =currentBlock4
-    ldrb r2, [r3] 
+checkFourthCoord:
+    ldr r3, =currentBorders
+    ldrb r2, [r3, #3] 
+    cmp r2, #255
+    beq CanMove
     add r2, #10
     cmp r2, #200
     bge bottomOfGrid
@@ -293,11 +341,6 @@ GameIsOver:
     // insert game over code here
     // commented out for debugging
     // draw image at 0,0
-    
-    mov r6, #1 
-    lsl r6, #5
-    mov r11, r6
-
     b haltLoop$
 FinishCheckGameOver:
     pop {r3}
@@ -438,10 +481,10 @@ insertNewSBeam:
     // 0, 1, 2, 3
     
     ldr r0, =currentBlock1
-    mov r1, #2
+    mov r1, #1
     strb r1, [r0]
     ldr r0, =currentBlock2
-    mov r1, #3
+    mov r1, #2
     strb r1, [r0]
     ldr r0, =currentBlock3
     mov r1, #10
@@ -449,6 +492,20 @@ insertNewSBeam:
     ldr r0, =currentBlock4
     mov r1, #11
     strb r1, [r0]
+
+    // update border tiles
+    //
+    ldr r0, =currentBorders
+    mov r1, #255
+    strb r1, [r0]
+    // skip 2, as not border
+    mov r1, #2
+    strb r1, [r0, #1]
+    mov r1, #10
+    strb r1, [r0, #2]
+    mov r1, #11
+    strb r1, [r0, #3]
+    
     // update game state
     // with block at initial
     // position
@@ -542,6 +599,8 @@ currentBlock3:
     .byte   0
 currentBlock4:
     .byte   0
+currentBorders:
+    .byte   0,0,0,0
 currentBlockImage:
     .word   0
 currentBlockImageBlack:
