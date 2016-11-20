@@ -3,12 +3,12 @@
 
 _start:
     b       main
-    
+
 .section .text
 
 main:
     mov     sp, #0x8000
-    
+
     bl      EnableJTAG
     bl      InitFrameBuffer
 
@@ -39,7 +39,10 @@ StartGame:
 InsertNewBlock:
     // initializes new ibeam
     // at 0,0
-    bl insertNewSBeam 
+
+    // L orange block not stacking properly
+    //s red block not working?
+    bl insertNewSRBeam
     // set initial coords
     mov r1, #0
     mov r0, #300
@@ -47,13 +50,16 @@ InsertNewBlock:
     bl drawCurrentBlock
 
     // moves current block down
-    // until it cannot move further 
+    // until it cannot move further
     bl moveBlockDown
     add r11, #1
-    
+
     // loops until moveBlockDown
-    // detects end of game state
-    b InsertNewBlock  
+    // detects end of game stat
+
+    b InsertNewBlock
+
+
 
 
 
@@ -77,16 +83,16 @@ moveBlockDown:
     mov r11, #0
 
 moveBlockLoop:
-    
+
     bl CheckBlockMove
     cmp r5, #0
     beq NoMove
     // clear game state
     mov r1, #0
     ldr r2, =currentBlock1
-    ldrb r2, [r2] 
+    ldrb r2, [r2]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
+    strb r1, [r0, r2]
 
     // commented out for debugging
     // draw black image
@@ -118,30 +124,30 @@ endMod:
 
     mov r1, #0
     ldr r2, =currentBlock2
-    ldrb r2, [r2] 
+    ldrb r2, [r2]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
+    strb r1, [r0, r2]
 
     ldr r2, =currentBlock3
-    ldrb r2, [r2] 
+    ldrb r2, [r2]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
+    strb r1, [r0, r2]
 
     ldr r2, =currentBlock4
-    ldrb r2, [r2] 
+    ldrb r2, [r2]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
+    strb r1, [r0, r2]
 
 
     // update state with new
     // block position
     mov r1, #1
     ldr r3, =currentBlock1
-    ldrb r2, [r3] 
+    ldrb r2, [r3]
     add r2, #10
     strb r2, [r3]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
+    strb r1, [r0, r2]
 
     // draw regular image
     // divide coordinate by 10
@@ -172,25 +178,25 @@ endMod2:
 
     mov r1, #1
     ldr r3, =currentBlock2
-    ldrb r2, [r3] 
+    ldrb r2, [r3]
     add r2, #10
     strb r2, [r3]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
+    strb r1, [r0, r2]
 
     ldr r3, =currentBlock3
-    ldrb r2, [r3] 
+    ldrb r2, [r3]
     add r2, #10
     strb r2, [r3]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
+    strb r1, [r0, r2]
 
     ldr r3, =currentBlock4
-    ldrb r2, [r3] 
+    ldrb r2, [r3]
     add r2, #10
     strb r2, [r3]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
+    strb r1, [r0, r2]
 
     ldr r0, =currentBorders
     ldrb r1, [r0]
@@ -224,9 +230,9 @@ finishInc:
     mvn r5, #0
     bl Wait
     // end delay
-    
+
     add r11, #1
-    b moveBlockLoop 
+    b moveBlockLoop
 
 NoMove:
     bl CheckGameOver
@@ -243,10 +249,10 @@ CheckBlockMove:
     mov r3, lr
     push {r3}
     mov r10, #99
-   
-checkFirstCoord: 
+
+checkFirstCoord:
     ldr r3, =currentBorders
-    ldrb r2, [r3] 
+    ldrb r2, [r3]
     mov r10, r2
     cmp r2, #255
     beq checkSecondCoord
@@ -259,9 +265,9 @@ checkFirstCoord:
     cmp r1, #1
     beq hitOtherBlock
 
-checkSecondCoord: 
+checkSecondCoord:
     ldr r3, =currentBorders
-    ldrb r2, [r3, #1] 
+    ldrb r2, [r3, #1]
     cmp r2, #255
     beq checkThirdCoord
     add r2, #10
@@ -274,7 +280,7 @@ checkSecondCoord:
 
 checkThirdCoord:
     ldr r3, =currentBorders
-    ldrb r2, [r3, #2] 
+    ldrb r2, [r3, #2]
     cmp r2, #255
     beq checkFourthCoord
     add r2, #10
@@ -287,7 +293,7 @@ checkThirdCoord:
 
 checkFourthCoord:
     ldr r3, =currentBorders
-    ldrb r2, [r3, #3] 
+    ldrb r2, [r3, #3]
     cmp r2, #255
     beq CanMove
     add r2, #10
@@ -297,7 +303,7 @@ checkFourthCoord:
     ldrb r1, [r0, r2]
     cmp r1, #1
     beq hitOtherBlock
-    
+
     b CanMove
 
 hitOtherBlock:
@@ -319,21 +325,21 @@ endCheckBlock:
 CheckGameOver:
     mov r3, lr
     push {r3}
-    
+
     ldr r3, =currentBlock1
-    ldrb r2, [r3] 
+    ldrb r2, [r3]
     cmp r2, #10
-    blt GameIsOver 
+    blt GameIsOver
     ldr r3, =currentBlock2
-    ldrb r2, [r3] 
+    ldrb r2, [r3]
     cmp r2, #10
     blt GameIsOver
     ldr r3, =currentBlock3
-    ldrb r2, [r3] 
+    ldrb r2, [r3]
     cmp r2, #10
     blt GameIsOver
     ldr r3, =currentBlock4
-    ldrb r2, [r3] 
+    ldrb r2, [r3]
     cmp r2, #10
     blt GameIsOver
     b FinishCheckGameOver
@@ -366,8 +372,8 @@ drawCurrentBlock:
     ldr r3, =currentBlockSizeY
     ldrb r3, [r3]
     mov r5, r3
-    // load pointer to image 
-    // address 
+    // load pointer to image
+    // address
     ldr r3, =currentBlockImage
     ldr r3, [r3]
     bl drawImage
@@ -392,8 +398,8 @@ eraseCurrentBlock:
     ldr r3, =currentBlockSizeY
     ldrb r3, [r3]
     mov r5, r3
-    // load pointer to image 
-    // address 
+    // load pointer to image
+    // address
     ldr r3, =currentBlockImageBlack
     ldr r3, [r3]
 
@@ -413,7 +419,7 @@ insertNewIBeam:
     push {r4}
     // first coords are
     // 0, 1, 2, 3
-    
+
     ldr r0, =currentBlock1
     mov r1, #0
     strb r1, [r0]
@@ -426,30 +432,45 @@ insertNewIBeam:
     ldr r0, =currentBlock4
     mov r1, #3
     strb r1, [r0]
+
+    // update border tiles
+    //
+    ldr r0, =currentBorders
+    mov r1, #255
+    strb r1, [r0]
+    // skip 2, as not border
+    mov r1, #0
+    strb r1, [r0, #1]
+    mov r1, #1
+    strb r1, [r0, #2]
+    mov r1, #3
+    strb r1, [r0, #3]
+
+
     // update game state
     // with block at initial
     // position
     mov r1, #1
     ldr r2, =currentBlock1
-    ldrb r2, [r2] 
+    ldrb r2, [r2]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
+    strb r1, [r0, r2]
 
     ldr r2, =currentBlock2
-    ldrb r2, [r2] 
+    ldrb r2, [r2]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
+    strb r1, [r0, r2]
 
     ldr r2, =currentBlock3
-    ldrb r2, [r2] 
+    ldrb r2, [r2]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
+    strb r1, [r0, r2]
 
     ldr r2, =currentBlock4
-    ldrb r2, [r2] 
+    ldrb r2, [r2]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
- 
+    strb r1, [r0, r2]
+
     // update current block image
     // pointer, and size
     ldr r3, =i_block
@@ -478,8 +499,8 @@ insertNewSBeam:
     mov r4, lr
     push {r4}
     // first coords are
-    // 0, 1, 2, 3
-    
+    // 1,2,10,11
+
     ldr r0, =currentBlock1
     mov r1, #1
     strb r1, [r0]
@@ -505,31 +526,31 @@ insertNewSBeam:
     strb r1, [r0, #2]
     mov r1, #11
     strb r1, [r0, #3]
-    
+
     // update game state
     // with block at initial
     // position
     mov r1, #1
     ldr r2, =currentBlock1
-    ldrb r2, [r2] 
+    ldrb r2, [r2]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
+    strb r1, [r0, r2]
 
     ldr r2, =currentBlock2
-    ldrb r2, [r2] 
+    ldrb r2, [r2]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
+    strb r1, [r0, r2]
 
     ldr r2, =currentBlock3
-    ldrb r2, [r2] 
+    ldrb r2, [r2]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
+    strb r1, [r0, r2]
 
     ldr r2, =currentBlock4
-    ldrb r2, [r2] 
+    ldrb r2, [r2]
     ldr r0, =gameState
-    strb r1, [r0, r2] 
- 
+    strb r1, [r0, r2]
+
     // update current block image
     // pointer, and size
     ldr r3, =s_block_green
@@ -549,6 +570,437 @@ insertNewSBeam:
     mov pc, r4
 
 //----------------------------
+
+//edit n0v 26
+
+
+
+// initializes a new obeam
+// block at 0,0 on the screen
+// and game state
+insertNewOBeam:
+    mov r4, lr
+    push {r4}
+    // first coords are
+    // 0,1,11,12
+
+    ldr r0, =currentBlock1
+    mov r1, #0
+    strb r1, [r0]
+    ldr r0, =currentBlock2
+    mov r1, #1
+    strb r1, [r0]
+    ldr r0, =currentBlock3
+    mov r1, #10
+    strb r1, [r0]
+    ldr r0, =currentBlock4
+    mov r1, #11
+    strb r1, [r0]
+
+    // update border tiles
+    //
+    ldr r0, =currentBorders
+    mov r1, #255
+    strb r1, [r0]
+    // skip 2, as not border
+    mov r1, #2
+    strb r1, [r0, #1]
+    mov r1, #11
+    strb r1, [r0, #2]
+    mov r1, #12
+    strb r1, [r0, #3]
+
+    // update game state
+    // with block at initial
+    // position
+    mov r1, #1
+    ldr r2, =currentBlock1
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock2
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock3
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock4
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    // update current block image
+    // pointer, and size
+    ldr r3, =o_block_yellow
+    ldr r2, =currentBlockImage
+    str r3, [r2]
+    ldr r3, =o_block_yellow_black
+    ldr r2, =currentBlockImageBlack
+    str r3, [r2]
+    mov r3, #64
+    ldr r2, =currentBlockSizeX
+    strb r3, [r2]
+    mov r3, #64
+    ldr r5, =currentBlockSizeY
+    strb r3, [r5]
+
+    pop {r4}
+    mov pc, r4
+
+//----------------------------
+
+
+
+
+
+
+// initializes a new obeam
+// block at 0,0 on the screen
+// and game state
+insertNewWBeam:
+    mov r4, lr
+    push {r4}
+    // first coords are
+    // 0,1,11,12
+
+    ldr r0, =currentBlock1
+    mov r1, #1
+    strb r1, [r0]
+    ldr r0, =currentBlock2
+    mov r1, #10
+    strb r1, [r0]
+    ldr r0, =currentBlock3
+    mov r1, #11
+    strb r1, [r0]
+    ldr r0, =currentBlock4
+    mov r1, #12
+    strb r1, [r0]
+
+    // update border tiles
+    //
+    ldr r0, =currentBorders
+    mov r1, #255
+    strb r1, [r0]
+    // skip 2, as not border
+    mov r1, #10
+    strb r1, [r0, #1]
+    mov r1, #11
+    strb r1, [r0, #2]
+    mov r1, #12
+    strb r1, [r0, #3]
+
+    // update game state
+    // with block at initial
+    // position
+    mov r1, #1
+    ldr r2, =currentBlock1
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock2
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock3
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock4
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    // update current block image
+    // pointer, and size
+    ldr r3, =w_block
+    ldr r2, =currentBlockImage
+    str r3, [r2]
+    ldr r3, =w_block_black
+    ldr r2, =currentBlockImageBlack
+    str r3, [r2]
+    mov r3, #96
+    ldr r2, =currentBlockSizeX
+    strb r3, [r2]
+    mov r3, #64
+    ldr r5, =currentBlockSizeY
+    strb r3, [r5]
+
+    pop {r4}
+    mov pc, r4
+
+//----------------------------
+
+
+// initializes a new obeam
+// block at 0,0 on the screen
+// and game state
+insertNewLBBeam:
+    mov r4, lr
+    push {r4}
+    // first coords are
+    // 0,1,11,12
+
+    ldr r0, =currentBlock1
+    mov r1, #0
+    strb r1, [r0]
+    ldr r0, =currentBlock2
+    mov r1, #10
+    strb r1, [r0]
+    ldr r0, =currentBlock3
+    mov r1, #11
+    strb r1, [r0]
+    ldr r0, =currentBlock4
+    mov r1, #12
+    strb r1, [r0]
+
+    // update border tiles
+    //
+    ldr r0, =currentBorders
+    mov r1, #255
+    strb r1, [r0]
+    // skip 2, as not border
+    mov r1, #10
+    strb r1, [r0, #1]
+    mov r1, #11
+    strb r1, [r0, #2]
+    mov r1, #12
+    strb r1, [r0, #3]
+
+    // update game state
+    // with block at initial
+    // position
+    mov r1, #1
+    ldr r2, =currentBlock1
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock2
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock3
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock4
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    // update current block image
+    // pointer, and size
+    ldr r3, =l_block_blue
+    ldr r2, =currentBlockImage
+    str r3, [r2]
+    ldr r3, =l_block_blue_black
+    ldr r2, =currentBlockImageBlack
+    str r3, [r2]
+    mov r3, #96
+    ldr r2, =currentBlockSizeX
+    strb r3, [r2]
+    mov r3, #64
+    ldr r5, =currentBlockSizeY
+    strb r3, [r5]
+
+    pop {r4}
+    mov pc, r4
+
+//----------------------------
+
+
+
+
+// initializes a new obeam
+// block at 0,0 on the screen
+// and game state
+insertNewLOBeam:
+    mov r4, lr
+    push {r4}
+    // first coords are
+    // 0,1,11,12
+
+    ldr r0, =currentBlock1
+    mov r1, #3
+    strb r1, [r0]
+    ldr r0, =currentBlock2
+    mov r1, #12
+    strb r1, [r0]
+    ldr r0, =currentBlock3
+    mov r1, #11
+    strb r1, [r0]
+    ldr r0, =currentBlock4
+    mov r1, #10
+    strb r1, [r0]
+
+    // update border tiles
+    //
+    ldr r0, =currentBorders
+    mov r1, #255
+    strb r1, [r0]
+    // skip 2, as not border
+    mov r1, #12
+    strb r1, [r0, #1]
+    mov r1, #11
+    strb r1, [r0, #2]
+    mov r1, #10
+    strb r1, [r0, #3]
+
+    // update game state
+    // with block at initial
+    // position
+    mov r1, #1
+    ldr r2, =currentBlock1
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock2
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock3
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock4
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    // update current block image
+    // pointer, and size
+    ldr r3, =l_block_orange
+    ldr r2, =currentBlockImage
+    str r3, [r2]
+    ldr r3, =l_block_orange_black
+    ldr r2, =currentBlockImageBlack
+    str r3, [r2]
+    mov r3, #96
+    ldr r2, =currentBlockSizeX
+    strb r3, [r2]
+    mov r3, #64
+    ldr r5, =currentBlockSizeY
+    strb r3, [r5]
+
+    pop {r4}
+    mov pc, r4
+
+//----------------------------
+
+
+
+
+
+
+// initializes a new obeam
+// block at 0,0 on the screen
+// and game state
+insertNewSRBeam:
+    mov r4, lr
+    push {r4}
+    // first coords are
+    // 0,1,11,12
+
+    ldr r0, =currentBlock1
+    mov r1, #0
+    strb r1, [r0]
+    ldr r0, =currentBlock2
+    mov r1, #1
+    strb r1, [r0]
+    ldr r0, =currentBlock3
+    mov r1, #12
+    strb r1, [r0]
+    ldr r0, =currentBlock4
+    mov r1, #11
+    strb r1, [r0]
+
+    // update border tiles
+    //
+    ldr r0, =currentBorders
+    mov r1, #255
+    strb r1, [r0]
+    // skip 2, as not border
+    mov r1, #1
+    strb r1, [r0, #1]
+    mov r1, #11
+    strb r1, [r0, #2]
+    mov r1, #12
+    strb r1, [r0, #3]
+
+    // update game state
+    // with block at initial
+    // position
+    mov r1, #1
+    ldr r2, =currentBlock1
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock2
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock3
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    ldr r2, =currentBlock4
+    ldrb r2, [r2]
+    ldr r0, =gameState
+    strb r1, [r0, r2]
+
+    // update current block image
+    // pointer, and size
+    ldr r3, =s_block_red
+    ldr r2, =currentBlockImage
+    str r3, [r2]
+    ldr r3, =s_block_red_black
+    ldr r2, =currentBlockImageBlack
+    str r3, [r2]
+    mov r3, #96
+    ldr r2, =currentBlockSizeX
+    strb r3, [r2]
+    mov r3, #64
+    ldr r5, =currentBlockSizeY
+    strb r3, [r5]
+
+    pop {r4}
+    mov pc, r4
+
+//----------------------------
+
+
+//edit n0v 26
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -583,11 +1035,27 @@ i_block:        .include "images/i_block.txt"
 i_block_black:  .include "images/i_block_black.txt"
 s_block_green:        .include "images/s_block_green.txt"
 s_block_green_black:  .include "images/s_block_green_black.txt"
+s_block_red:    .include "images/s_block_red.txt"
+s_block_red_black: .include "images/s_block_red_black.txt"
+
+o_block_yellow: .include "images/o_block_yellow.txt"
+o_block_yellow_black: .include "images/o_block_yellow_black.txt"
+
+w_block: .include "images/w_block.txt"
+w_block_black: .include "images/w_block_black.txt"
+
+l_block_blue: .include "images/l_block_blue.txt"
+l_block_blue_black: .include "images/l_block_blue_black.txt"
+
+
+l_block_orange: .include "images/l_block_orange.txt"
+l_block_orange_black: .include "images/l_block_orange_black.txt"
+
 
 // game state has 1 values for blocks, and 0 for
 // empty space
 gameState:
-    .rept   200 
+    .rept   200
     .byte   0
     .endr
 
