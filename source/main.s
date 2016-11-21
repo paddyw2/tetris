@@ -11,8 +11,10 @@ main:
 
     bl      EnableJTAG
     bl      InitFrameBuffer
+    
 
     // clear screen
+    b StartGame
 
     mov r7, #0x0000
     bl clearScreen
@@ -34,7 +36,6 @@ StartGame:
     mov r7, #0x0000
     bl clearScreen
 
-    mov r11, #0
 
 InsertNewBlock:
     // initializes new ibeam
@@ -42,17 +43,16 @@ InsertNewBlock:
 
     // L orange block not stacking properly
     //s red block not working?
-    bl insertNewSRBeam
+    bl insertRandomBlock
     // set initial coords
     mov r1, #0
     mov r0, #300
     // draws intial block position
-    bl drawCurrentBlock
+    //bl drawCurrentBlock
 
     // moves current block down
     // until it cannot move further
     bl moveBlockDown
-    add r11, #1
 
     // loops until moveBlockDown
     // detects end of game stat
@@ -80,7 +80,6 @@ InsertNewBlock:
 moveBlockDown:
     mov r3, lr
     push {r3}
-    mov r11, #0
 
 moveBlockLoop:
 
@@ -231,7 +230,6 @@ finishInc:
     bl Wait
     // end delay
 
-    add r11, #1
     b moveBlockLoop
 
 NoMove:
@@ -248,12 +246,10 @@ NoMove:
 CheckBlockMove:
     mov r3, lr
     push {r3}
-    mov r10, #99
 
 checkFirstCoord:
     ldr r3, =currentBorders
     ldrb r2, [r3]
-    mov r10, r2
     cmp r2, #255
     beq checkSecondCoord
     add r2, #10
@@ -261,7 +257,6 @@ checkFirstCoord:
     bge bottomOfGrid
     ldr r0, =gameState
     ldrb r1, [r0, r2]
-    mov r10, r1
     cmp r1, #1
     beq hitOtherBlock
 
@@ -603,11 +598,11 @@ insertNewOBeam:
     mov r1, #255
     strb r1, [r0]
     // skip 2, as not border
-    mov r1, #2
+    mov r1, #255
     strb r1, [r0, #1]
-    mov r1, #11
+    mov r1, #10
     strb r1, [r0, #2]
-    mov r1, #12
+    mov r1, #11
     strb r1, [r0, #3]
 
     // update game state
@@ -831,16 +826,16 @@ insertNewLOBeam:
     // 0,1,11,12
 
     ldr r0, =currentBlock1
-    mov r1, #3
+    mov r1, #2
     strb r1, [r0]
     ldr r0, =currentBlock2
-    mov r1, #12
+    mov r1, #10
     strb r1, [r0]
     ldr r0, =currentBlock3
     mov r1, #11
     strb r1, [r0]
     ldr r0, =currentBlock4
-    mov r1, #10
+    mov r1, #12
     strb r1, [r0]
 
     // update border tiles
@@ -849,11 +844,11 @@ insertNewLOBeam:
     mov r1, #255
     strb r1, [r0]
     // skip 2, as not border
-    mov r1, #12
+    mov r1, #10
     strb r1, [r0, #1]
     mov r1, #11
     strb r1, [r0, #2]
-    mov r1, #10
+    mov r1, #12
     strb r1, [r0, #3]
 
     // update game state
@@ -921,19 +916,19 @@ insertNewSRBeam:
     mov r1, #1
     strb r1, [r0]
     ldr r0, =currentBlock3
-    mov r1, #12
+    mov r1, #11
     strb r1, [r0]
     ldr r0, =currentBlock4
-    mov r1, #11
+    mov r1, #12
     strb r1, [r0]
 
     // update border tiles
     //
     ldr r0, =currentBorders
-    mov r1, #255
+    mov r1, #0
     strb r1, [r0]
     // skip 2, as not border
-    mov r1, #1
+    mov r1, #255
     strb r1, [r0, #1]
     mov r1, #11
     strb r1, [r0, #2]
@@ -990,13 +985,98 @@ insertNewSRBeam:
 
 
 
+// basic concept referenced from:
+// http://www.arklyffe.com/main/2010/08/29/xorshift-pseudorandom-number-generator/
+xorShift:
+    // takes single parameter as
+    // r8 which defines the largest
+    // value allowed
+    // note: this will never return
+    // 0, so to achieve this 1 is
+    // added to the range and then
+    // 1 is subbed from the return
+    // value
+    // if range is r8=8
+    // will generate 0-8 inclusive
+    mov r5, lr
+    push {r5}
+    // range max in r8
+    // add 1 to allow for zero
+    // values
+    add r8, #1
+    // seed value
+    ldr r0, =randSeedVal
+    ldrb r0, [r0]
+    mov r1, r0
+    // shift seed value by 
+    lsl r0, #7
+    eor r1, r0
+    mov r2, r1
+    lsr r1, #5
+    eor r1, r2
+    mov r2, r1
+    lsl r2, #3
+    eor r1, r2
+    mov r10, r1
+    
+    ldr r0, =randSeedVal
+    strb r1, [r0]
+
+// to get a number within range
+// simply modulo until value
+// within range
+randModLoop:
+    cmp r1, r8
+    ble finishRand
+    sub r1, r8
+    b randModLoop
+finishRand:
+    // to allow for zero values
+    sub r1, #1
+    // return random value in r1
+    pop {r5}
+    mov pc, r5
 
 
 
+insertRandomBlock:
+    mov r5, lr
+    push {r5}
 
+    mov r8, #4
+    bl xorShift
+    mov r11, r1
+    
+    cmp r1, #0
+    beq block0
+    cmp r1, #1
+    beq block1
+    cmp r1, #2
+    beq block2
+    cmp r1, #3
+    beq block3
+    cmp r1, #4
+    beq block3
 
+block0:
+    bl insertNewSRBeam
+    b finishRandInsert
+block1:
+    bl insertNewLOBeam
+    b finishRandInsert
+block2:
+    bl insertNewLBBeam
+    b finishRandInsert
+block3:
+    bl insertNewSRBeam
+    b finishRandInsert
+block4:
+    bl insertNewWBeam
+    b finishRandInsert
 
-
+finishRandInsert:
+    pop {r5}
+    mov pc, r5
 
 
 
@@ -1077,3 +1157,6 @@ currentBlockSizeX:
     .byte   0
 currentBlockSizeY:
     .byte   0
+
+randSeedVal:
+    .word   37
