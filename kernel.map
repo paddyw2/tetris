@@ -18,7 +18,7 @@ LOAD build/main.o
  .init          0x00008000        0x4 build/main.o
                 0x00008000                _start
 
-.data           0x00009080   0x1a7cf2
+.data           0x00009080   0x1a7cf4
  *(.data)
  .data          0x00009080        0x0 build/jtag.o
  .data          0x00009080       0x70 build/framebuffer.o
@@ -27,13 +27,13 @@ LOAD build/main.o
  *fill*         0x000090f2        0xe 3f3f3f3f
  .data          0x00009100      0x800 build/write.o
  .data          0x00009900        0x0 build/snes.o
- .data          0x00009900   0x1a7472 build/main.o
+ .data          0x00009900   0x1a7474 build/main.o
  *.c.o(*)
 
 .igot.plt       0x001b0d74        0x0
  .igot.plt      0x00000000        0x0 build/jtag.o
 
-.text           0x001b0d74      0xf58
+.text           0x001b0d74     0x11b4
  *.c.o(.text)
  *(.text)
  .text          0x001b0d74       0x8c build/jtag.o
@@ -52,34 +52,34 @@ LOAD build/main.o
                 0x001b10a0                Read_Data
                 0x001b1114                Check_Buttons
                 0x001b1198                Wait
- .text          0x001b1200      0xacc build/main.o
+ .text          0x001b1200      0xd28 build/main.o
 OUTPUT(build/output.elf elf32-littlearm)
 
-.glue_7         0x001b1ccc        0x0
+.glue_7         0x001b1f28        0x0
  .glue_7        0x00000000        0x0 linker stubs
 
-.glue_7t        0x001b1ccc        0x0
+.glue_7t        0x001b1f28        0x0
  .glue_7t       0x00000000        0x0 linker stubs
 
-.vfp11_veneer   0x001b1ccc        0x0
+.vfp11_veneer   0x001b1f28        0x0
  .vfp11_veneer  0x00000000        0x0 linker stubs
 
-.v4_bx          0x001b1ccc        0x0
+.v4_bx          0x001b1f28        0x0
  .v4_bx         0x00000000        0x0 linker stubs
 
-.iplt           0x001b1ccc        0x0
+.iplt           0x001b1f28        0x0
  .iplt          0x00000000        0x0 build/jtag.o
 
-.rel.dyn        0x001b1ccc        0x0
+.rel.dyn        0x001b1f28        0x0
  .rel.iplt      0x00000000        0x0 build/jtag.o
 
-.bss            0x001b1ccc        0x0
- .bss           0x001b1ccc        0x0 build/jtag.o
- .bss           0x001b1ccc        0x0 build/framebuffer.o
- .bss           0x001b1ccc        0x0 build/draw.o
- .bss           0x001b1ccc        0x0 build/write.o
- .bss           0x001b1ccc        0x0 build/snes.o
- .bss           0x001b1ccc        0x0 build/main.o
+.bss            0x001b1f28        0x0
+ .bss           0x001b1f28        0x0 build/jtag.o
+ .bss           0x001b1f28        0x0 build/framebuffer.o
+ .bss           0x001b1f28        0x0 build/draw.o
+ .bss           0x001b1f28        0x0 build/write.o
+ .bss           0x001b1f28        0x0 build/snes.o
+ .bss           0x001b1f28        0x0 build/main.o
 
 .ARM.attributes
                 0x00000000       0x29
@@ -96,13 +96,13 @@ OUTPUT(build/output.elf elf32-littlearm)
  .ARM.attributes
                 0x000000cd       0x29 build/main.o
 
-.debug_line     0x00000000      0x5bc
+.debug_line     0x00000000      0x659
  .debug_line    0x00000000       0x61 build/jtag.o
  .debug_line    0x00000061       0x67 build/framebuffer.o
  .debug_line    0x000000c8       0x86 build/draw.o
  .debug_line    0x0000014e       0x63 build/write.o
  .debug_line    0x000001b1       0xca build/snes.o
- .debug_line    0x0000027b      0x341 build/main.o
+ .debug_line    0x0000027b      0x3de build/main.o
 
 .debug_info     0x00000000      0x250
  .debug_info    0x00000000       0x5f build/jtag.o

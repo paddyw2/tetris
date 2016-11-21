@@ -35,6 +35,7 @@ StartGame:
     // start
     mov r7, #0x0000
     bl clearScreen
+    bl setSeed
 
 
 InsertNewBlock:
@@ -44,11 +45,14 @@ InsertNewBlock:
     // L orange block not stacking properly
     //s red block not working?
     bl insertRandomBlock
+   // bl insertNewLOBeam
+
     // set initial coords
+
     mov r1, #0
     mov r0, #300
     // draws intial block position
-    //bl drawCurrentBlock
+    bl drawCurrentBlock
 
     // moves current block down
     // until it cannot move further
@@ -116,7 +120,7 @@ endMod:
 
     mov r0, #300
     lsl r7, #5
-    add r1, r7
+ //   add r1, r7
 
     bl eraseCurrentBlock
 
@@ -170,7 +174,8 @@ endMod2:
 
     mov r0, #300
     lsl r7, #5
-    add r1, r7
+//    add r1, r7
+
 
     bl drawCurrentBlock
 
@@ -226,7 +231,8 @@ incFourth:
     strb r1, [r0]
 finishInc:
     // delay after each block draw
-    mvn r5, #0
+    mov r5, #1000
+    lsl r5, #6
     bl Wait
     // end delay
 
@@ -359,6 +365,19 @@ drawCurrentBlock:
     */
     mov r3, lr
     push {r3}
+
+    ldr r3, =topLeftBlock
+    ldrb r3, [r3]
+    cmp r3, #0
+    b noCoordChange
+coordChange:
+    subs r1, #32
+    blt topOfGrid
+    b noCoordChange
+topOfGrid:
+    add r1, #32
+noCoordChange: 
+    ldr r3, =topLeftBlock
     // get block width
     ldr r3, =currentBlockSizeX
     ldrb r3, [r3]
@@ -385,6 +404,19 @@ eraseCurrentBlock:
     */
     mov r3, lr
     push {r3}
+    ldr r3, =topLeftBlock
+    ldrb r3, [r3]
+    cmp r3, #0
+    b eraseNoCoordChange
+eraseCoordChange:
+    subs r1, #32
+    blt eraseTopOfGrid
+    b eraseNoCoordChange
+eraseTopOfGrid:
+    add r1, #32
+eraseNoCoordChange:
+
+
     // get block width
     ldr r3, =currentBlockSizeX
     ldrb r3, [r3]
@@ -415,6 +447,24 @@ insertNewIBeam:
     // first coords are
     // 0, 1, 2, 3
 
+    // first check that new block can
+    // be inserted
+    ldr r0, =gameState
+    ldrb r1, [r0, #0]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #1]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #2]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #3]
+    cmp r1, #1
+    beq haltLoop$
+
+
+
     ldr r0, =currentBlock1
     mov r1, #0
     strb r1, [r0]
@@ -431,12 +481,12 @@ insertNewIBeam:
     // update border tiles
     //
     ldr r0, =currentBorders
-    mov r1, #255
+    mov r1, #0
     strb r1, [r0]
     // skip 2, as not border
-    mov r1, #0
-    strb r1, [r0, #1]
     mov r1, #1
+    strb r1, [r0, #1]
+    mov r1, #2
     strb r1, [r0, #2]
     mov r1, #3
     strb r1, [r0, #3]
@@ -481,6 +531,12 @@ insertNewIBeam:
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
 
+    // indicate that top left is filled
+    mov r5, #0
+    ldr r3, =topLeftBlock
+    strb r5, [r3]
+
+
     pop {r4}
     mov pc, r4
 
@@ -495,6 +551,23 @@ insertNewSBeam:
     push {r4}
     // first coords are
     // 1,2,10,11
+
+    // first check that new block can
+    // be inserted
+    ldr r0, =gameState
+    ldrb r1, [r0, #1]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #2]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #10]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #11]
+    cmp r1, #1
+    beq haltLoop$
+
 
     ldr r0, =currentBlock1
     mov r1, #1
@@ -560,6 +633,11 @@ insertNewSBeam:
     mov r3, #64
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
+    // add flag indicating top left
+    // position is blank
+    mov r5, #1
+    ldr r3, =topLeftBlock
+    strb r5, [r3]
 
     pop {r4}
     mov pc, r4
@@ -578,6 +656,23 @@ insertNewOBeam:
     push {r4}
     // first coords are
     // 0,1,11,12
+
+    // first check that new block can
+    // be inserted
+    ldr r0, =gameState
+    ldrb r1, [r0, #0]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #1]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #10]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #11]
+    cmp r1, #1
+    beq haltLoop$
+
 
     ldr r0, =currentBlock1
     mov r1, #0
@@ -644,6 +739,12 @@ insertNewOBeam:
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
 
+    // indicate that top left is filled
+    mov r5, #0
+    ldr r3, =topLeftBlock
+    strb r5, [r3]
+
+
     pop {r4}
     mov pc, r4
 
@@ -662,6 +763,23 @@ insertNewWBeam:
     push {r4}
     // first coords are
     // 0,1,11,12
+
+    // first check that new block can
+    // be inserted
+    ldr r0, =gameState
+    ldrb r1, [r0, #1]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #10]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #11]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #12]
+    cmp r1, #1
+    beq haltLoop$
+
 
     ldr r0, =currentBlock1
     mov r1, #1
@@ -727,6 +845,11 @@ insertNewWBeam:
     mov r3, #64
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
+    // indicate that top left is filled
+    mov r5, #1
+    ldr r3, =topLeftBlock
+    strb r5, [r3]
+
 
     pop {r4}
     mov pc, r4
@@ -742,6 +865,23 @@ insertNewLBBeam:
     push {r4}
     // first coords are
     // 0,1,11,12
+
+    // first check that new block can
+    // be inserted
+    ldr r0, =gameState
+    ldrb r1, [r0, #0]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #10]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #11]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #12]
+    cmp r1, #1
+    beq haltLoop$
+
 
     ldr r0, =currentBlock1
     mov r1, #0
@@ -807,6 +947,11 @@ insertNewLBBeam:
     mov r3, #64
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
+    // indicate that top left is filled
+    mov r5, #0
+    ldr r3, =topLeftBlock
+    strb r5, [r3]
+
 
     pop {r4}
     mov pc, r4
@@ -824,6 +969,24 @@ insertNewLOBeam:
     push {r4}
     // first coords are
     // 0,1,11,12
+
+    // first check that new block can
+    // be inserted
+    ldr r0, =gameState
+    ldrb r1, [r0, #2]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #10]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #11]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #12]
+    cmp r1, #1
+    beq haltLoop$
+
+
 
     ldr r0, =currentBlock1
     mov r1, #2
@@ -889,6 +1052,11 @@ insertNewLOBeam:
     mov r3, #64
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
+    // add flag indicating top left
+    // position is blank
+    mov r5, #1
+    ldr r3, =topLeftBlock
+    strb r5, [r3]
 
     pop {r4}
     mov pc, r4
@@ -908,6 +1076,24 @@ insertNewSRBeam:
     push {r4}
     // first coords are
     // 0,1,11,12
+
+    // first check that new block can
+    // be inserted
+    ldr r0, =gameState
+    ldrb r1, [r0, #0]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #1]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #11]
+    cmp r1, #1
+    beq haltLoop$
+    ldrb r1, [r0, #12]
+    cmp r1, #1
+    beq haltLoop$
+
+    // if it can, continue
 
     ldr r0, =currentBlock1
     mov r1, #0
@@ -973,6 +1159,11 @@ insertNewSRBeam:
     mov r3, #64
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
+    // indicate that top left is filled
+    mov r5, #0
+    ldr r3, =topLeftBlock
+    strb r5, [r3]
+
 
     pop {r4}
     mov pc, r4
@@ -1017,7 +1208,6 @@ xorShift:
     mov r2, r1
     lsl r2, #3
     eor r1, r2
-    mov r10, r1
     
     ldr r0, =randSeedVal
     strb r1, [r0]
@@ -1039,11 +1229,29 @@ finishRand:
 
 
 
+setSeed:
+    // sets the seed value
+    // to the system time after
+    // clear screen executed, in
+    // theory different each time
+    // to ensure different sequences
+    mov r5, lr
+    push {r5}
+
+
+    ldr r1, =randSeedVal
+    ldr r0, =0x3F003000                                 // base clock address
+    ldrh r2, [r0, #4]                                    // get current time
+    strh r2, [r1]
+    pop {r5}
+    mov pc, r5
+
+
 insertRandomBlock:
     mov r5, lr
     push {r5}
 
-    mov r8, #4
+    mov r8, #7
     bl xorShift
     mov r11, r1
     
@@ -1056,7 +1264,14 @@ insertRandomBlock:
     cmp r1, #3
     beq block3
     cmp r1, #4
-    beq block3
+    beq block4
+    cmp r1, #5
+    beq block5
+    cmp r1, #6
+    beq block6
+    cmp r1, #7
+    beq block7
+
 
 block0:
     bl insertNewSRBeam
@@ -1073,6 +1288,18 @@ block3:
 block4:
     bl insertNewWBeam
     b finishRandInsert
+block5:
+    bl insertNewSBeam
+    b finishRandInsert
+block6:
+    bl insertNewIBeam
+    b finishRandInsert
+block7:
+    bl insertNewOBeam
+    b finishRandInsert
+
+
+
 
 finishRandInsert:
     pop {r5}
@@ -1128,8 +1355,8 @@ l_block_blue: .include "images/l_block_blue.txt"
 l_block_blue_black: .include "images/l_block_blue_black.txt"
 
 
-l_block_orange: .include "images/l_block_orange.txt"
-l_block_orange_black: .include "images/l_block_orange_black.txt"
+l_block_orange: .include "images/l_block_orange2.txt"
+l_block_orange_black: .include "images/l_block_orange_black2.txt"
 
 
 // game state has 1 values for blocks, and 0 for
@@ -1157,6 +1384,9 @@ currentBlockSizeX:
     .byte   0
 currentBlockSizeY:
     .byte   0
-
+currentBlockLeftOffset:
+    .byte   300
+topLeftBlock:
+    .byte   0
 randSeedVal:
-    .word   37
+    .word   2008                                           // originally 37, now set with setSeed

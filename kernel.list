@@ -395,7 +395,7 @@ Disassembly of section .text:
   1b120c:	ea000006 	b	1b122c <StartGame>
   1b1210:	e3a07000 	mov	r7, #0
   1b1214:	ebffff19 	bl	1b0e80 <clearScreen>
-  1b1218:	eb000286 	bl	1b1c38 <drawIntroScreen>
+  1b1218:	eb00031b 	bl	1b1e8c <drawIntroScreen>
   1b121c:	e3a05ffa 	mov	r5, #1000	; 0x3e8
   1b1220:	ebffffdc 	bl	1b1198 <Wait>
   1b1224:	e3a05ffa 	mov	r5, #1000	; 0x3e8
@@ -404,103 +404,103 @@ Disassembly of section .text:
 001b122c <StartGame>:
   1b122c:	e3a07000 	mov	r7, #0
   1b1230:	ebffff12 	bl	1b0e80 <clearScreen>
+  1b1234:	eb0002e5 	bl	1b1dd0 <setSeed>
 
-001b1234 <InsertNewBlock>:
-  1b1234:	eb000264 	bl	1b1bcc <insertRandomBlock>
-  1b1238:	e3a01000 	mov	r1, #0
-  1b123c:	e3a00f4b 	mov	r0, #300	; 0x12c
-  1b1240:	eb000000 	bl	1b1248 <moveBlockDown>
-  1b1244:	eafffffa 	b	1b1234 <InsertNewBlock>
+001b1238 <InsertNewBlock>:
+  1b1238:	eb0002ec 	bl	1b1df0 <insertRandomBlock>
+  1b123c:	e3a01000 	mov	r1, #0
+  1b1240:	e3a00f4b 	mov	r0, #300	; 0x12c
+  1b1244:	eb0000b5 	bl	1b1520 <drawCurrentBlock>
+  1b1248:	eb000000 	bl	1b1250 <moveBlockDown>
+  1b124c:	eafffff9 	b	1b1238 <InsertNewBlock>
 
-001b1248 <moveBlockDown>:
-  1b1248:	e1a0300e 	mov	r3, lr
-  1b124c:	e52d3004 	push	{r3}		; (str r3, [sp, #-4]!)
+001b1250 <moveBlockDown>:
+  1b1250:	e1a0300e 	mov	r3, lr
+  1b1254:	e52d3004 	push	{r3}		; (str r3, [sp, #-4]!)
 
-001b1250 <moveBlockLoop>:
-  1b1250:	eb000067 	bl	1b13f4 <CheckBlockMove>
-  1b1254:	e3550000 	cmp	r5, #0
-  1b1258:	0a000062 	beq	1b13e8 <NoMove>
-  1b125c:	e3a01000 	mov	r1, #0
-  1b1260:	e59f29fc 	ldr	r2, [pc, #2556]	; 1b1c64 <haltLoop$+0x4>
-  1b1264:	e5d22000 	ldrb	r2, [r2]
-  1b1268:	e59f09f8 	ldr	r0, [pc, #2552]	; 1b1c68 <haltLoop$+0x8>
-  1b126c:	e7c01002 	strb	r1, [r0, r2]
-  1b1270:	e1a07002 	mov	r7, r2
-  1b1274:	e3a06000 	mov	r6, #0
+001b1258 <moveBlockLoop>:
+  1b1258:	eb000066 	bl	1b13f8 <CheckBlockMove>
+  1b125c:	e3550000 	cmp	r5, #0
+  1b1260:	0a000061 	beq	1b13ec <NoMove>
+  1b1264:	e3a01000 	mov	r1, #0
+  1b1268:	e59f2c48 	ldr	r2, [pc, #3144]	; 1b1eb8 <haltLoop$+0x4>
+  1b126c:	e5d22000 	ldrb	r2, [r2]
+  1b1270:	e59f0c44 	ldr	r0, [pc, #3140]	; 1b1ebc <haltLoop$+0x8>
+  1b1274:	e7c01002 	strb	r1, [r0, r2]
+  1b1278:	e1a07002 	mov	r7, r2
+  1b127c:	e3a06000 	mov	r6, #0
 
-001b1278 <modLoop>:
-  1b1278:	e252200a 	subs	r2, r2, #10
-  1b127c:	ba000002 	blt	1b128c <endMod>
-  1b1280:	e2866001 	add	r6, r6, #1
-  1b1284:	e1a07002 	mov	r7, r2
-  1b1288:	eafffffa 	b	1b1278 <modLoop>
+001b1280 <modLoop>:
+  1b1280:	e252200a 	subs	r2, r2, #10
+  1b1284:	ba000002 	blt	1b1294 <endMod>
+  1b1288:	e2866001 	add	r6, r6, #1
+  1b128c:	e1a07002 	mov	r7, r2
+  1b1290:	eafffffa 	b	1b1280 <modLoop>
 
-001b128c <endMod>:
-  1b128c:	e3a01000 	mov	r1, #0
-  1b1290:	e1a06286 	lsl	r6, r6, #5
-  1b1294:	e0811006 	add	r1, r1, r6
-  1b1298:	e3a00f4b 	mov	r0, #300	; 0x12c
-  1b129c:	e1a07287 	lsl	r7, r7, #5
-  1b12a0:	e0811007 	add	r1, r1, r7
-  1b12a4:	eb0000a9 	bl	1b1550 <eraseCurrentBlock>
-  1b12a8:	e3a01000 	mov	r1, #0
-  1b12ac:	e59f29b8 	ldr	r2, [pc, #2488]	; 1b1c6c <haltLoop$+0xc>
-  1b12b0:	e5d22000 	ldrb	r2, [r2]
-  1b12b4:	e59f09ac 	ldr	r0, [pc, #2476]	; 1b1c68 <haltLoop$+0x8>
-  1b12b8:	e7c01002 	strb	r1, [r0, r2]
-  1b12bc:	e59f29ac 	ldr	r2, [pc, #2476]	; 1b1c70 <haltLoop$+0x10>
-  1b12c0:	e5d22000 	ldrb	r2, [r2]
-  1b12c4:	e59f099c 	ldr	r0, [pc, #2460]	; 1b1c68 <haltLoop$+0x8>
-  1b12c8:	e7c01002 	strb	r1, [r0, r2]
-  1b12cc:	e59f29a0 	ldr	r2, [pc, #2464]	; 1b1c74 <haltLoop$+0x14>
-  1b12d0:	e5d22000 	ldrb	r2, [r2]
-  1b12d4:	e59f098c 	ldr	r0, [pc, #2444]	; 1b1c68 <haltLoop$+0x8>
-  1b12d8:	e7c01002 	strb	r1, [r0, r2]
-  1b12dc:	e3a01001 	mov	r1, #1
-  1b12e0:	e59f397c 	ldr	r3, [pc, #2428]	; 1b1c64 <haltLoop$+0x4>
-  1b12e4:	e5d32000 	ldrb	r2, [r3]
-  1b12e8:	e282200a 	add	r2, r2, #10
-  1b12ec:	e5c32000 	strb	r2, [r3]
-  1b12f0:	e59f0970 	ldr	r0, [pc, #2416]	; 1b1c68 <haltLoop$+0x8>
-  1b12f4:	e7c01002 	strb	r1, [r0, r2]
-  1b12f8:	e1a07002 	mov	r7, r2
-  1b12fc:	e3a06000 	mov	r6, #0
+001b1294 <endMod>:
+  1b1294:	e3a01000 	mov	r1, #0
+  1b1298:	e1a06286 	lsl	r6, r6, #5
+  1b129c:	e0811006 	add	r1, r1, r6
+  1b12a0:	e3a00f4b 	mov	r0, #300	; 0x12c
+  1b12a4:	e1a07287 	lsl	r7, r7, #5
+  1b12a8:	eb0000b2 	bl	1b1578 <eraseCurrentBlock>
+  1b12ac:	e3a01000 	mov	r1, #0
+  1b12b0:	e59f2c08 	ldr	r2, [pc, #3080]	; 1b1ec0 <haltLoop$+0xc>
+  1b12b4:	e5d22000 	ldrb	r2, [r2]
+  1b12b8:	e59f0bfc 	ldr	r0, [pc, #3068]	; 1b1ebc <haltLoop$+0x8>
+  1b12bc:	e7c01002 	strb	r1, [r0, r2]
+  1b12c0:	e59f2bfc 	ldr	r2, [pc, #3068]	; 1b1ec4 <haltLoop$+0x10>
+  1b12c4:	e5d22000 	ldrb	r2, [r2]
+  1b12c8:	e59f0bec 	ldr	r0, [pc, #3052]	; 1b1ebc <haltLoop$+0x8>
+  1b12cc:	e7c01002 	strb	r1, [r0, r2]
+  1b12d0:	e59f2bf0 	ldr	r2, [pc, #3056]	; 1b1ec8 <haltLoop$+0x14>
+  1b12d4:	e5d22000 	ldrb	r2, [r2]
+  1b12d8:	e59f0bdc 	ldr	r0, [pc, #3036]	; 1b1ebc <haltLoop$+0x8>
+  1b12dc:	e7c01002 	strb	r1, [r0, r2]
+  1b12e0:	e3a01001 	mov	r1, #1
+  1b12e4:	e59f3bcc 	ldr	r3, [pc, #3020]	; 1b1eb8 <haltLoop$+0x4>
+  1b12e8:	e5d32000 	ldrb	r2, [r3]
+  1b12ec:	e282200a 	add	r2, r2, #10
+  1b12f0:	e5c32000 	strb	r2, [r3]
+  1b12f4:	e59f0bc0 	ldr	r0, [pc, #3008]	; 1b1ebc <haltLoop$+0x8>
+  1b12f8:	e7c01002 	strb	r1, [r0, r2]
+  1b12fc:	e1a07002 	mov	r7, r2
+  1b1300:	e3a06000 	mov	r6, #0
 
-001b1300 <modLoop2>:
-  1b1300:	e252200a 	subs	r2, r2, #10
-  1b1304:	ba000002 	blt	1b1314 <endMod2>
-  1b1308:	e2866001 	add	r6, r6, #1
-  1b130c:	e1a07002 	mov	r7, r2
-  1b1310:	eafffffa 	b	1b1300 <modLoop2>
+001b1304 <modLoop2>:
+  1b1304:	e252200a 	subs	r2, r2, #10
+  1b1308:	ba000002 	blt	1b1318 <endMod2>
+  1b130c:	e2866001 	add	r6, r6, #1
+  1b1310:	e1a07002 	mov	r7, r2
+  1b1314:	eafffffa 	b	1b1304 <modLoop2>
 
-001b1314 <endMod2>:
-  1b1314:	e3a01000 	mov	r1, #0
-  1b1318:	e1a06286 	lsl	r6, r6, #5
-  1b131c:	e0811006 	add	r1, r1, r6
-  1b1320:	e3a00f4b 	mov	r0, #300	; 0x12c
-  1b1324:	e1a07287 	lsl	r7, r7, #5
-  1b1328:	e0811007 	add	r1, r1, r7
-  1b132c:	eb00007a 	bl	1b151c <drawCurrentBlock>
+001b1318 <endMod2>:
+  1b1318:	e3a01000 	mov	r1, #0
+  1b131c:	e1a06286 	lsl	r6, r6, #5
+  1b1320:	e0811006 	add	r1, r1, r6
+  1b1324:	e3a00f4b 	mov	r0, #300	; 0x12c
+  1b1328:	e1a07287 	lsl	r7, r7, #5
+  1b132c:	eb00007b 	bl	1b1520 <drawCurrentBlock>
   1b1330:	e3a01001 	mov	r1, #1
-  1b1334:	e59f3930 	ldr	r3, [pc, #2352]	; 1b1c6c <haltLoop$+0xc>
+  1b1334:	e59f3b84 	ldr	r3, [pc, #2948]	; 1b1ec0 <haltLoop$+0xc>
   1b1338:	e5d32000 	ldrb	r2, [r3]
   1b133c:	e282200a 	add	r2, r2, #10
   1b1340:	e5c32000 	strb	r2, [r3]
-  1b1344:	e59f091c 	ldr	r0, [pc, #2332]	; 1b1c68 <haltLoop$+0x8>
+  1b1344:	e59f0b70 	ldr	r0, [pc, #2928]	; 1b1ebc <haltLoop$+0x8>
   1b1348:	e7c01002 	strb	r1, [r0, r2]
-  1b134c:	e59f391c 	ldr	r3, [pc, #2332]	; 1b1c70 <haltLoop$+0x10>
+  1b134c:	e59f3b70 	ldr	r3, [pc, #2928]	; 1b1ec4 <haltLoop$+0x10>
   1b1350:	e5d32000 	ldrb	r2, [r3]
   1b1354:	e282200a 	add	r2, r2, #10
   1b1358:	e5c32000 	strb	r2, [r3]
-  1b135c:	e59f0904 	ldr	r0, [pc, #2308]	; 1b1c68 <haltLoop$+0x8>
+  1b135c:	e59f0b58 	ldr	r0, [pc, #2904]	; 1b1ebc <haltLoop$+0x8>
   1b1360:	e7c01002 	strb	r1, [r0, r2]
-  1b1364:	e59f3908 	ldr	r3, [pc, #2312]	; 1b1c74 <haltLoop$+0x14>
+  1b1364:	e59f3b5c 	ldr	r3, [pc, #2908]	; 1b1ec8 <haltLoop$+0x14>
   1b1368:	e5d32000 	ldrb	r2, [r3]
   1b136c:	e282200a 	add	r2, r2, #10
   1b1370:	e5c32000 	strb	r2, [r3]
-  1b1374:	e59f08ec 	ldr	r0, [pc, #2284]	; 1b1c68 <haltLoop$+0x8>
+  1b1374:	e59f0b40 	ldr	r0, [pc, #2880]	; 1b1ebc <haltLoop$+0x8>
   1b1378:	e7c01002 	strb	r1, [r0, r2]
-  1b137c:	e59f08f4 	ldr	r0, [pc, #2292]	; 1b1c78 <haltLoop$+0x18>
+  1b137c:	e59f0b48 	ldr	r0, [pc, #2888]	; 1b1ecc <haltLoop$+0x18>
   1b1380:	e5d01000 	ldrb	r1, [r0]
   1b1384:	e35100ff 	cmp	r1, #255	; 0xff
   1b1388:	0a000001 	beq	1b1394 <incSecond>
@@ -532,641 +532,812 @@ Disassembly of section .text:
   1b13d8:	e5c01000 	strb	r1, [r0]
 
 001b13dc <finishInc>:
-  1b13dc:	e3e05000 	mvn	r5, #0
-  1b13e0:	ebffff6c 	bl	1b1198 <Wait>
-  1b13e4:	eaffff99 	b	1b1250 <moveBlockLoop>
+  1b13dc:	e3a05ffa 	mov	r5, #1000	; 0x3e8
+  1b13e0:	e1a05305 	lsl	r5, r5, #6
+  1b13e4:	ebffff6b 	bl	1b1198 <Wait>
+  1b13e8:	eaffff9a 	b	1b1258 <moveBlockLoop>
 
-001b13e8 <NoMove>:
-  1b13e8:	eb000035 	bl	1b14c4 <CheckGameOver>
-  1b13ec:	e49d3004 	pop	{r3}		; (ldr r3, [sp], #4)
-  1b13f0:	e1a0f003 	mov	pc, r3
+001b13ec <NoMove>:
+  1b13ec:	eb000035 	bl	1b14c8 <CheckGameOver>
+  1b13f0:	e49d3004 	pop	{r3}		; (ldr r3, [sp], #4)
+  1b13f4:	e1a0f003 	mov	pc, r3
 
-001b13f4 <CheckBlockMove>:
-  1b13f4:	e1a0300e 	mov	r3, lr
-  1b13f8:	e52d3004 	push	{r3}		; (str r3, [sp, #-4]!)
+001b13f8 <CheckBlockMove>:
+  1b13f8:	e1a0300e 	mov	r3, lr
+  1b13fc:	e52d3004 	push	{r3}		; (str r3, [sp, #-4]!)
 
-001b13fc <checkFirstCoord>:
-  1b13fc:	e59f3874 	ldr	r3, [pc, #2164]	; 1b1c78 <haltLoop$+0x18>
-  1b1400:	e5d32000 	ldrb	r2, [r3]
-  1b1404:	e35200ff 	cmp	r2, #255	; 0xff
-  1b1408:	0a000006 	beq	1b1428 <checkSecondCoord>
-  1b140c:	e282200a 	add	r2, r2, #10
-  1b1410:	e35200c8 	cmp	r2, #200	; 0xc8
-  1b1414:	aa000025 	bge	1b14b0 <bottomOfGrid>
-  1b1418:	e59f0848 	ldr	r0, [pc, #2120]	; 1b1c68 <haltLoop$+0x8>
-  1b141c:	e7d01002 	ldrb	r1, [r0, r2]
-  1b1420:	e3510001 	cmp	r1, #1
-  1b1424:	0a000021 	beq	1b14b0 <bottomOfGrid>
+001b1400 <checkFirstCoord>:
+  1b1400:	e59f3ac4 	ldr	r3, [pc, #2756]	; 1b1ecc <haltLoop$+0x18>
+  1b1404:	e5d32000 	ldrb	r2, [r3]
+  1b1408:	e35200ff 	cmp	r2, #255	; 0xff
+  1b140c:	0a000006 	beq	1b142c <checkSecondCoord>
+  1b1410:	e282200a 	add	r2, r2, #10
+  1b1414:	e35200c8 	cmp	r2, #200	; 0xc8
+  1b1418:	aa000025 	bge	1b14b4 <bottomOfGrid>
+  1b141c:	e59f0a98 	ldr	r0, [pc, #2712]	; 1b1ebc <haltLoop$+0x8>
+  1b1420:	e7d01002 	ldrb	r1, [r0, r2]
+  1b1424:	e3510001 	cmp	r1, #1
+  1b1428:	0a000021 	beq	1b14b4 <bottomOfGrid>
 
-001b1428 <checkSecondCoord>:
-  1b1428:	e59f3848 	ldr	r3, [pc, #2120]	; 1b1c78 <haltLoop$+0x18>
-  1b142c:	e5d32001 	ldrb	r2, [r3, #1]
-  1b1430:	e35200ff 	cmp	r2, #255	; 0xff
-  1b1434:	0a000006 	beq	1b1454 <checkThirdCoord>
-  1b1438:	e282200a 	add	r2, r2, #10
-  1b143c:	e35200c8 	cmp	r2, #200	; 0xc8
-  1b1440:	aa00001a 	bge	1b14b0 <bottomOfGrid>
-  1b1444:	e59f081c 	ldr	r0, [pc, #2076]	; 1b1c68 <haltLoop$+0x8>
-  1b1448:	e7d01002 	ldrb	r1, [r0, r2]
-  1b144c:	e3510001 	cmp	r1, #1
-  1b1450:	0a000016 	beq	1b14b0 <bottomOfGrid>
+001b142c <checkSecondCoord>:
+  1b142c:	e59f3a98 	ldr	r3, [pc, #2712]	; 1b1ecc <haltLoop$+0x18>
+  1b1430:	e5d32001 	ldrb	r2, [r3, #1]
+  1b1434:	e35200ff 	cmp	r2, #255	; 0xff
+  1b1438:	0a000006 	beq	1b1458 <checkThirdCoord>
+  1b143c:	e282200a 	add	r2, r2, #10
+  1b1440:	e35200c8 	cmp	r2, #200	; 0xc8
+  1b1444:	aa00001a 	bge	1b14b4 <bottomOfGrid>
+  1b1448:	e59f0a6c 	ldr	r0, [pc, #2668]	; 1b1ebc <haltLoop$+0x8>
+  1b144c:	e7d01002 	ldrb	r1, [r0, r2]
+  1b1450:	e3510001 	cmp	r1, #1
+  1b1454:	0a000016 	beq	1b14b4 <bottomOfGrid>
 
-001b1454 <checkThirdCoord>:
-  1b1454:	e59f381c 	ldr	r3, [pc, #2076]	; 1b1c78 <haltLoop$+0x18>
-  1b1458:	e5d32002 	ldrb	r2, [r3, #2]
-  1b145c:	e35200ff 	cmp	r2, #255	; 0xff
-  1b1460:	0a000006 	beq	1b1480 <checkFourthCoord>
-  1b1464:	e282200a 	add	r2, r2, #10
-  1b1468:	e35200c8 	cmp	r2, #200	; 0xc8
-  1b146c:	aa00000f 	bge	1b14b0 <bottomOfGrid>
-  1b1470:	e59f07f0 	ldr	r0, [pc, #2032]	; 1b1c68 <haltLoop$+0x8>
-  1b1474:	e7d01002 	ldrb	r1, [r0, r2]
-  1b1478:	e3510001 	cmp	r1, #1
-  1b147c:	0a00000b 	beq	1b14b0 <bottomOfGrid>
+001b1458 <checkThirdCoord>:
+  1b1458:	e59f3a6c 	ldr	r3, [pc, #2668]	; 1b1ecc <haltLoop$+0x18>
+  1b145c:	e5d32002 	ldrb	r2, [r3, #2]
+  1b1460:	e35200ff 	cmp	r2, #255	; 0xff
+  1b1464:	0a000006 	beq	1b1484 <checkFourthCoord>
+  1b1468:	e282200a 	add	r2, r2, #10
+  1b146c:	e35200c8 	cmp	r2, #200	; 0xc8
+  1b1470:	aa00000f 	bge	1b14b4 <bottomOfGrid>
+  1b1474:	e59f0a40 	ldr	r0, [pc, #2624]	; 1b1ebc <haltLoop$+0x8>
+  1b1478:	e7d01002 	ldrb	r1, [r0, r2]
+  1b147c:	e3510001 	cmp	r1, #1
+  1b1480:	0a00000b 	beq	1b14b4 <bottomOfGrid>
 
-001b1480 <checkFourthCoord>:
-  1b1480:	e59f37f0 	ldr	r3, [pc, #2032]	; 1b1c78 <haltLoop$+0x18>
-  1b1484:	e5d32003 	ldrb	r2, [r3, #3]
-  1b1488:	e35200ff 	cmp	r2, #255	; 0xff
-  1b148c:	0a000009 	beq	1b14b8 <CanMove>
-  1b1490:	e282200a 	add	r2, r2, #10
-  1b1494:	e35200c8 	cmp	r2, #200	; 0xc8
-  1b1498:	aa000004 	bge	1b14b0 <bottomOfGrid>
-  1b149c:	e59f07c4 	ldr	r0, [pc, #1988]	; 1b1c68 <haltLoop$+0x8>
-  1b14a0:	e7d01002 	ldrb	r1, [r0, r2]
-  1b14a4:	e3510001 	cmp	r1, #1
-  1b14a8:	0a000000 	beq	1b14b0 <bottomOfGrid>
-  1b14ac:	ea000001 	b	1b14b8 <CanMove>
+001b1484 <checkFourthCoord>:
+  1b1484:	e59f3a40 	ldr	r3, [pc, #2624]	; 1b1ecc <haltLoop$+0x18>
+  1b1488:	e5d32003 	ldrb	r2, [r3, #3]
+  1b148c:	e35200ff 	cmp	r2, #255	; 0xff
+  1b1490:	0a000009 	beq	1b14bc <CanMove>
+  1b1494:	e282200a 	add	r2, r2, #10
+  1b1498:	e35200c8 	cmp	r2, #200	; 0xc8
+  1b149c:	aa000004 	bge	1b14b4 <bottomOfGrid>
+  1b14a0:	e59f0a14 	ldr	r0, [pc, #2580]	; 1b1ebc <haltLoop$+0x8>
+  1b14a4:	e7d01002 	ldrb	r1, [r0, r2]
+  1b14a8:	e3510001 	cmp	r1, #1
+  1b14ac:	0a000000 	beq	1b14b4 <bottomOfGrid>
+  1b14b0:	ea000001 	b	1b14bc <CanMove>
 
-001b14b0 <bottomOfGrid>:
-  1b14b0:	e3a05000 	mov	r5, #0
-  1b14b4:	ea000000 	b	1b14bc <endCheckBlock>
+001b14b4 <bottomOfGrid>:
+  1b14b4:	e3a05000 	mov	r5, #0
+  1b14b8:	ea000000 	b	1b14c0 <endCheckBlock>
 
-001b14b8 <CanMove>:
-  1b14b8:	e3a05001 	mov	r5, #1
+001b14bc <CanMove>:
+  1b14bc:	e3a05001 	mov	r5, #1
 
-001b14bc <endCheckBlock>:
-  1b14bc:	e49d3004 	pop	{r3}		; (ldr r3, [sp], #4)
-  1b14c0:	e1a0f003 	mov	pc, r3
+001b14c0 <endCheckBlock>:
+  1b14c0:	e49d3004 	pop	{r3}		; (ldr r3, [sp], #4)
+  1b14c4:	e1a0f003 	mov	pc, r3
 
-001b14c4 <CheckGameOver>:
-  1b14c4:	e1a0300e 	mov	r3, lr
-  1b14c8:	e52d3004 	push	{r3}		; (str r3, [sp, #-4]!)
-  1b14cc:	e59f3790 	ldr	r3, [pc, #1936]	; 1b1c64 <haltLoop$+0x4>
-  1b14d0:	e5d32000 	ldrb	r2, [r3]
-  1b14d4:	e352000a 	cmp	r2, #10
-  1b14d8:	ba00000c 	blt	1b1510 <GameIsOver>
-  1b14dc:	e59f3788 	ldr	r3, [pc, #1928]	; 1b1c6c <haltLoop$+0xc>
-  1b14e0:	e5d32000 	ldrb	r2, [r3]
-  1b14e4:	e352000a 	cmp	r2, #10
-  1b14e8:	ba000008 	blt	1b1510 <GameIsOver>
-  1b14ec:	e59f377c 	ldr	r3, [pc, #1916]	; 1b1c70 <haltLoop$+0x10>
-  1b14f0:	e5d32000 	ldrb	r2, [r3]
-  1b14f4:	e352000a 	cmp	r2, #10
-  1b14f8:	ba000004 	blt	1b1510 <GameIsOver>
-  1b14fc:	e59f3770 	ldr	r3, [pc, #1904]	; 1b1c74 <haltLoop$+0x14>
-  1b1500:	e5d32000 	ldrb	r2, [r3]
-  1b1504:	e352000a 	cmp	r2, #10
-  1b1508:	ba000000 	blt	1b1510 <GameIsOver>
-  1b150c:	ea000000 	b	1b1514 <FinishCheckGameOver>
+001b14c8 <CheckGameOver>:
+  1b14c8:	e1a0300e 	mov	r3, lr
+  1b14cc:	e52d3004 	push	{r3}		; (str r3, [sp, #-4]!)
+  1b14d0:	e59f39e0 	ldr	r3, [pc, #2528]	; 1b1eb8 <haltLoop$+0x4>
+  1b14d4:	e5d32000 	ldrb	r2, [r3]
+  1b14d8:	e352000a 	cmp	r2, #10
+  1b14dc:	ba00000c 	blt	1b1514 <GameIsOver>
+  1b14e0:	e59f39d8 	ldr	r3, [pc, #2520]	; 1b1ec0 <haltLoop$+0xc>
+  1b14e4:	e5d32000 	ldrb	r2, [r3]
+  1b14e8:	e352000a 	cmp	r2, #10
+  1b14ec:	ba000008 	blt	1b1514 <GameIsOver>
+  1b14f0:	e59f39cc 	ldr	r3, [pc, #2508]	; 1b1ec4 <haltLoop$+0x10>
+  1b14f4:	e5d32000 	ldrb	r2, [r3]
+  1b14f8:	e352000a 	cmp	r2, #10
+  1b14fc:	ba000004 	blt	1b1514 <GameIsOver>
+  1b1500:	e59f39c0 	ldr	r3, [pc, #2496]	; 1b1ec8 <haltLoop$+0x14>
+  1b1504:	e5d32000 	ldrb	r2, [r3]
+  1b1508:	e352000a 	cmp	r2, #10
+  1b150c:	ba000000 	blt	1b1514 <GameIsOver>
+  1b1510:	ea000000 	b	1b1518 <FinishCheckGameOver>
 
-001b1510 <GameIsOver>:
-  1b1510:	ea0001d2 	b	1b1c60 <haltLoop$>
+001b1514 <GameIsOver>:
+  1b1514:	ea000266 	b	1b1eb4 <haltLoop$>
 
-001b1514 <FinishCheckGameOver>:
-  1b1514:	e49d3004 	pop	{r3}		; (ldr r3, [sp], #4)
-  1b1518:	e1a0f003 	mov	pc, r3
+001b1518 <FinishCheckGameOver>:
+  1b1518:	e49d3004 	pop	{r3}		; (ldr r3, [sp], #4)
+  1b151c:	e1a0f003 	mov	pc, r3
 
-001b151c <drawCurrentBlock>:
-  1b151c:	e1a0300e 	mov	r3, lr
-  1b1520:	e52d3004 	push	{r3}		; (str r3, [sp, #-4]!)
-  1b1524:	e59f3750 	ldr	r3, [pc, #1872]	; 1b1c7c <haltLoop$+0x1c>
-  1b1528:	e5d33000 	ldrb	r3, [r3]
-  1b152c:	e1a04003 	mov	r4, r3
-  1b1530:	e59f3748 	ldr	r3, [pc, #1864]	; 1b1c80 <haltLoop$+0x20>
-  1b1534:	e5d33000 	ldrb	r3, [r3]
-  1b1538:	e1a05003 	mov	r5, r3
-  1b153c:	e59f3740 	ldr	r3, [pc, #1856]	; 1b1c84 <haltLoop$+0x24>
-  1b1540:	e5933000 	ldr	r3, [r3]
-  1b1544:	ebfffe69 	bl	1b0ef0 <drawImage>
-  1b1548:	e49d3004 	pop	{r3}		; (ldr r3, [sp], #4)
-  1b154c:	e1a0f003 	mov	pc, r3
+001b1520 <drawCurrentBlock>:
+  1b1520:	e1a0300e 	mov	r3, lr
+  1b1524:	e52d3004 	push	{r3}		; (str r3, [sp, #-4]!)
+  1b1528:	e59f39a0 	ldr	r3, [pc, #2464]	; 1b1ed0 <haltLoop$+0x1c>
+  1b152c:	e5d33000 	ldrb	r3, [r3]
+  1b1530:	e3530000 	cmp	r3, #0
+  1b1534:	ea000003 	b	1b1548 <noCoordChange>
 
-001b1550 <eraseCurrentBlock>:
-  1b1550:	e1a0300e 	mov	r3, lr
-  1b1554:	e52d3004 	push	{r3}		; (str r3, [sp, #-4]!)
-  1b1558:	e59f371c 	ldr	r3, [pc, #1820]	; 1b1c7c <haltLoop$+0x1c>
+001b1538 <coordChange>:
+  1b1538:	e2511020 	subs	r1, r1, #32
+  1b153c:	ba000000 	blt	1b1544 <topOfGrid>
+  1b1540:	ea000000 	b	1b1548 <noCoordChange>
+
+001b1544 <topOfGrid>:
+  1b1544:	e2811020 	add	r1, r1, #32
+
+001b1548 <noCoordChange>:
+  1b1548:	e59f3980 	ldr	r3, [pc, #2432]	; 1b1ed0 <haltLoop$+0x1c>
+  1b154c:	e59f3980 	ldr	r3, [pc, #2432]	; 1b1ed4 <haltLoop$+0x20>
+  1b1550:	e5d33000 	ldrb	r3, [r3]
+  1b1554:	e1a04003 	mov	r4, r3
+  1b1558:	e59f3978 	ldr	r3, [pc, #2424]	; 1b1ed8 <haltLoop$+0x24>
   1b155c:	e5d33000 	ldrb	r3, [r3]
-  1b1560:	e1a04003 	mov	r4, r3
-  1b1564:	e59f3714 	ldr	r3, [pc, #1812]	; 1b1c80 <haltLoop$+0x20>
-  1b1568:	e5d33000 	ldrb	r3, [r3]
-  1b156c:	e1a05003 	mov	r5, r3
-  1b1570:	e59f3710 	ldr	r3, [pc, #1808]	; 1b1c88 <haltLoop$+0x28>
-  1b1574:	e5933000 	ldr	r3, [r3]
-  1b1578:	ebfffe5c 	bl	1b0ef0 <drawImage>
-  1b157c:	e49d3004 	pop	{r3}		; (ldr r3, [sp], #4)
-  1b1580:	e1a0f003 	mov	pc, r3
+  1b1560:	e1a05003 	mov	r5, r3
+  1b1564:	e59f3970 	ldr	r3, [pc, #2416]	; 1b1edc <haltLoop$+0x28>
+  1b1568:	e5933000 	ldr	r3, [r3]
+  1b156c:	ebfffe5f 	bl	1b0ef0 <drawImage>
+  1b1570:	e49d3004 	pop	{r3}		; (ldr r3, [sp], #4)
+  1b1574:	e1a0f003 	mov	pc, r3
 
-001b1584 <insertNewIBeam>:
-  1b1584:	e1a0400e 	mov	r4, lr
-  1b1588:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
-  1b158c:	e59f06d0 	ldr	r0, [pc, #1744]	; 1b1c64 <haltLoop$+0x4>
-  1b1590:	e3a01000 	mov	r1, #0
-  1b1594:	e5c01000 	strb	r1, [r0]
-  1b1598:	e59f06cc 	ldr	r0, [pc, #1740]	; 1b1c6c <haltLoop$+0xc>
-  1b159c:	e3a01001 	mov	r1, #1
-  1b15a0:	e5c01000 	strb	r1, [r0]
-  1b15a4:	e59f06c4 	ldr	r0, [pc, #1732]	; 1b1c70 <haltLoop$+0x10>
-  1b15a8:	e3a01002 	mov	r1, #2
-  1b15ac:	e5c01000 	strb	r1, [r0]
-  1b15b0:	e59f06bc 	ldr	r0, [pc, #1724]	; 1b1c74 <haltLoop$+0x14>
-  1b15b4:	e3a01003 	mov	r1, #3
-  1b15b8:	e5c01000 	strb	r1, [r0]
-  1b15bc:	e59f06b4 	ldr	r0, [pc, #1716]	; 1b1c78 <haltLoop$+0x18>
-  1b15c0:	e3a010ff 	mov	r1, #255	; 0xff
-  1b15c4:	e5c01000 	strb	r1, [r0]
-  1b15c8:	e3a01000 	mov	r1, #0
-  1b15cc:	e5c01001 	strb	r1, [r0, #1]
-  1b15d0:	e3a01001 	mov	r1, #1
-  1b15d4:	e5c01002 	strb	r1, [r0, #2]
-  1b15d8:	e3a01003 	mov	r1, #3
-  1b15dc:	e5c01003 	strb	r1, [r0, #3]
-  1b15e0:	e3a01001 	mov	r1, #1
-  1b15e4:	e59f2678 	ldr	r2, [pc, #1656]	; 1b1c64 <haltLoop$+0x4>
-  1b15e8:	e5d22000 	ldrb	r2, [r2]
-  1b15ec:	e59f0674 	ldr	r0, [pc, #1652]	; 1b1c68 <haltLoop$+0x8>
-  1b15f0:	e7c01002 	strb	r1, [r0, r2]
-  1b15f4:	e59f2670 	ldr	r2, [pc, #1648]	; 1b1c6c <haltLoop$+0xc>
-  1b15f8:	e5d22000 	ldrb	r2, [r2]
-  1b15fc:	e59f0664 	ldr	r0, [pc, #1636]	; 1b1c68 <haltLoop$+0x8>
-  1b1600:	e7c01002 	strb	r1, [r0, r2]
-  1b1604:	e59f2664 	ldr	r2, [pc, #1636]	; 1b1c70 <haltLoop$+0x10>
-  1b1608:	e5d22000 	ldrb	r2, [r2]
-  1b160c:	e59f0654 	ldr	r0, [pc, #1620]	; 1b1c68 <haltLoop$+0x8>
-  1b1610:	e7c01002 	strb	r1, [r0, r2]
-  1b1614:	e59f2658 	ldr	r2, [pc, #1624]	; 1b1c74 <haltLoop$+0x14>
-  1b1618:	e5d22000 	ldrb	r2, [r2]
-  1b161c:	e59f0644 	ldr	r0, [pc, #1604]	; 1b1c68 <haltLoop$+0x8>
-  1b1620:	e7c01002 	strb	r1, [r0, r2]
-  1b1624:	e59f3660 	ldr	r3, [pc, #1632]	; 1b1c8c <haltLoop$+0x2c>
-  1b1628:	e59f2654 	ldr	r2, [pc, #1620]	; 1b1c84 <haltLoop$+0x24>
-  1b162c:	e5823000 	str	r3, [r2]
-  1b1630:	e59f3658 	ldr	r3, [pc, #1624]	; 1b1c90 <haltLoop$+0x30>
-  1b1634:	e59f264c 	ldr	r2, [pc, #1612]	; 1b1c88 <haltLoop$+0x28>
-  1b1638:	e5823000 	str	r3, [r2]
-  1b163c:	e3a03080 	mov	r3, #128	; 0x80
-  1b1640:	e59f2634 	ldr	r2, [pc, #1588]	; 1b1c7c <haltLoop$+0x1c>
-  1b1644:	e5c23000 	strb	r3, [r2]
-  1b1648:	e3a03020 	mov	r3, #32
-  1b164c:	e59f562c 	ldr	r5, [pc, #1580]	; 1b1c80 <haltLoop$+0x20>
-  1b1650:	e5c53000 	strb	r3, [r5]
-  1b1654:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
-  1b1658:	e1a0f004 	mov	pc, r4
+001b1578 <eraseCurrentBlock>:
+  1b1578:	e1a0300e 	mov	r3, lr
+  1b157c:	e52d3004 	push	{r3}		; (str r3, [sp, #-4]!)
+  1b1580:	e59f3948 	ldr	r3, [pc, #2376]	; 1b1ed0 <haltLoop$+0x1c>
+  1b1584:	e5d33000 	ldrb	r3, [r3]
+  1b1588:	e3530000 	cmp	r3, #0
+  1b158c:	ea000003 	b	1b15a0 <eraseNoCoordChange>
 
-001b165c <insertNewSBeam>:
-  1b165c:	e1a0400e 	mov	r4, lr
-  1b1660:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
-  1b1664:	e59f05f8 	ldr	r0, [pc, #1528]	; 1b1c64 <haltLoop$+0x4>
-  1b1668:	e3a01001 	mov	r1, #1
-  1b166c:	e5c01000 	strb	r1, [r0]
-  1b1670:	e59f05f4 	ldr	r0, [pc, #1524]	; 1b1c6c <haltLoop$+0xc>
-  1b1674:	e3a01002 	mov	r1, #2
-  1b1678:	e5c01000 	strb	r1, [r0]
-  1b167c:	e59f05ec 	ldr	r0, [pc, #1516]	; 1b1c70 <haltLoop$+0x10>
-  1b1680:	e3a0100a 	mov	r1, #10
-  1b1684:	e5c01000 	strb	r1, [r0]
-  1b1688:	e59f05e4 	ldr	r0, [pc, #1508]	; 1b1c74 <haltLoop$+0x14>
-  1b168c:	e3a0100b 	mov	r1, #11
-  1b1690:	e5c01000 	strb	r1, [r0]
-  1b1694:	e59f05dc 	ldr	r0, [pc, #1500]	; 1b1c78 <haltLoop$+0x18>
-  1b1698:	e3a010ff 	mov	r1, #255	; 0xff
-  1b169c:	e5c01000 	strb	r1, [r0]
-  1b16a0:	e3a01002 	mov	r1, #2
-  1b16a4:	e5c01001 	strb	r1, [r0, #1]
-  1b16a8:	e3a0100a 	mov	r1, #10
-  1b16ac:	e5c01002 	strb	r1, [r0, #2]
-  1b16b0:	e3a0100b 	mov	r1, #11
-  1b16b4:	e5c01003 	strb	r1, [r0, #3]
-  1b16b8:	e3a01001 	mov	r1, #1
-  1b16bc:	e59f25a0 	ldr	r2, [pc, #1440]	; 1b1c64 <haltLoop$+0x4>
-  1b16c0:	e5d22000 	ldrb	r2, [r2]
-  1b16c4:	e59f059c 	ldr	r0, [pc, #1436]	; 1b1c68 <haltLoop$+0x8>
-  1b16c8:	e7c01002 	strb	r1, [r0, r2]
-  1b16cc:	e59f2598 	ldr	r2, [pc, #1432]	; 1b1c6c <haltLoop$+0xc>
-  1b16d0:	e5d22000 	ldrb	r2, [r2]
-  1b16d4:	e59f058c 	ldr	r0, [pc, #1420]	; 1b1c68 <haltLoop$+0x8>
-  1b16d8:	e7c01002 	strb	r1, [r0, r2]
-  1b16dc:	e59f258c 	ldr	r2, [pc, #1420]	; 1b1c70 <haltLoop$+0x10>
-  1b16e0:	e5d22000 	ldrb	r2, [r2]
-  1b16e4:	e59f057c 	ldr	r0, [pc, #1404]	; 1b1c68 <haltLoop$+0x8>
-  1b16e8:	e7c01002 	strb	r1, [r0, r2]
-  1b16ec:	e59f2580 	ldr	r2, [pc, #1408]	; 1b1c74 <haltLoop$+0x14>
-  1b16f0:	e5d22000 	ldrb	r2, [r2]
-  1b16f4:	e59f056c 	ldr	r0, [pc, #1388]	; 1b1c68 <haltLoop$+0x8>
-  1b16f8:	e7c01002 	strb	r1, [r0, r2]
-  1b16fc:	e59f3590 	ldr	r3, [pc, #1424]	; 1b1c94 <haltLoop$+0x34>
-  1b1700:	e59f257c 	ldr	r2, [pc, #1404]	; 1b1c84 <haltLoop$+0x24>
-  1b1704:	e5823000 	str	r3, [r2]
-  1b1708:	e59f3588 	ldr	r3, [pc, #1416]	; 1b1c98 <haltLoop$+0x38>
-  1b170c:	e59f2574 	ldr	r2, [pc, #1396]	; 1b1c88 <haltLoop$+0x28>
-  1b1710:	e5823000 	str	r3, [r2]
-  1b1714:	e3a03060 	mov	r3, #96	; 0x60
-  1b1718:	e59f255c 	ldr	r2, [pc, #1372]	; 1b1c7c <haltLoop$+0x1c>
-  1b171c:	e5c23000 	strb	r3, [r2]
-  1b1720:	e3a03040 	mov	r3, #64	; 0x40
-  1b1724:	e59f5554 	ldr	r5, [pc, #1364]	; 1b1c80 <haltLoop$+0x20>
-  1b1728:	e5c53000 	strb	r3, [r5]
-  1b172c:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
-  1b1730:	e1a0f004 	mov	pc, r4
+001b1590 <eraseCoordChange>:
+  1b1590:	e2511020 	subs	r1, r1, #32
+  1b1594:	ba000000 	blt	1b159c <eraseTopOfGrid>
+  1b1598:	ea000000 	b	1b15a0 <eraseNoCoordChange>
 
-001b1734 <insertNewOBeam>:
-  1b1734:	e1a0400e 	mov	r4, lr
-  1b1738:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
-  1b173c:	e59f0520 	ldr	r0, [pc, #1312]	; 1b1c64 <haltLoop$+0x4>
-  1b1740:	e3a01000 	mov	r1, #0
-  1b1744:	e5c01000 	strb	r1, [r0]
-  1b1748:	e59f051c 	ldr	r0, [pc, #1308]	; 1b1c6c <haltLoop$+0xc>
-  1b174c:	e3a01001 	mov	r1, #1
-  1b1750:	e5c01000 	strb	r1, [r0]
-  1b1754:	e59f0514 	ldr	r0, [pc, #1300]	; 1b1c70 <haltLoop$+0x10>
-  1b1758:	e3a0100a 	mov	r1, #10
-  1b175c:	e5c01000 	strb	r1, [r0]
-  1b1760:	e59f050c 	ldr	r0, [pc, #1292]	; 1b1c74 <haltLoop$+0x14>
-  1b1764:	e3a0100b 	mov	r1, #11
-  1b1768:	e5c01000 	strb	r1, [r0]
-  1b176c:	e59f0504 	ldr	r0, [pc, #1284]	; 1b1c78 <haltLoop$+0x18>
-  1b1770:	e3a010ff 	mov	r1, #255	; 0xff
-  1b1774:	e5c01000 	strb	r1, [r0]
-  1b1778:	e3a010ff 	mov	r1, #255	; 0xff
-  1b177c:	e5c01001 	strb	r1, [r0, #1]
-  1b1780:	e3a0100a 	mov	r1, #10
-  1b1784:	e5c01002 	strb	r1, [r0, #2]
-  1b1788:	e3a0100b 	mov	r1, #11
-  1b178c:	e5c01003 	strb	r1, [r0, #3]
-  1b1790:	e3a01001 	mov	r1, #1
-  1b1794:	e59f24c8 	ldr	r2, [pc, #1224]	; 1b1c64 <haltLoop$+0x4>
-  1b1798:	e5d22000 	ldrb	r2, [r2]
-  1b179c:	e59f04c4 	ldr	r0, [pc, #1220]	; 1b1c68 <haltLoop$+0x8>
-  1b17a0:	e7c01002 	strb	r1, [r0, r2]
-  1b17a4:	e59f24c0 	ldr	r2, [pc, #1216]	; 1b1c6c <haltLoop$+0xc>
-  1b17a8:	e5d22000 	ldrb	r2, [r2]
-  1b17ac:	e59f04b4 	ldr	r0, [pc, #1204]	; 1b1c68 <haltLoop$+0x8>
-  1b17b0:	e7c01002 	strb	r1, [r0, r2]
-  1b17b4:	e59f24b4 	ldr	r2, [pc, #1204]	; 1b1c70 <haltLoop$+0x10>
-  1b17b8:	e5d22000 	ldrb	r2, [r2]
-  1b17bc:	e59f04a4 	ldr	r0, [pc, #1188]	; 1b1c68 <haltLoop$+0x8>
-  1b17c0:	e7c01002 	strb	r1, [r0, r2]
-  1b17c4:	e59f24a8 	ldr	r2, [pc, #1192]	; 1b1c74 <haltLoop$+0x14>
-  1b17c8:	e5d22000 	ldrb	r2, [r2]
-  1b17cc:	e59f0494 	ldr	r0, [pc, #1172]	; 1b1c68 <haltLoop$+0x8>
-  1b17d0:	e7c01002 	strb	r1, [r0, r2]
-  1b17d4:	e59f34c0 	ldr	r3, [pc, #1216]	; 1b1c9c <haltLoop$+0x3c>
-  1b17d8:	e59f24a4 	ldr	r2, [pc, #1188]	; 1b1c84 <haltLoop$+0x24>
-  1b17dc:	e5823000 	str	r3, [r2]
-  1b17e0:	e59f34b8 	ldr	r3, [pc, #1208]	; 1b1ca0 <haltLoop$+0x40>
-  1b17e4:	e59f249c 	ldr	r2, [pc, #1180]	; 1b1c88 <haltLoop$+0x28>
-  1b17e8:	e5823000 	str	r3, [r2]
-  1b17ec:	e3a03040 	mov	r3, #64	; 0x40
-  1b17f0:	e59f2484 	ldr	r2, [pc, #1156]	; 1b1c7c <haltLoop$+0x1c>
-  1b17f4:	e5c23000 	strb	r3, [r2]
-  1b17f8:	e3a03040 	mov	r3, #64	; 0x40
-  1b17fc:	e59f547c 	ldr	r5, [pc, #1148]	; 1b1c80 <haltLoop$+0x20>
-  1b1800:	e5c53000 	strb	r3, [r5]
-  1b1804:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
-  1b1808:	e1a0f004 	mov	pc, r4
+001b159c <eraseTopOfGrid>:
+  1b159c:	e2811020 	add	r1, r1, #32
 
-001b180c <insertNewWBeam>:
-  1b180c:	e1a0400e 	mov	r4, lr
-  1b1810:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
-  1b1814:	e59f0448 	ldr	r0, [pc, #1096]	; 1b1c64 <haltLoop$+0x4>
-  1b1818:	e3a01001 	mov	r1, #1
-  1b181c:	e5c01000 	strb	r1, [r0]
-  1b1820:	e59f0444 	ldr	r0, [pc, #1092]	; 1b1c6c <haltLoop$+0xc>
-  1b1824:	e3a0100a 	mov	r1, #10
-  1b1828:	e5c01000 	strb	r1, [r0]
-  1b182c:	e59f043c 	ldr	r0, [pc, #1084]	; 1b1c70 <haltLoop$+0x10>
-  1b1830:	e3a0100b 	mov	r1, #11
-  1b1834:	e5c01000 	strb	r1, [r0]
-  1b1838:	e59f0434 	ldr	r0, [pc, #1076]	; 1b1c74 <haltLoop$+0x14>
-  1b183c:	e3a0100c 	mov	r1, #12
+001b15a0 <eraseNoCoordChange>:
+  1b15a0:	e59f392c 	ldr	r3, [pc, #2348]	; 1b1ed4 <haltLoop$+0x20>
+  1b15a4:	e5d33000 	ldrb	r3, [r3]
+  1b15a8:	e1a04003 	mov	r4, r3
+  1b15ac:	e59f3924 	ldr	r3, [pc, #2340]	; 1b1ed8 <haltLoop$+0x24>
+  1b15b0:	e5d33000 	ldrb	r3, [r3]
+  1b15b4:	e1a05003 	mov	r5, r3
+  1b15b8:	e59f3920 	ldr	r3, [pc, #2336]	; 1b1ee0 <haltLoop$+0x2c>
+  1b15bc:	e5933000 	ldr	r3, [r3]
+  1b15c0:	ebfffe4a 	bl	1b0ef0 <drawImage>
+  1b15c4:	e49d3004 	pop	{r3}		; (ldr r3, [sp], #4)
+  1b15c8:	e1a0f003 	mov	pc, r3
+
+001b15cc <insertNewIBeam>:
+  1b15cc:	e1a0400e 	mov	r4, lr
+  1b15d0:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
+  1b15d4:	e59f08e0 	ldr	r0, [pc, #2272]	; 1b1ebc <haltLoop$+0x8>
+  1b15d8:	e5d01000 	ldrb	r1, [r0]
+  1b15dc:	e3510001 	cmp	r1, #1
+  1b15e0:	0a000233 	beq	1b1eb4 <haltLoop$>
+  1b15e4:	e5d01001 	ldrb	r1, [r0, #1]
+  1b15e8:	e3510001 	cmp	r1, #1
+  1b15ec:	0a000230 	beq	1b1eb4 <haltLoop$>
+  1b15f0:	e5d01002 	ldrb	r1, [r0, #2]
+  1b15f4:	e3510001 	cmp	r1, #1
+  1b15f8:	0a00022d 	beq	1b1eb4 <haltLoop$>
+  1b15fc:	e5d01003 	ldrb	r1, [r0, #3]
+  1b1600:	e3510001 	cmp	r1, #1
+  1b1604:	0a00022a 	beq	1b1eb4 <haltLoop$>
+  1b1608:	e59f08a8 	ldr	r0, [pc, #2216]	; 1b1eb8 <haltLoop$+0x4>
+  1b160c:	e3a01000 	mov	r1, #0
+  1b1610:	e5c01000 	strb	r1, [r0]
+  1b1614:	e59f08a4 	ldr	r0, [pc, #2212]	; 1b1ec0 <haltLoop$+0xc>
+  1b1618:	e3a01001 	mov	r1, #1
+  1b161c:	e5c01000 	strb	r1, [r0]
+  1b1620:	e59f089c 	ldr	r0, [pc, #2204]	; 1b1ec4 <haltLoop$+0x10>
+  1b1624:	e3a01002 	mov	r1, #2
+  1b1628:	e5c01000 	strb	r1, [r0]
+  1b162c:	e59f0894 	ldr	r0, [pc, #2196]	; 1b1ec8 <haltLoop$+0x14>
+  1b1630:	e3a01003 	mov	r1, #3
+  1b1634:	e5c01000 	strb	r1, [r0]
+  1b1638:	e59f088c 	ldr	r0, [pc, #2188]	; 1b1ecc <haltLoop$+0x18>
+  1b163c:	e3a01000 	mov	r1, #0
+  1b1640:	e5c01000 	strb	r1, [r0]
+  1b1644:	e3a01001 	mov	r1, #1
+  1b1648:	e5c01001 	strb	r1, [r0, #1]
+  1b164c:	e3a01002 	mov	r1, #2
+  1b1650:	e5c01002 	strb	r1, [r0, #2]
+  1b1654:	e3a01003 	mov	r1, #3
+  1b1658:	e5c01003 	strb	r1, [r0, #3]
+  1b165c:	e3a01001 	mov	r1, #1
+  1b1660:	e59f2850 	ldr	r2, [pc, #2128]	; 1b1eb8 <haltLoop$+0x4>
+  1b1664:	e5d22000 	ldrb	r2, [r2]
+  1b1668:	e59f084c 	ldr	r0, [pc, #2124]	; 1b1ebc <haltLoop$+0x8>
+  1b166c:	e7c01002 	strb	r1, [r0, r2]
+  1b1670:	e59f2848 	ldr	r2, [pc, #2120]	; 1b1ec0 <haltLoop$+0xc>
+  1b1674:	e5d22000 	ldrb	r2, [r2]
+  1b1678:	e59f083c 	ldr	r0, [pc, #2108]	; 1b1ebc <haltLoop$+0x8>
+  1b167c:	e7c01002 	strb	r1, [r0, r2]
+  1b1680:	e59f283c 	ldr	r2, [pc, #2108]	; 1b1ec4 <haltLoop$+0x10>
+  1b1684:	e5d22000 	ldrb	r2, [r2]
+  1b1688:	e59f082c 	ldr	r0, [pc, #2092]	; 1b1ebc <haltLoop$+0x8>
+  1b168c:	e7c01002 	strb	r1, [r0, r2]
+  1b1690:	e59f2830 	ldr	r2, [pc, #2096]	; 1b1ec8 <haltLoop$+0x14>
+  1b1694:	e5d22000 	ldrb	r2, [r2]
+  1b1698:	e59f081c 	ldr	r0, [pc, #2076]	; 1b1ebc <haltLoop$+0x8>
+  1b169c:	e7c01002 	strb	r1, [r0, r2]
+  1b16a0:	e59f383c 	ldr	r3, [pc, #2108]	; 1b1ee4 <haltLoop$+0x30>
+  1b16a4:	e59f2830 	ldr	r2, [pc, #2096]	; 1b1edc <haltLoop$+0x28>
+  1b16a8:	e5823000 	str	r3, [r2]
+  1b16ac:	e59f3834 	ldr	r3, [pc, #2100]	; 1b1ee8 <haltLoop$+0x34>
+  1b16b0:	e59f2828 	ldr	r2, [pc, #2088]	; 1b1ee0 <haltLoop$+0x2c>
+  1b16b4:	e5823000 	str	r3, [r2]
+  1b16b8:	e3a03080 	mov	r3, #128	; 0x80
+  1b16bc:	e59f2810 	ldr	r2, [pc, #2064]	; 1b1ed4 <haltLoop$+0x20>
+  1b16c0:	e5c23000 	strb	r3, [r2]
+  1b16c4:	e3a03020 	mov	r3, #32
+  1b16c8:	e59f5808 	ldr	r5, [pc, #2056]	; 1b1ed8 <haltLoop$+0x24>
+  1b16cc:	e5c53000 	strb	r3, [r5]
+  1b16d0:	e3a05000 	mov	r5, #0
+  1b16d4:	e59f37f4 	ldr	r3, [pc, #2036]	; 1b1ed0 <haltLoop$+0x1c>
+  1b16d8:	e5c35000 	strb	r5, [r3]
+  1b16dc:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
+  1b16e0:	e1a0f004 	mov	pc, r4
+
+001b16e4 <insertNewSBeam>:
+  1b16e4:	e1a0400e 	mov	r4, lr
+  1b16e8:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
+  1b16ec:	e59f07c8 	ldr	r0, [pc, #1992]	; 1b1ebc <haltLoop$+0x8>
+  1b16f0:	e5d01001 	ldrb	r1, [r0, #1]
+  1b16f4:	e3510001 	cmp	r1, #1
+  1b16f8:	0a0001ed 	beq	1b1eb4 <haltLoop$>
+  1b16fc:	e5d01002 	ldrb	r1, [r0, #2]
+  1b1700:	e3510001 	cmp	r1, #1
+  1b1704:	0a0001ea 	beq	1b1eb4 <haltLoop$>
+  1b1708:	e5d0100a 	ldrb	r1, [r0, #10]
+  1b170c:	e3510001 	cmp	r1, #1
+  1b1710:	0a0001e7 	beq	1b1eb4 <haltLoop$>
+  1b1714:	e5d0100b 	ldrb	r1, [r0, #11]
+  1b1718:	e3510001 	cmp	r1, #1
+  1b171c:	0a0001e4 	beq	1b1eb4 <haltLoop$>
+  1b1720:	e59f0790 	ldr	r0, [pc, #1936]	; 1b1eb8 <haltLoop$+0x4>
+  1b1724:	e3a01001 	mov	r1, #1
+  1b1728:	e5c01000 	strb	r1, [r0]
+  1b172c:	e59f078c 	ldr	r0, [pc, #1932]	; 1b1ec0 <haltLoop$+0xc>
+  1b1730:	e3a01002 	mov	r1, #2
+  1b1734:	e5c01000 	strb	r1, [r0]
+  1b1738:	e59f0784 	ldr	r0, [pc, #1924]	; 1b1ec4 <haltLoop$+0x10>
+  1b173c:	e3a0100a 	mov	r1, #10
+  1b1740:	e5c01000 	strb	r1, [r0]
+  1b1744:	e59f077c 	ldr	r0, [pc, #1916]	; 1b1ec8 <haltLoop$+0x14>
+  1b1748:	e3a0100b 	mov	r1, #11
+  1b174c:	e5c01000 	strb	r1, [r0]
+  1b1750:	e59f0774 	ldr	r0, [pc, #1908]	; 1b1ecc <haltLoop$+0x18>
+  1b1754:	e3a010ff 	mov	r1, #255	; 0xff
+  1b1758:	e5c01000 	strb	r1, [r0]
+  1b175c:	e3a01002 	mov	r1, #2
+  1b1760:	e5c01001 	strb	r1, [r0, #1]
+  1b1764:	e3a0100a 	mov	r1, #10
+  1b1768:	e5c01002 	strb	r1, [r0, #2]
+  1b176c:	e3a0100b 	mov	r1, #11
+  1b1770:	e5c01003 	strb	r1, [r0, #3]
+  1b1774:	e3a01001 	mov	r1, #1
+  1b1778:	e59f2738 	ldr	r2, [pc, #1848]	; 1b1eb8 <haltLoop$+0x4>
+  1b177c:	e5d22000 	ldrb	r2, [r2]
+  1b1780:	e59f0734 	ldr	r0, [pc, #1844]	; 1b1ebc <haltLoop$+0x8>
+  1b1784:	e7c01002 	strb	r1, [r0, r2]
+  1b1788:	e59f2730 	ldr	r2, [pc, #1840]	; 1b1ec0 <haltLoop$+0xc>
+  1b178c:	e5d22000 	ldrb	r2, [r2]
+  1b1790:	e59f0724 	ldr	r0, [pc, #1828]	; 1b1ebc <haltLoop$+0x8>
+  1b1794:	e7c01002 	strb	r1, [r0, r2]
+  1b1798:	e59f2724 	ldr	r2, [pc, #1828]	; 1b1ec4 <haltLoop$+0x10>
+  1b179c:	e5d22000 	ldrb	r2, [r2]
+  1b17a0:	e59f0714 	ldr	r0, [pc, #1812]	; 1b1ebc <haltLoop$+0x8>
+  1b17a4:	e7c01002 	strb	r1, [r0, r2]
+  1b17a8:	e59f2718 	ldr	r2, [pc, #1816]	; 1b1ec8 <haltLoop$+0x14>
+  1b17ac:	e5d22000 	ldrb	r2, [r2]
+  1b17b0:	e59f0704 	ldr	r0, [pc, #1796]	; 1b1ebc <haltLoop$+0x8>
+  1b17b4:	e7c01002 	strb	r1, [r0, r2]
+  1b17b8:	e59f372c 	ldr	r3, [pc, #1836]	; 1b1eec <haltLoop$+0x38>
+  1b17bc:	e59f2718 	ldr	r2, [pc, #1816]	; 1b1edc <haltLoop$+0x28>
+  1b17c0:	e5823000 	str	r3, [r2]
+  1b17c4:	e59f3724 	ldr	r3, [pc, #1828]	; 1b1ef0 <haltLoop$+0x3c>
+  1b17c8:	e59f2710 	ldr	r2, [pc, #1808]	; 1b1ee0 <haltLoop$+0x2c>
+  1b17cc:	e5823000 	str	r3, [r2]
+  1b17d0:	e3a03060 	mov	r3, #96	; 0x60
+  1b17d4:	e59f26f8 	ldr	r2, [pc, #1784]	; 1b1ed4 <haltLoop$+0x20>
+  1b17d8:	e5c23000 	strb	r3, [r2]
+  1b17dc:	e3a03040 	mov	r3, #64	; 0x40
+  1b17e0:	e59f56f0 	ldr	r5, [pc, #1776]	; 1b1ed8 <haltLoop$+0x24>
+  1b17e4:	e5c53000 	strb	r3, [r5]
+  1b17e8:	e3a05001 	mov	r5, #1
+  1b17ec:	e59f36dc 	ldr	r3, [pc, #1756]	; 1b1ed0 <haltLoop$+0x1c>
+  1b17f0:	e5c35000 	strb	r5, [r3]
+  1b17f4:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
+  1b17f8:	e1a0f004 	mov	pc, r4
+
+001b17fc <insertNewOBeam>:
+  1b17fc:	e1a0400e 	mov	r4, lr
+  1b1800:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
+  1b1804:	e59f06b0 	ldr	r0, [pc, #1712]	; 1b1ebc <haltLoop$+0x8>
+  1b1808:	e5d01000 	ldrb	r1, [r0]
+  1b180c:	e3510001 	cmp	r1, #1
+  1b1810:	0a0001a7 	beq	1b1eb4 <haltLoop$>
+  1b1814:	e5d01001 	ldrb	r1, [r0, #1]
+  1b1818:	e3510001 	cmp	r1, #1
+  1b181c:	0a0001a4 	beq	1b1eb4 <haltLoop$>
+  1b1820:	e5d0100a 	ldrb	r1, [r0, #10]
+  1b1824:	e3510001 	cmp	r1, #1
+  1b1828:	0a0001a1 	beq	1b1eb4 <haltLoop$>
+  1b182c:	e5d0100b 	ldrb	r1, [r0, #11]
+  1b1830:	e3510001 	cmp	r1, #1
+  1b1834:	0a00019e 	beq	1b1eb4 <haltLoop$>
+  1b1838:	e59f0678 	ldr	r0, [pc, #1656]	; 1b1eb8 <haltLoop$+0x4>
+  1b183c:	e3a01000 	mov	r1, #0
   1b1840:	e5c01000 	strb	r1, [r0]
-  1b1844:	e59f042c 	ldr	r0, [pc, #1068]	; 1b1c78 <haltLoop$+0x18>
-  1b1848:	e3a010ff 	mov	r1, #255	; 0xff
+  1b1844:	e59f0674 	ldr	r0, [pc, #1652]	; 1b1ec0 <haltLoop$+0xc>
+  1b1848:	e3a01001 	mov	r1, #1
   1b184c:	e5c01000 	strb	r1, [r0]
-  1b1850:	e3a0100a 	mov	r1, #10
-  1b1854:	e5c01001 	strb	r1, [r0, #1]
-  1b1858:	e3a0100b 	mov	r1, #11
-  1b185c:	e5c01002 	strb	r1, [r0, #2]
-  1b1860:	e3a0100c 	mov	r1, #12
-  1b1864:	e5c01003 	strb	r1, [r0, #3]
-  1b1868:	e3a01001 	mov	r1, #1
-  1b186c:	e59f23f0 	ldr	r2, [pc, #1008]	; 1b1c64 <haltLoop$+0x4>
-  1b1870:	e5d22000 	ldrb	r2, [r2]
-  1b1874:	e59f03ec 	ldr	r0, [pc, #1004]	; 1b1c68 <haltLoop$+0x8>
-  1b1878:	e7c01002 	strb	r1, [r0, r2]
-  1b187c:	e59f23e8 	ldr	r2, [pc, #1000]	; 1b1c6c <haltLoop$+0xc>
-  1b1880:	e5d22000 	ldrb	r2, [r2]
-  1b1884:	e59f03dc 	ldr	r0, [pc, #988]	; 1b1c68 <haltLoop$+0x8>
-  1b1888:	e7c01002 	strb	r1, [r0, r2]
-  1b188c:	e59f23dc 	ldr	r2, [pc, #988]	; 1b1c70 <haltLoop$+0x10>
-  1b1890:	e5d22000 	ldrb	r2, [r2]
-  1b1894:	e59f03cc 	ldr	r0, [pc, #972]	; 1b1c68 <haltLoop$+0x8>
-  1b1898:	e7c01002 	strb	r1, [r0, r2]
-  1b189c:	e59f23d0 	ldr	r2, [pc, #976]	; 1b1c74 <haltLoop$+0x14>
-  1b18a0:	e5d22000 	ldrb	r2, [r2]
-  1b18a4:	e59f03bc 	ldr	r0, [pc, #956]	; 1b1c68 <haltLoop$+0x8>
-  1b18a8:	e7c01002 	strb	r1, [r0, r2]
-  1b18ac:	e59f33f0 	ldr	r3, [pc, #1008]	; 1b1ca4 <haltLoop$+0x44>
-  1b18b0:	e59f23cc 	ldr	r2, [pc, #972]	; 1b1c84 <haltLoop$+0x24>
-  1b18b4:	e5823000 	str	r3, [r2]
-  1b18b8:	e59f33e8 	ldr	r3, [pc, #1000]	; 1b1ca8 <haltLoop$+0x48>
-  1b18bc:	e59f23c4 	ldr	r2, [pc, #964]	; 1b1c88 <haltLoop$+0x28>
-  1b18c0:	e5823000 	str	r3, [r2]
-  1b18c4:	e3a03060 	mov	r3, #96	; 0x60
-  1b18c8:	e59f23ac 	ldr	r2, [pc, #940]	; 1b1c7c <haltLoop$+0x1c>
-  1b18cc:	e5c23000 	strb	r3, [r2]
-  1b18d0:	e3a03040 	mov	r3, #64	; 0x40
-  1b18d4:	e59f53a4 	ldr	r5, [pc, #932]	; 1b1c80 <haltLoop$+0x20>
-  1b18d8:	e5c53000 	strb	r3, [r5]
-  1b18dc:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
-  1b18e0:	e1a0f004 	mov	pc, r4
+  1b1850:	e59f066c 	ldr	r0, [pc, #1644]	; 1b1ec4 <haltLoop$+0x10>
+  1b1854:	e3a0100a 	mov	r1, #10
+  1b1858:	e5c01000 	strb	r1, [r0]
+  1b185c:	e59f0664 	ldr	r0, [pc, #1636]	; 1b1ec8 <haltLoop$+0x14>
+  1b1860:	e3a0100b 	mov	r1, #11
+  1b1864:	e5c01000 	strb	r1, [r0]
+  1b1868:	e59f065c 	ldr	r0, [pc, #1628]	; 1b1ecc <haltLoop$+0x18>
+  1b186c:	e3a010ff 	mov	r1, #255	; 0xff
+  1b1870:	e5c01000 	strb	r1, [r0]
+  1b1874:	e3a010ff 	mov	r1, #255	; 0xff
+  1b1878:	e5c01001 	strb	r1, [r0, #1]
+  1b187c:	e3a0100a 	mov	r1, #10
+  1b1880:	e5c01002 	strb	r1, [r0, #2]
+  1b1884:	e3a0100b 	mov	r1, #11
+  1b1888:	e5c01003 	strb	r1, [r0, #3]
+  1b188c:	e3a01001 	mov	r1, #1
+  1b1890:	e59f2620 	ldr	r2, [pc, #1568]	; 1b1eb8 <haltLoop$+0x4>
+  1b1894:	e5d22000 	ldrb	r2, [r2]
+  1b1898:	e59f061c 	ldr	r0, [pc, #1564]	; 1b1ebc <haltLoop$+0x8>
+  1b189c:	e7c01002 	strb	r1, [r0, r2]
+  1b18a0:	e59f2618 	ldr	r2, [pc, #1560]	; 1b1ec0 <haltLoop$+0xc>
+  1b18a4:	e5d22000 	ldrb	r2, [r2]
+  1b18a8:	e59f060c 	ldr	r0, [pc, #1548]	; 1b1ebc <haltLoop$+0x8>
+  1b18ac:	e7c01002 	strb	r1, [r0, r2]
+  1b18b0:	e59f260c 	ldr	r2, [pc, #1548]	; 1b1ec4 <haltLoop$+0x10>
+  1b18b4:	e5d22000 	ldrb	r2, [r2]
+  1b18b8:	e59f05fc 	ldr	r0, [pc, #1532]	; 1b1ebc <haltLoop$+0x8>
+  1b18bc:	e7c01002 	strb	r1, [r0, r2]
+  1b18c0:	e59f2600 	ldr	r2, [pc, #1536]	; 1b1ec8 <haltLoop$+0x14>
+  1b18c4:	e5d22000 	ldrb	r2, [r2]
+  1b18c8:	e59f05ec 	ldr	r0, [pc, #1516]	; 1b1ebc <haltLoop$+0x8>
+  1b18cc:	e7c01002 	strb	r1, [r0, r2]
+  1b18d0:	e59f361c 	ldr	r3, [pc, #1564]	; 1b1ef4 <haltLoop$+0x40>
+  1b18d4:	e59f2600 	ldr	r2, [pc, #1536]	; 1b1edc <haltLoop$+0x28>
+  1b18d8:	e5823000 	str	r3, [r2]
+  1b18dc:	e59f3614 	ldr	r3, [pc, #1556]	; 1b1ef8 <haltLoop$+0x44>
+  1b18e0:	e59f25f8 	ldr	r2, [pc, #1528]	; 1b1ee0 <haltLoop$+0x2c>
+  1b18e4:	e5823000 	str	r3, [r2]
+  1b18e8:	e3a03040 	mov	r3, #64	; 0x40
+  1b18ec:	e59f25e0 	ldr	r2, [pc, #1504]	; 1b1ed4 <haltLoop$+0x20>
+  1b18f0:	e5c23000 	strb	r3, [r2]
+  1b18f4:	e3a03040 	mov	r3, #64	; 0x40
+  1b18f8:	e59f55d8 	ldr	r5, [pc, #1496]	; 1b1ed8 <haltLoop$+0x24>
+  1b18fc:	e5c53000 	strb	r3, [r5]
+  1b1900:	e3a05000 	mov	r5, #0
+  1b1904:	e59f35c4 	ldr	r3, [pc, #1476]	; 1b1ed0 <haltLoop$+0x1c>
+  1b1908:	e5c35000 	strb	r5, [r3]
+  1b190c:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
+  1b1910:	e1a0f004 	mov	pc, r4
 
-001b18e4 <insertNewLBBeam>:
-  1b18e4:	e1a0400e 	mov	r4, lr
-  1b18e8:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
-  1b18ec:	e59f0370 	ldr	r0, [pc, #880]	; 1b1c64 <haltLoop$+0x4>
-  1b18f0:	e3a01000 	mov	r1, #0
-  1b18f4:	e5c01000 	strb	r1, [r0]
-  1b18f8:	e59f036c 	ldr	r0, [pc, #876]	; 1b1c6c <haltLoop$+0xc>
-  1b18fc:	e3a0100a 	mov	r1, #10
-  1b1900:	e5c01000 	strb	r1, [r0]
-  1b1904:	e59f0364 	ldr	r0, [pc, #868]	; 1b1c70 <haltLoop$+0x10>
-  1b1908:	e3a0100b 	mov	r1, #11
-  1b190c:	e5c01000 	strb	r1, [r0]
-  1b1910:	e59f035c 	ldr	r0, [pc, #860]	; 1b1c74 <haltLoop$+0x14>
-  1b1914:	e3a0100c 	mov	r1, #12
-  1b1918:	e5c01000 	strb	r1, [r0]
-  1b191c:	e59f0354 	ldr	r0, [pc, #852]	; 1b1c78 <haltLoop$+0x18>
-  1b1920:	e3a010ff 	mov	r1, #255	; 0xff
-  1b1924:	e5c01000 	strb	r1, [r0]
-  1b1928:	e3a0100a 	mov	r1, #10
-  1b192c:	e5c01001 	strb	r1, [r0, #1]
-  1b1930:	e3a0100b 	mov	r1, #11
-  1b1934:	e5c01002 	strb	r1, [r0, #2]
-  1b1938:	e3a0100c 	mov	r1, #12
-  1b193c:	e5c01003 	strb	r1, [r0, #3]
-  1b1940:	e3a01001 	mov	r1, #1
-  1b1944:	e59f2318 	ldr	r2, [pc, #792]	; 1b1c64 <haltLoop$+0x4>
-  1b1948:	e5d22000 	ldrb	r2, [r2]
-  1b194c:	e59f0314 	ldr	r0, [pc, #788]	; 1b1c68 <haltLoop$+0x8>
-  1b1950:	e7c01002 	strb	r1, [r0, r2]
-  1b1954:	e59f2310 	ldr	r2, [pc, #784]	; 1b1c6c <haltLoop$+0xc>
-  1b1958:	e5d22000 	ldrb	r2, [r2]
-  1b195c:	e59f0304 	ldr	r0, [pc, #772]	; 1b1c68 <haltLoop$+0x8>
-  1b1960:	e7c01002 	strb	r1, [r0, r2]
-  1b1964:	e59f2304 	ldr	r2, [pc, #772]	; 1b1c70 <haltLoop$+0x10>
-  1b1968:	e5d22000 	ldrb	r2, [r2]
-  1b196c:	e59f02f4 	ldr	r0, [pc, #756]	; 1b1c68 <haltLoop$+0x8>
-  1b1970:	e7c01002 	strb	r1, [r0, r2]
-  1b1974:	e59f22f8 	ldr	r2, [pc, #760]	; 1b1c74 <haltLoop$+0x14>
-  1b1978:	e5d22000 	ldrb	r2, [r2]
-  1b197c:	e59f02e4 	ldr	r0, [pc, #740]	; 1b1c68 <haltLoop$+0x8>
-  1b1980:	e7c01002 	strb	r1, [r0, r2]
-  1b1984:	e59f3320 	ldr	r3, [pc, #800]	; 1b1cac <haltLoop$+0x4c>
-  1b1988:	e59f22f4 	ldr	r2, [pc, #756]	; 1b1c84 <haltLoop$+0x24>
-  1b198c:	e5823000 	str	r3, [r2]
-  1b1990:	e59f3318 	ldr	r3, [pc, #792]	; 1b1cb0 <haltLoop$+0x50>
-  1b1994:	e59f22ec 	ldr	r2, [pc, #748]	; 1b1c88 <haltLoop$+0x28>
-  1b1998:	e5823000 	str	r3, [r2]
-  1b199c:	e3a03060 	mov	r3, #96	; 0x60
-  1b19a0:	e59f22d4 	ldr	r2, [pc, #724]	; 1b1c7c <haltLoop$+0x1c>
-  1b19a4:	e5c23000 	strb	r3, [r2]
-  1b19a8:	e3a03040 	mov	r3, #64	; 0x40
-  1b19ac:	e59f52cc 	ldr	r5, [pc, #716]	; 1b1c80 <haltLoop$+0x20>
-  1b19b0:	e5c53000 	strb	r3, [r5]
-  1b19b4:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
-  1b19b8:	e1a0f004 	mov	pc, r4
+001b1914 <insertNewWBeam>:
+  1b1914:	e1a0400e 	mov	r4, lr
+  1b1918:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
+  1b191c:	e59f0598 	ldr	r0, [pc, #1432]	; 1b1ebc <haltLoop$+0x8>
+  1b1920:	e5d01001 	ldrb	r1, [r0, #1]
+  1b1924:	e3510001 	cmp	r1, #1
+  1b1928:	0a000161 	beq	1b1eb4 <haltLoop$>
+  1b192c:	e5d0100a 	ldrb	r1, [r0, #10]
+  1b1930:	e3510001 	cmp	r1, #1
+  1b1934:	0a00015e 	beq	1b1eb4 <haltLoop$>
+  1b1938:	e5d0100b 	ldrb	r1, [r0, #11]
+  1b193c:	e3510001 	cmp	r1, #1
+  1b1940:	0a00015b 	beq	1b1eb4 <haltLoop$>
+  1b1944:	e5d0100c 	ldrb	r1, [r0, #12]
+  1b1948:	e3510001 	cmp	r1, #1
+  1b194c:	0a000158 	beq	1b1eb4 <haltLoop$>
+  1b1950:	e59f0560 	ldr	r0, [pc, #1376]	; 1b1eb8 <haltLoop$+0x4>
+  1b1954:	e3a01001 	mov	r1, #1
+  1b1958:	e5c01000 	strb	r1, [r0]
+  1b195c:	e59f055c 	ldr	r0, [pc, #1372]	; 1b1ec0 <haltLoop$+0xc>
+  1b1960:	e3a0100a 	mov	r1, #10
+  1b1964:	e5c01000 	strb	r1, [r0]
+  1b1968:	e59f0554 	ldr	r0, [pc, #1364]	; 1b1ec4 <haltLoop$+0x10>
+  1b196c:	e3a0100b 	mov	r1, #11
+  1b1970:	e5c01000 	strb	r1, [r0]
+  1b1974:	e59f054c 	ldr	r0, [pc, #1356]	; 1b1ec8 <haltLoop$+0x14>
+  1b1978:	e3a0100c 	mov	r1, #12
+  1b197c:	e5c01000 	strb	r1, [r0]
+  1b1980:	e59f0544 	ldr	r0, [pc, #1348]	; 1b1ecc <haltLoop$+0x18>
+  1b1984:	e3a010ff 	mov	r1, #255	; 0xff
+  1b1988:	e5c01000 	strb	r1, [r0]
+  1b198c:	e3a0100a 	mov	r1, #10
+  1b1990:	e5c01001 	strb	r1, [r0, #1]
+  1b1994:	e3a0100b 	mov	r1, #11
+  1b1998:	e5c01002 	strb	r1, [r0, #2]
+  1b199c:	e3a0100c 	mov	r1, #12
+  1b19a0:	e5c01003 	strb	r1, [r0, #3]
+  1b19a4:	e3a01001 	mov	r1, #1
+  1b19a8:	e59f2508 	ldr	r2, [pc, #1288]	; 1b1eb8 <haltLoop$+0x4>
+  1b19ac:	e5d22000 	ldrb	r2, [r2]
+  1b19b0:	e59f0504 	ldr	r0, [pc, #1284]	; 1b1ebc <haltLoop$+0x8>
+  1b19b4:	e7c01002 	strb	r1, [r0, r2]
+  1b19b8:	e59f2500 	ldr	r2, [pc, #1280]	; 1b1ec0 <haltLoop$+0xc>
+  1b19bc:	e5d22000 	ldrb	r2, [r2]
+  1b19c0:	e59f04f4 	ldr	r0, [pc, #1268]	; 1b1ebc <haltLoop$+0x8>
+  1b19c4:	e7c01002 	strb	r1, [r0, r2]
+  1b19c8:	e59f24f4 	ldr	r2, [pc, #1268]	; 1b1ec4 <haltLoop$+0x10>
+  1b19cc:	e5d22000 	ldrb	r2, [r2]
+  1b19d0:	e59f04e4 	ldr	r0, [pc, #1252]	; 1b1ebc <haltLoop$+0x8>
+  1b19d4:	e7c01002 	strb	r1, [r0, r2]
+  1b19d8:	e59f24e8 	ldr	r2, [pc, #1256]	; 1b1ec8 <haltLoop$+0x14>
+  1b19dc:	e5d22000 	ldrb	r2, [r2]
+  1b19e0:	e59f04d4 	ldr	r0, [pc, #1236]	; 1b1ebc <haltLoop$+0x8>
+  1b19e4:	e7c01002 	strb	r1, [r0, r2]
+  1b19e8:	e59f350c 	ldr	r3, [pc, #1292]	; 1b1efc <haltLoop$+0x48>
+  1b19ec:	e59f24e8 	ldr	r2, [pc, #1256]	; 1b1edc <haltLoop$+0x28>
+  1b19f0:	e5823000 	str	r3, [r2]
+  1b19f4:	e59f3504 	ldr	r3, [pc, #1284]	; 1b1f00 <haltLoop$+0x4c>
+  1b19f8:	e59f24e0 	ldr	r2, [pc, #1248]	; 1b1ee0 <haltLoop$+0x2c>
+  1b19fc:	e5823000 	str	r3, [r2]
+  1b1a00:	e3a03060 	mov	r3, #96	; 0x60
+  1b1a04:	e59f24c8 	ldr	r2, [pc, #1224]	; 1b1ed4 <haltLoop$+0x20>
+  1b1a08:	e5c23000 	strb	r3, [r2]
+  1b1a0c:	e3a03040 	mov	r3, #64	; 0x40
+  1b1a10:	e59f54c0 	ldr	r5, [pc, #1216]	; 1b1ed8 <haltLoop$+0x24>
+  1b1a14:	e5c53000 	strb	r3, [r5]
+  1b1a18:	e3a05001 	mov	r5, #1
+  1b1a1c:	e59f34ac 	ldr	r3, [pc, #1196]	; 1b1ed0 <haltLoop$+0x1c>
+  1b1a20:	e5c35000 	strb	r5, [r3]
+  1b1a24:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
+  1b1a28:	e1a0f004 	mov	pc, r4
 
-001b19bc <insertNewLOBeam>:
-  1b19bc:	e1a0400e 	mov	r4, lr
-  1b19c0:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
-  1b19c4:	e59f0298 	ldr	r0, [pc, #664]	; 1b1c64 <haltLoop$+0x4>
-  1b19c8:	e3a01002 	mov	r1, #2
-  1b19cc:	e5c01000 	strb	r1, [r0]
-  1b19d0:	e59f0294 	ldr	r0, [pc, #660]	; 1b1c6c <haltLoop$+0xc>
-  1b19d4:	e3a0100a 	mov	r1, #10
-  1b19d8:	e5c01000 	strb	r1, [r0]
-  1b19dc:	e59f028c 	ldr	r0, [pc, #652]	; 1b1c70 <haltLoop$+0x10>
-  1b19e0:	e3a0100b 	mov	r1, #11
-  1b19e4:	e5c01000 	strb	r1, [r0]
-  1b19e8:	e59f0284 	ldr	r0, [pc, #644]	; 1b1c74 <haltLoop$+0x14>
-  1b19ec:	e3a0100c 	mov	r1, #12
-  1b19f0:	e5c01000 	strb	r1, [r0]
-  1b19f4:	e59f027c 	ldr	r0, [pc, #636]	; 1b1c78 <haltLoop$+0x18>
-  1b19f8:	e3a010ff 	mov	r1, #255	; 0xff
-  1b19fc:	e5c01000 	strb	r1, [r0]
-  1b1a00:	e3a0100a 	mov	r1, #10
-  1b1a04:	e5c01001 	strb	r1, [r0, #1]
-  1b1a08:	e3a0100b 	mov	r1, #11
-  1b1a0c:	e5c01002 	strb	r1, [r0, #2]
-  1b1a10:	e3a0100c 	mov	r1, #12
-  1b1a14:	e5c01003 	strb	r1, [r0, #3]
-  1b1a18:	e3a01001 	mov	r1, #1
-  1b1a1c:	e59f2240 	ldr	r2, [pc, #576]	; 1b1c64 <haltLoop$+0x4>
-  1b1a20:	e5d22000 	ldrb	r2, [r2]
-  1b1a24:	e59f023c 	ldr	r0, [pc, #572]	; 1b1c68 <haltLoop$+0x8>
-  1b1a28:	e7c01002 	strb	r1, [r0, r2]
-  1b1a2c:	e59f2238 	ldr	r2, [pc, #568]	; 1b1c6c <haltLoop$+0xc>
-  1b1a30:	e5d22000 	ldrb	r2, [r2]
-  1b1a34:	e59f022c 	ldr	r0, [pc, #556]	; 1b1c68 <haltLoop$+0x8>
-  1b1a38:	e7c01002 	strb	r1, [r0, r2]
-  1b1a3c:	e59f222c 	ldr	r2, [pc, #556]	; 1b1c70 <haltLoop$+0x10>
-  1b1a40:	e5d22000 	ldrb	r2, [r2]
-  1b1a44:	e59f021c 	ldr	r0, [pc, #540]	; 1b1c68 <haltLoop$+0x8>
-  1b1a48:	e7c01002 	strb	r1, [r0, r2]
-  1b1a4c:	e59f2220 	ldr	r2, [pc, #544]	; 1b1c74 <haltLoop$+0x14>
-  1b1a50:	e5d22000 	ldrb	r2, [r2]
-  1b1a54:	e59f020c 	ldr	r0, [pc, #524]	; 1b1c68 <haltLoop$+0x8>
-  1b1a58:	e7c01002 	strb	r1, [r0, r2]
-  1b1a5c:	e59f3250 	ldr	r3, [pc, #592]	; 1b1cb4 <haltLoop$+0x54>
-  1b1a60:	e59f221c 	ldr	r2, [pc, #540]	; 1b1c84 <haltLoop$+0x24>
-  1b1a64:	e5823000 	str	r3, [r2]
-  1b1a68:	e59f3248 	ldr	r3, [pc, #584]	; 1b1cb8 <haltLoop$+0x58>
-  1b1a6c:	e59f2214 	ldr	r2, [pc, #532]	; 1b1c88 <haltLoop$+0x28>
-  1b1a70:	e5823000 	str	r3, [r2]
-  1b1a74:	e3a03060 	mov	r3, #96	; 0x60
-  1b1a78:	e59f21fc 	ldr	r2, [pc, #508]	; 1b1c7c <haltLoop$+0x1c>
-  1b1a7c:	e5c23000 	strb	r3, [r2]
-  1b1a80:	e3a03040 	mov	r3, #64	; 0x40
-  1b1a84:	e59f51f4 	ldr	r5, [pc, #500]	; 1b1c80 <haltLoop$+0x20>
-  1b1a88:	e5c53000 	strb	r3, [r5]
-  1b1a8c:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
-  1b1a90:	e1a0f004 	mov	pc, r4
+001b1a2c <insertNewLBBeam>:
+  1b1a2c:	e1a0400e 	mov	r4, lr
+  1b1a30:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
+  1b1a34:	e59f0480 	ldr	r0, [pc, #1152]	; 1b1ebc <haltLoop$+0x8>
+  1b1a38:	e5d01000 	ldrb	r1, [r0]
+  1b1a3c:	e3510001 	cmp	r1, #1
+  1b1a40:	0a00011b 	beq	1b1eb4 <haltLoop$>
+  1b1a44:	e5d0100a 	ldrb	r1, [r0, #10]
+  1b1a48:	e3510001 	cmp	r1, #1
+  1b1a4c:	0a000118 	beq	1b1eb4 <haltLoop$>
+  1b1a50:	e5d0100b 	ldrb	r1, [r0, #11]
+  1b1a54:	e3510001 	cmp	r1, #1
+  1b1a58:	0a000115 	beq	1b1eb4 <haltLoop$>
+  1b1a5c:	e5d0100c 	ldrb	r1, [r0, #12]
+  1b1a60:	e3510001 	cmp	r1, #1
+  1b1a64:	0a000112 	beq	1b1eb4 <haltLoop$>
+  1b1a68:	e59f0448 	ldr	r0, [pc, #1096]	; 1b1eb8 <haltLoop$+0x4>
+  1b1a6c:	e3a01000 	mov	r1, #0
+  1b1a70:	e5c01000 	strb	r1, [r0]
+  1b1a74:	e59f0444 	ldr	r0, [pc, #1092]	; 1b1ec0 <haltLoop$+0xc>
+  1b1a78:	e3a0100a 	mov	r1, #10
+  1b1a7c:	e5c01000 	strb	r1, [r0]
+  1b1a80:	e59f043c 	ldr	r0, [pc, #1084]	; 1b1ec4 <haltLoop$+0x10>
+  1b1a84:	e3a0100b 	mov	r1, #11
+  1b1a88:	e5c01000 	strb	r1, [r0]
+  1b1a8c:	e59f0434 	ldr	r0, [pc, #1076]	; 1b1ec8 <haltLoop$+0x14>
+  1b1a90:	e3a0100c 	mov	r1, #12
+  1b1a94:	e5c01000 	strb	r1, [r0]
+  1b1a98:	e59f042c 	ldr	r0, [pc, #1068]	; 1b1ecc <haltLoop$+0x18>
+  1b1a9c:	e3a010ff 	mov	r1, #255	; 0xff
+  1b1aa0:	e5c01000 	strb	r1, [r0]
+  1b1aa4:	e3a0100a 	mov	r1, #10
+  1b1aa8:	e5c01001 	strb	r1, [r0, #1]
+  1b1aac:	e3a0100b 	mov	r1, #11
+  1b1ab0:	e5c01002 	strb	r1, [r0, #2]
+  1b1ab4:	e3a0100c 	mov	r1, #12
+  1b1ab8:	e5c01003 	strb	r1, [r0, #3]
+  1b1abc:	e3a01001 	mov	r1, #1
+  1b1ac0:	e59f23f0 	ldr	r2, [pc, #1008]	; 1b1eb8 <haltLoop$+0x4>
+  1b1ac4:	e5d22000 	ldrb	r2, [r2]
+  1b1ac8:	e59f03ec 	ldr	r0, [pc, #1004]	; 1b1ebc <haltLoop$+0x8>
+  1b1acc:	e7c01002 	strb	r1, [r0, r2]
+  1b1ad0:	e59f23e8 	ldr	r2, [pc, #1000]	; 1b1ec0 <haltLoop$+0xc>
+  1b1ad4:	e5d22000 	ldrb	r2, [r2]
+  1b1ad8:	e59f03dc 	ldr	r0, [pc, #988]	; 1b1ebc <haltLoop$+0x8>
+  1b1adc:	e7c01002 	strb	r1, [r0, r2]
+  1b1ae0:	e59f23dc 	ldr	r2, [pc, #988]	; 1b1ec4 <haltLoop$+0x10>
+  1b1ae4:	e5d22000 	ldrb	r2, [r2]
+  1b1ae8:	e59f03cc 	ldr	r0, [pc, #972]	; 1b1ebc <haltLoop$+0x8>
+  1b1aec:	e7c01002 	strb	r1, [r0, r2]
+  1b1af0:	e59f23d0 	ldr	r2, [pc, #976]	; 1b1ec8 <haltLoop$+0x14>
+  1b1af4:	e5d22000 	ldrb	r2, [r2]
+  1b1af8:	e59f03bc 	ldr	r0, [pc, #956]	; 1b1ebc <haltLoop$+0x8>
+  1b1afc:	e7c01002 	strb	r1, [r0, r2]
+  1b1b00:	e59f33fc 	ldr	r3, [pc, #1020]	; 1b1f04 <haltLoop$+0x50>
+  1b1b04:	e59f23d0 	ldr	r2, [pc, #976]	; 1b1edc <haltLoop$+0x28>
+  1b1b08:	e5823000 	str	r3, [r2]
+  1b1b0c:	e59f33f4 	ldr	r3, [pc, #1012]	; 1b1f08 <haltLoop$+0x54>
+  1b1b10:	e59f23c8 	ldr	r2, [pc, #968]	; 1b1ee0 <haltLoop$+0x2c>
+  1b1b14:	e5823000 	str	r3, [r2]
+  1b1b18:	e3a03060 	mov	r3, #96	; 0x60
+  1b1b1c:	e59f23b0 	ldr	r2, [pc, #944]	; 1b1ed4 <haltLoop$+0x20>
+  1b1b20:	e5c23000 	strb	r3, [r2]
+  1b1b24:	e3a03040 	mov	r3, #64	; 0x40
+  1b1b28:	e59f53a8 	ldr	r5, [pc, #936]	; 1b1ed8 <haltLoop$+0x24>
+  1b1b2c:	e5c53000 	strb	r3, [r5]
+  1b1b30:	e3a05000 	mov	r5, #0
+  1b1b34:	e59f3394 	ldr	r3, [pc, #916]	; 1b1ed0 <haltLoop$+0x1c>
+  1b1b38:	e5c35000 	strb	r5, [r3]
+  1b1b3c:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
+  1b1b40:	e1a0f004 	mov	pc, r4
 
-001b1a94 <insertNewSRBeam>:
-  1b1a94:	e1a0400e 	mov	r4, lr
-  1b1a98:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
-  1b1a9c:	e59f01c0 	ldr	r0, [pc, #448]	; 1b1c64 <haltLoop$+0x4>
-  1b1aa0:	e3a01000 	mov	r1, #0
-  1b1aa4:	e5c01000 	strb	r1, [r0]
-  1b1aa8:	e59f01bc 	ldr	r0, [pc, #444]	; 1b1c6c <haltLoop$+0xc>
-  1b1aac:	e3a01001 	mov	r1, #1
-  1b1ab0:	e5c01000 	strb	r1, [r0]
-  1b1ab4:	e59f01b4 	ldr	r0, [pc, #436]	; 1b1c70 <haltLoop$+0x10>
-  1b1ab8:	e3a0100b 	mov	r1, #11
-  1b1abc:	e5c01000 	strb	r1, [r0]
-  1b1ac0:	e59f01ac 	ldr	r0, [pc, #428]	; 1b1c74 <haltLoop$+0x14>
-  1b1ac4:	e3a0100c 	mov	r1, #12
-  1b1ac8:	e5c01000 	strb	r1, [r0]
-  1b1acc:	e59f01a4 	ldr	r0, [pc, #420]	; 1b1c78 <haltLoop$+0x18>
-  1b1ad0:	e3a01000 	mov	r1, #0
-  1b1ad4:	e5c01000 	strb	r1, [r0]
-  1b1ad8:	e3a010ff 	mov	r1, #255	; 0xff
-  1b1adc:	e5c01001 	strb	r1, [r0, #1]
-  1b1ae0:	e3a0100b 	mov	r1, #11
-  1b1ae4:	e5c01002 	strb	r1, [r0, #2]
-  1b1ae8:	e3a0100c 	mov	r1, #12
-  1b1aec:	e5c01003 	strb	r1, [r0, #3]
-  1b1af0:	e3a01001 	mov	r1, #1
-  1b1af4:	e59f2168 	ldr	r2, [pc, #360]	; 1b1c64 <haltLoop$+0x4>
-  1b1af8:	e5d22000 	ldrb	r2, [r2]
-  1b1afc:	e59f0164 	ldr	r0, [pc, #356]	; 1b1c68 <haltLoop$+0x8>
-  1b1b00:	e7c01002 	strb	r1, [r0, r2]
-  1b1b04:	e59f2160 	ldr	r2, [pc, #352]	; 1b1c6c <haltLoop$+0xc>
-  1b1b08:	e5d22000 	ldrb	r2, [r2]
-  1b1b0c:	e59f0154 	ldr	r0, [pc, #340]	; 1b1c68 <haltLoop$+0x8>
-  1b1b10:	e7c01002 	strb	r1, [r0, r2]
-  1b1b14:	e59f2154 	ldr	r2, [pc, #340]	; 1b1c70 <haltLoop$+0x10>
-  1b1b18:	e5d22000 	ldrb	r2, [r2]
-  1b1b1c:	e59f0144 	ldr	r0, [pc, #324]	; 1b1c68 <haltLoop$+0x8>
-  1b1b20:	e7c01002 	strb	r1, [r0, r2]
-  1b1b24:	e59f2148 	ldr	r2, [pc, #328]	; 1b1c74 <haltLoop$+0x14>
-  1b1b28:	e5d22000 	ldrb	r2, [r2]
-  1b1b2c:	e59f0134 	ldr	r0, [pc, #308]	; 1b1c68 <haltLoop$+0x8>
-  1b1b30:	e7c01002 	strb	r1, [r0, r2]
-  1b1b34:	e59f3180 	ldr	r3, [pc, #384]	; 1b1cbc <haltLoop$+0x5c>
-  1b1b38:	e59f2144 	ldr	r2, [pc, #324]	; 1b1c84 <haltLoop$+0x24>
-  1b1b3c:	e5823000 	str	r3, [r2]
-  1b1b40:	e59f3178 	ldr	r3, [pc, #376]	; 1b1cc0 <haltLoop$+0x60>
-  1b1b44:	e59f213c 	ldr	r2, [pc, #316]	; 1b1c88 <haltLoop$+0x28>
-  1b1b48:	e5823000 	str	r3, [r2]
-  1b1b4c:	e3a03060 	mov	r3, #96	; 0x60
-  1b1b50:	e59f2124 	ldr	r2, [pc, #292]	; 1b1c7c <haltLoop$+0x1c>
-  1b1b54:	e5c23000 	strb	r3, [r2]
-  1b1b58:	e3a03040 	mov	r3, #64	; 0x40
-  1b1b5c:	e59f511c 	ldr	r5, [pc, #284]	; 1b1c80 <haltLoop$+0x20>
-  1b1b60:	e5c53000 	strb	r3, [r5]
-  1b1b64:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
-  1b1b68:	e1a0f004 	mov	pc, r4
-
-001b1b6c <xorShift>:
-  1b1b6c:	e1a0500e 	mov	r5, lr
-  1b1b70:	e52d5004 	push	{r5}		; (str r5, [sp, #-4]!)
-  1b1b74:	e2888001 	add	r8, r8, #1
-  1b1b78:	e59f0144 	ldr	r0, [pc, #324]	; 1b1cc4 <haltLoop$+0x64>
-  1b1b7c:	e5d00000 	ldrb	r0, [r0]
-  1b1b80:	e1a01000 	mov	r1, r0
-  1b1b84:	e1a00380 	lsl	r0, r0, #7
-  1b1b88:	e0211000 	eor	r1, r1, r0
-  1b1b8c:	e1a02001 	mov	r2, r1
-  1b1b90:	e1a012a1 	lsr	r1, r1, #5
-  1b1b94:	e0211002 	eor	r1, r1, r2
-  1b1b98:	e1a02001 	mov	r2, r1
-  1b1b9c:	e1a02182 	lsl	r2, r2, #3
-  1b1ba0:	e0211002 	eor	r1, r1, r2
-  1b1ba4:	e1a0a001 	mov	sl, r1
-  1b1ba8:	e59f0114 	ldr	r0, [pc, #276]	; 1b1cc4 <haltLoop$+0x64>
+001b1b44 <insertNewLOBeam>:
+  1b1b44:	e1a0400e 	mov	r4, lr
+  1b1b48:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
+  1b1b4c:	e59f0368 	ldr	r0, [pc, #872]	; 1b1ebc <haltLoop$+0x8>
+  1b1b50:	e5d01002 	ldrb	r1, [r0, #2]
+  1b1b54:	e3510001 	cmp	r1, #1
+  1b1b58:	0a0000d5 	beq	1b1eb4 <haltLoop$>
+  1b1b5c:	e5d0100a 	ldrb	r1, [r0, #10]
+  1b1b60:	e3510001 	cmp	r1, #1
+  1b1b64:	0a0000d2 	beq	1b1eb4 <haltLoop$>
+  1b1b68:	e5d0100b 	ldrb	r1, [r0, #11]
+  1b1b6c:	e3510001 	cmp	r1, #1
+  1b1b70:	0a0000cf 	beq	1b1eb4 <haltLoop$>
+  1b1b74:	e5d0100c 	ldrb	r1, [r0, #12]
+  1b1b78:	e3510001 	cmp	r1, #1
+  1b1b7c:	0a0000cc 	beq	1b1eb4 <haltLoop$>
+  1b1b80:	e59f0330 	ldr	r0, [pc, #816]	; 1b1eb8 <haltLoop$+0x4>
+  1b1b84:	e3a01002 	mov	r1, #2
+  1b1b88:	e5c01000 	strb	r1, [r0]
+  1b1b8c:	e59f032c 	ldr	r0, [pc, #812]	; 1b1ec0 <haltLoop$+0xc>
+  1b1b90:	e3a0100a 	mov	r1, #10
+  1b1b94:	e5c01000 	strb	r1, [r0]
+  1b1b98:	e59f0324 	ldr	r0, [pc, #804]	; 1b1ec4 <haltLoop$+0x10>
+  1b1b9c:	e3a0100b 	mov	r1, #11
+  1b1ba0:	e5c01000 	strb	r1, [r0]
+  1b1ba4:	e59f031c 	ldr	r0, [pc, #796]	; 1b1ec8 <haltLoop$+0x14>
+  1b1ba8:	e3a0100c 	mov	r1, #12
   1b1bac:	e5c01000 	strb	r1, [r0]
+  1b1bb0:	e59f0314 	ldr	r0, [pc, #788]	; 1b1ecc <haltLoop$+0x18>
+  1b1bb4:	e3a010ff 	mov	r1, #255	; 0xff
+  1b1bb8:	e5c01000 	strb	r1, [r0]
+  1b1bbc:	e3a0100a 	mov	r1, #10
+  1b1bc0:	e5c01001 	strb	r1, [r0, #1]
+  1b1bc4:	e3a0100b 	mov	r1, #11
+  1b1bc8:	e5c01002 	strb	r1, [r0, #2]
+  1b1bcc:	e3a0100c 	mov	r1, #12
+  1b1bd0:	e5c01003 	strb	r1, [r0, #3]
+  1b1bd4:	e3a01001 	mov	r1, #1
+  1b1bd8:	e59f22d8 	ldr	r2, [pc, #728]	; 1b1eb8 <haltLoop$+0x4>
+  1b1bdc:	e5d22000 	ldrb	r2, [r2]
+  1b1be0:	e59f02d4 	ldr	r0, [pc, #724]	; 1b1ebc <haltLoop$+0x8>
+  1b1be4:	e7c01002 	strb	r1, [r0, r2]
+  1b1be8:	e59f22d0 	ldr	r2, [pc, #720]	; 1b1ec0 <haltLoop$+0xc>
+  1b1bec:	e5d22000 	ldrb	r2, [r2]
+  1b1bf0:	e59f02c4 	ldr	r0, [pc, #708]	; 1b1ebc <haltLoop$+0x8>
+  1b1bf4:	e7c01002 	strb	r1, [r0, r2]
+  1b1bf8:	e59f22c4 	ldr	r2, [pc, #708]	; 1b1ec4 <haltLoop$+0x10>
+  1b1bfc:	e5d22000 	ldrb	r2, [r2]
+  1b1c00:	e59f02b4 	ldr	r0, [pc, #692]	; 1b1ebc <haltLoop$+0x8>
+  1b1c04:	e7c01002 	strb	r1, [r0, r2]
+  1b1c08:	e59f22b8 	ldr	r2, [pc, #696]	; 1b1ec8 <haltLoop$+0x14>
+  1b1c0c:	e5d22000 	ldrb	r2, [r2]
+  1b1c10:	e59f02a4 	ldr	r0, [pc, #676]	; 1b1ebc <haltLoop$+0x8>
+  1b1c14:	e7c01002 	strb	r1, [r0, r2]
+  1b1c18:	e59f32ec 	ldr	r3, [pc, #748]	; 1b1f0c <haltLoop$+0x58>
+  1b1c1c:	e59f22b8 	ldr	r2, [pc, #696]	; 1b1edc <haltLoop$+0x28>
+  1b1c20:	e5823000 	str	r3, [r2]
+  1b1c24:	e59f32e4 	ldr	r3, [pc, #740]	; 1b1f10 <haltLoop$+0x5c>
+  1b1c28:	e59f22b0 	ldr	r2, [pc, #688]	; 1b1ee0 <haltLoop$+0x2c>
+  1b1c2c:	e5823000 	str	r3, [r2]
+  1b1c30:	e3a03060 	mov	r3, #96	; 0x60
+  1b1c34:	e59f2298 	ldr	r2, [pc, #664]	; 1b1ed4 <haltLoop$+0x20>
+  1b1c38:	e5c23000 	strb	r3, [r2]
+  1b1c3c:	e3a03040 	mov	r3, #64	; 0x40
+  1b1c40:	e59f5290 	ldr	r5, [pc, #656]	; 1b1ed8 <haltLoop$+0x24>
+  1b1c44:	e5c53000 	strb	r3, [r5]
+  1b1c48:	e3a05001 	mov	r5, #1
+  1b1c4c:	e59f327c 	ldr	r3, [pc, #636]	; 1b1ed0 <haltLoop$+0x1c>
+  1b1c50:	e5c35000 	strb	r5, [r3]
+  1b1c54:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
+  1b1c58:	e1a0f004 	mov	pc, r4
 
-001b1bb0 <randModLoop>:
-  1b1bb0:	e1510008 	cmp	r1, r8
-  1b1bb4:	da000001 	ble	1b1bc0 <finishRand>
-  1b1bb8:	e0411008 	sub	r1, r1, r8
-  1b1bbc:	eafffffb 	b	1b1bb0 <randModLoop>
+001b1c5c <insertNewSRBeam>:
+  1b1c5c:	e1a0400e 	mov	r4, lr
+  1b1c60:	e52d4004 	push	{r4}		; (str r4, [sp, #-4]!)
+  1b1c64:	e59f0250 	ldr	r0, [pc, #592]	; 1b1ebc <haltLoop$+0x8>
+  1b1c68:	e5d01000 	ldrb	r1, [r0]
+  1b1c6c:	e3510001 	cmp	r1, #1
+  1b1c70:	0a00008f 	beq	1b1eb4 <haltLoop$>
+  1b1c74:	e5d01001 	ldrb	r1, [r0, #1]
+  1b1c78:	e3510001 	cmp	r1, #1
+  1b1c7c:	0a00008c 	beq	1b1eb4 <haltLoop$>
+  1b1c80:	e5d0100b 	ldrb	r1, [r0, #11]
+  1b1c84:	e3510001 	cmp	r1, #1
+  1b1c88:	0a000089 	beq	1b1eb4 <haltLoop$>
+  1b1c8c:	e5d0100c 	ldrb	r1, [r0, #12]
+  1b1c90:	e3510001 	cmp	r1, #1
+  1b1c94:	0a000086 	beq	1b1eb4 <haltLoop$>
+  1b1c98:	e59f0218 	ldr	r0, [pc, #536]	; 1b1eb8 <haltLoop$+0x4>
+  1b1c9c:	e3a01000 	mov	r1, #0
+  1b1ca0:	e5c01000 	strb	r1, [r0]
+  1b1ca4:	e59f0214 	ldr	r0, [pc, #532]	; 1b1ec0 <haltLoop$+0xc>
+  1b1ca8:	e3a01001 	mov	r1, #1
+  1b1cac:	e5c01000 	strb	r1, [r0]
+  1b1cb0:	e59f020c 	ldr	r0, [pc, #524]	; 1b1ec4 <haltLoop$+0x10>
+  1b1cb4:	e3a0100b 	mov	r1, #11
+  1b1cb8:	e5c01000 	strb	r1, [r0]
+  1b1cbc:	e59f0204 	ldr	r0, [pc, #516]	; 1b1ec8 <haltLoop$+0x14>
+  1b1cc0:	e3a0100c 	mov	r1, #12
+  1b1cc4:	e5c01000 	strb	r1, [r0]
+  1b1cc8:	e59f01fc 	ldr	r0, [pc, #508]	; 1b1ecc <haltLoop$+0x18>
+  1b1ccc:	e3a01000 	mov	r1, #0
+  1b1cd0:	e5c01000 	strb	r1, [r0]
+  1b1cd4:	e3a010ff 	mov	r1, #255	; 0xff
+  1b1cd8:	e5c01001 	strb	r1, [r0, #1]
+  1b1cdc:	e3a0100b 	mov	r1, #11
+  1b1ce0:	e5c01002 	strb	r1, [r0, #2]
+  1b1ce4:	e3a0100c 	mov	r1, #12
+  1b1ce8:	e5c01003 	strb	r1, [r0, #3]
+  1b1cec:	e3a01001 	mov	r1, #1
+  1b1cf0:	e59f21c0 	ldr	r2, [pc, #448]	; 1b1eb8 <haltLoop$+0x4>
+  1b1cf4:	e5d22000 	ldrb	r2, [r2]
+  1b1cf8:	e59f01bc 	ldr	r0, [pc, #444]	; 1b1ebc <haltLoop$+0x8>
+  1b1cfc:	e7c01002 	strb	r1, [r0, r2]
+  1b1d00:	e59f21b8 	ldr	r2, [pc, #440]	; 1b1ec0 <haltLoop$+0xc>
+  1b1d04:	e5d22000 	ldrb	r2, [r2]
+  1b1d08:	e59f01ac 	ldr	r0, [pc, #428]	; 1b1ebc <haltLoop$+0x8>
+  1b1d0c:	e7c01002 	strb	r1, [r0, r2]
+  1b1d10:	e59f21ac 	ldr	r2, [pc, #428]	; 1b1ec4 <haltLoop$+0x10>
+  1b1d14:	e5d22000 	ldrb	r2, [r2]
+  1b1d18:	e59f019c 	ldr	r0, [pc, #412]	; 1b1ebc <haltLoop$+0x8>
+  1b1d1c:	e7c01002 	strb	r1, [r0, r2]
+  1b1d20:	e59f21a0 	ldr	r2, [pc, #416]	; 1b1ec8 <haltLoop$+0x14>
+  1b1d24:	e5d22000 	ldrb	r2, [r2]
+  1b1d28:	e59f018c 	ldr	r0, [pc, #396]	; 1b1ebc <haltLoop$+0x8>
+  1b1d2c:	e7c01002 	strb	r1, [r0, r2]
+  1b1d30:	e59f31dc 	ldr	r3, [pc, #476]	; 1b1f14 <haltLoop$+0x60>
+  1b1d34:	e59f21a0 	ldr	r2, [pc, #416]	; 1b1edc <haltLoop$+0x28>
+  1b1d38:	e5823000 	str	r3, [r2]
+  1b1d3c:	e59f31d4 	ldr	r3, [pc, #468]	; 1b1f18 <haltLoop$+0x64>
+  1b1d40:	e59f2198 	ldr	r2, [pc, #408]	; 1b1ee0 <haltLoop$+0x2c>
+  1b1d44:	e5823000 	str	r3, [r2]
+  1b1d48:	e3a03060 	mov	r3, #96	; 0x60
+  1b1d4c:	e59f2180 	ldr	r2, [pc, #384]	; 1b1ed4 <haltLoop$+0x20>
+  1b1d50:	e5c23000 	strb	r3, [r2]
+  1b1d54:	e3a03040 	mov	r3, #64	; 0x40
+  1b1d58:	e59f5178 	ldr	r5, [pc, #376]	; 1b1ed8 <haltLoop$+0x24>
+  1b1d5c:	e5c53000 	strb	r3, [r5]
+  1b1d60:	e3a05000 	mov	r5, #0
+  1b1d64:	e59f3164 	ldr	r3, [pc, #356]	; 1b1ed0 <haltLoop$+0x1c>
+  1b1d68:	e5c35000 	strb	r5, [r3]
+  1b1d6c:	e49d4004 	pop	{r4}		; (ldr r4, [sp], #4)
+  1b1d70:	e1a0f004 	mov	pc, r4
 
-001b1bc0 <finishRand>:
-  1b1bc0:	e2411001 	sub	r1, r1, #1
-  1b1bc4:	e49d5004 	pop	{r5}		; (ldr r5, [sp], #4)
-  1b1bc8:	e1a0f005 	mov	pc, r5
+001b1d74 <xorShift>:
+  1b1d74:	e1a0500e 	mov	r5, lr
+  1b1d78:	e52d5004 	push	{r5}		; (str r5, [sp, #-4]!)
+  1b1d7c:	e2888001 	add	r8, r8, #1
+  1b1d80:	e59f0194 	ldr	r0, [pc, #404]	; 1b1f1c <haltLoop$+0x68>
+  1b1d84:	e5d00000 	ldrb	r0, [r0]
+  1b1d88:	e1a01000 	mov	r1, r0
+  1b1d8c:	e1a00380 	lsl	r0, r0, #7
+  1b1d90:	e0211000 	eor	r1, r1, r0
+  1b1d94:	e1a02001 	mov	r2, r1
+  1b1d98:	e1a012a1 	lsr	r1, r1, #5
+  1b1d9c:	e0211002 	eor	r1, r1, r2
+  1b1da0:	e1a02001 	mov	r2, r1
+  1b1da4:	e1a02182 	lsl	r2, r2, #3
+  1b1da8:	e0211002 	eor	r1, r1, r2
+  1b1dac:	e59f0168 	ldr	r0, [pc, #360]	; 1b1f1c <haltLoop$+0x68>
+  1b1db0:	e5c01000 	strb	r1, [r0]
 
-001b1bcc <insertRandomBlock>:
-  1b1bcc:	e1a0500e 	mov	r5, lr
-  1b1bd0:	e52d5004 	push	{r5}		; (str r5, [sp, #-4]!)
-  1b1bd4:	e3a08004 	mov	r8, #4
-  1b1bd8:	ebffffe3 	bl	1b1b6c <xorShift>
-  1b1bdc:	e1a0b001 	mov	fp, r1
-  1b1be0:	e3510000 	cmp	r1, #0
-  1b1be4:	0a000007 	beq	1b1c08 <block0>
-  1b1be8:	e3510001 	cmp	r1, #1
-  1b1bec:	0a000007 	beq	1b1c10 <block1>
-  1b1bf0:	e3510002 	cmp	r1, #2
-  1b1bf4:	0a000007 	beq	1b1c18 <block2>
-  1b1bf8:	e3510003 	cmp	r1, #3
-  1b1bfc:	0a000007 	beq	1b1c20 <block3>
-  1b1c00:	e3510004 	cmp	r1, #4
-  1b1c04:	0a000005 	beq	1b1c20 <block3>
+001b1db4 <randModLoop>:
+  1b1db4:	e1510008 	cmp	r1, r8
+  1b1db8:	da000001 	ble	1b1dc4 <finishRand>
+  1b1dbc:	e0411008 	sub	r1, r1, r8
+  1b1dc0:	eafffffb 	b	1b1db4 <randModLoop>
 
-001b1c08 <block0>:
-  1b1c08:	ebffffa1 	bl	1b1a94 <insertNewSRBeam>
-  1b1c0c:	ea000007 	b	1b1c30 <finishRandInsert>
+001b1dc4 <finishRand>:
+  1b1dc4:	e2411001 	sub	r1, r1, #1
+  1b1dc8:	e49d5004 	pop	{r5}		; (ldr r5, [sp], #4)
+  1b1dcc:	e1a0f005 	mov	pc, r5
 
-001b1c10 <block1>:
-  1b1c10:	ebffff69 	bl	1b19bc <insertNewLOBeam>
-  1b1c14:	ea000005 	b	1b1c30 <finishRandInsert>
+001b1dd0 <setSeed>:
+  1b1dd0:	e1a0500e 	mov	r5, lr
+  1b1dd4:	e52d5004 	push	{r5}		; (str r5, [sp, #-4]!)
+  1b1dd8:	e59f113c 	ldr	r1, [pc, #316]	; 1b1f1c <haltLoop$+0x68>
+  1b1ddc:	e59f013c 	ldr	r0, [pc, #316]	; 1b1f20 <haltLoop$+0x6c>
+  1b1de0:	e1d020b4 	ldrh	r2, [r0, #4]
+  1b1de4:	e1c120b0 	strh	r2, [r1]
+  1b1de8:	e49d5004 	pop	{r5}		; (ldr r5, [sp], #4)
+  1b1dec:	e1a0f005 	mov	pc, r5
 
-001b1c18 <block2>:
-  1b1c18:	ebffff31 	bl	1b18e4 <insertNewLBBeam>
-  1b1c1c:	ea000003 	b	1b1c30 <finishRandInsert>
+001b1df0 <insertRandomBlock>:
+  1b1df0:	e1a0500e 	mov	r5, lr
+  1b1df4:	e52d5004 	push	{r5}		; (str r5, [sp, #-4]!)
+  1b1df8:	e3a08007 	mov	r8, #7
+  1b1dfc:	ebffffdc 	bl	1b1d74 <xorShift>
+  1b1e00:	e1a0b001 	mov	fp, r1
+  1b1e04:	e3510000 	cmp	r1, #0
+  1b1e08:	0a00000d 	beq	1b1e44 <block0>
+  1b1e0c:	e3510001 	cmp	r1, #1
+  1b1e10:	0a00000d 	beq	1b1e4c <block1>
+  1b1e14:	e3510002 	cmp	r1, #2
+  1b1e18:	0a00000d 	beq	1b1e54 <block2>
+  1b1e1c:	e3510003 	cmp	r1, #3
+  1b1e20:	0a00000d 	beq	1b1e5c <block3>
+  1b1e24:	e3510004 	cmp	r1, #4
+  1b1e28:	0a00000d 	beq	1b1e64 <block4>
+  1b1e2c:	e3510005 	cmp	r1, #5
+  1b1e30:	0a00000d 	beq	1b1e6c <block5>
+  1b1e34:	e3510006 	cmp	r1, #6
+  1b1e38:	0a00000d 	beq	1b1e74 <block6>
+  1b1e3c:	e3510007 	cmp	r1, #7
+  1b1e40:	0a00000d 	beq	1b1e7c <block7>
 
-001b1c20 <block3>:
-  1b1c20:	ebffff9b 	bl	1b1a94 <insertNewSRBeam>
-  1b1c24:	ea000001 	b	1b1c30 <finishRandInsert>
+001b1e44 <block0>:
+  1b1e44:	ebffff84 	bl	1b1c5c <insertNewSRBeam>
+  1b1e48:	ea00000d 	b	1b1e84 <finishRandInsert>
 
-001b1c28 <block4>:
-  1b1c28:	ebfffef7 	bl	1b180c <insertNewWBeam>
-  1b1c2c:	eaffffff 	b	1b1c30 <finishRandInsert>
+001b1e4c <block1>:
+  1b1e4c:	ebffff3c 	bl	1b1b44 <insertNewLOBeam>
+  1b1e50:	ea00000b 	b	1b1e84 <finishRandInsert>
 
-001b1c30 <finishRandInsert>:
-  1b1c30:	e49d5004 	pop	{r5}		; (ldr r5, [sp], #4)
-  1b1c34:	e1a0f005 	mov	pc, r5
+001b1e54 <block2>:
+  1b1e54:	ebfffef4 	bl	1b1a2c <insertNewLBBeam>
+  1b1e58:	ea000009 	b	1b1e84 <finishRandInsert>
 
-001b1c38 <drawIntroScreen>:
-  1b1c38:	e1a0300e 	mov	r3, lr
-  1b1c3c:	e52d3004 	push	{r3}		; (str r3, [sp, #-4]!)
-  1b1c40:	e59f3080 	ldr	r3, [pc, #128]	; 1b1cc8 <haltLoop$+0x68>
-  1b1c44:	e3a01000 	mov	r1, #0
-  1b1c48:	e3a00000 	mov	r0, #0
-  1b1c4c:	e3a04b01 	mov	r4, #1024	; 0x400
-  1b1c50:	e3a05c03 	mov	r5, #768	; 0x300
-  1b1c54:	ebfffca5 	bl	1b0ef0 <drawImage>
-  1b1c58:	e49d3004 	pop	{r3}		; (ldr r3, [sp], #4)
-  1b1c5c:	e1a0f003 	mov	pc, r3
+001b1e5c <block3>:
+  1b1e5c:	ebffff7e 	bl	1b1c5c <insertNewSRBeam>
+  1b1e60:	ea000007 	b	1b1e84 <finishRandInsert>
 
-001b1c60 <haltLoop$>:
-  1b1c60:	eafffffe 	b	1b1c60 <haltLoop$>
-  1b1c64:	001b0d5c 	.word	0x001b0d5c
-  1b1c68:	001b0c94 	.word	0x001b0c94
-  1b1c6c:	001b0d5d 	.word	0x001b0d5d
-  1b1c70:	001b0d5e 	.word	0x001b0d5e
-  1b1c74:	001b0d5f 	.word	0x001b0d5f
-  1b1c78:	001b0d60 	.word	0x001b0d60
-  1b1c7c:	001b0d6c 	.word	0x001b0d6c
-  1b1c80:	001b0d6d 	.word	0x001b0d6d
-  1b1c84:	001b0d64 	.word	0x001b0d64
-  1b1c88:	001b0d68 	.word	0x001b0d68
-  1b1c8c:	0018ac94 	.word	0x0018ac94
-  1b1c90:	0018cc94 	.word	0x0018cc94
-  1b1c94:	0018ec94 	.word	0x0018ec94
-  1b1c98:	00191c94 	.word	0x00191c94
-  1b1c9c:	0019ac94 	.word	0x0019ac94
-  1b1ca0:	0019cc94 	.word	0x0019cc94
-  1b1ca4:	0019ec94 	.word	0x0019ec94
-  1b1ca8:	001a1c94 	.word	0x001a1c94
-  1b1cac:	001a4c94 	.word	0x001a4c94
-  1b1cb0:	001a7c94 	.word	0x001a7c94
-  1b1cb4:	001aac94 	.word	0x001aac94
-  1b1cb8:	001adc94 	.word	0x001adc94
-  1b1cbc:	00194c94 	.word	0x00194c94
-  1b1cc0:	00197c94 	.word	0x00197c94
-  1b1cc4:	001b0d6e 	.word	0x001b0d6e
-  1b1cc8:	0000ac88 	.word	0x0000ac88
+001b1e64 <block4>:
+  1b1e64:	ebfffeaa 	bl	1b1914 <insertNewWBeam>
+  1b1e68:	ea000005 	b	1b1e84 <finishRandInsert>
+
+001b1e6c <block5>:
+  1b1e6c:	ebfffe1c 	bl	1b16e4 <insertNewSBeam>
+  1b1e70:	ea000003 	b	1b1e84 <finishRandInsert>
+
+001b1e74 <block6>:
+  1b1e74:	ebfffdd4 	bl	1b15cc <insertNewIBeam>
+  1b1e78:	ea000001 	b	1b1e84 <finishRandInsert>
+
+001b1e7c <block7>:
+  1b1e7c:	ebfffe5e 	bl	1b17fc <insertNewOBeam>
+  1b1e80:	eaffffff 	b	1b1e84 <finishRandInsert>
+
+001b1e84 <finishRandInsert>:
+  1b1e84:	e49d5004 	pop	{r5}		; (ldr r5, [sp], #4)
+  1b1e88:	e1a0f005 	mov	pc, r5
+
+001b1e8c <drawIntroScreen>:
+  1b1e8c:	e1a0300e 	mov	r3, lr
+  1b1e90:	e52d3004 	push	{r3}		; (str r3, [sp, #-4]!)
+  1b1e94:	e59f3088 	ldr	r3, [pc, #136]	; 1b1f24 <haltLoop$+0x70>
+  1b1e98:	e3a01000 	mov	r1, #0
+  1b1e9c:	e3a00000 	mov	r0, #0
+  1b1ea0:	e3a04b01 	mov	r4, #1024	; 0x400
+  1b1ea4:	e3a05c03 	mov	r5, #768	; 0x300
+  1b1ea8:	ebfffc10 	bl	1b0ef0 <drawImage>
+  1b1eac:	e49d3004 	pop	{r3}		; (ldr r3, [sp], #4)
+  1b1eb0:	e1a0f003 	mov	pc, r3
+
+001b1eb4 <haltLoop$>:
+  1b1eb4:	eafffffe 	b	1b1eb4 <haltLoop$>
+  1b1eb8:	001b0d5c 	.word	0x001b0d5c
+  1b1ebc:	001b0c94 	.word	0x001b0c94
+  1b1ec0:	001b0d5d 	.word	0x001b0d5d
+  1b1ec4:	001b0d5e 	.word	0x001b0d5e
+  1b1ec8:	001b0d5f 	.word	0x001b0d5f
+  1b1ecc:	001b0d60 	.word	0x001b0d60
+  1b1ed0:	001b0d6f 	.word	0x001b0d6f
+  1b1ed4:	001b0d6c 	.word	0x001b0d6c
+  1b1ed8:	001b0d6d 	.word	0x001b0d6d
+  1b1edc:	001b0d64 	.word	0x001b0d64
+  1b1ee0:	001b0d68 	.word	0x001b0d68
+  1b1ee4:	0018ac94 	.word	0x0018ac94
+  1b1ee8:	0018cc94 	.word	0x0018cc94
+  1b1eec:	0018ec94 	.word	0x0018ec94
+  1b1ef0:	00191c94 	.word	0x00191c94
+  1b1ef4:	0019ac94 	.word	0x0019ac94
+  1b1ef8:	0019cc94 	.word	0x0019cc94
+  1b1efc:	0019ec94 	.word	0x0019ec94
+  1b1f00:	001a1c94 	.word	0x001a1c94
+  1b1f04:	001a4c94 	.word	0x001a4c94
+  1b1f08:	001a7c94 	.word	0x001a7c94
+  1b1f0c:	001aac94 	.word	0x001aac94
+  1b1f10:	001adc94 	.word	0x001adc94
+  1b1f14:	00194c94 	.word	0x00194c94
+  1b1f18:	00197c94 	.word	0x00197c94
+  1b1f1c:	001b0d70 	.word	0x001b0d70
+  1b1f20:	3f003000 	.word	0x3f003000
+  1b1f24:	0000ac88 	.word	0x0000ac88
