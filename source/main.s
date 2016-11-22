@@ -14,21 +14,13 @@ main:
     
 
     // clear screen
-    b StartGame
+    // b StartGame
 
     mov r7, #0x0000
     bl clearScreen
 
     // draw intro screen
     bl drawIntroScreen
-
-
-    // delay to show start screen
-    mov r5, #1000
-    bl Wait
-    mov r5, #1000
-    bl Wait
-
 
 StartGame:
     // clear on game
@@ -45,12 +37,15 @@ InsertNewBlock:
     // L orange block not stacking properly
     //s red block not working?
     bl insertRandomBlock
-   // bl insertNewLOBeam
 
-    // set initial coords
-
+    // set initial coords for
+    // x
+    ldr r0, =currentBlockLeftOffset
+    ldrb r0, [r0]
+    lsl r0, #5
+    add r0, #300
+    // set y to 0
     mov r1, #0
-    mov r0, #300
     // draws intial block position
     bl drawCurrentBlock
 
@@ -117,10 +112,12 @@ endMod:
     lsl r6, #5
     add r1, r6
     // now calc x
-
-    mov r0, #300
-    lsl r7, #5
- //   add r1, r7
+    ldr r0, =currentBlockLeftOffset
+    ldrb r0, [r0]
+    // x32 to get pixel value
+    lsl r0, #5
+    // add base offset
+    add r0, #300
 
     bl eraseCurrentBlock
 
@@ -170,12 +167,14 @@ endMod2:
     mov r1, #0
     lsl r6, #5
     add r1, r6
+
     // now calc x
-
-    mov r0, #300
-    lsl r7, #5
-//    add r1, r7
-
+    ldr r0, =currentBlockLeftOffset
+    ldrb r0, [r0]
+    // x32 to get pixel value
+    lsl r0, #5
+    // add base offset
+    add r0, #300
 
     bl drawCurrentBlock
 
@@ -348,7 +347,7 @@ GameIsOver:
     // insert game over code here
     // commented out for debugging
     // draw image at 0,0
-    b haltLoop$
+    b quitProgram
 FinishCheckGameOver:
     pop {r3}
     mov pc, r3
@@ -447,48 +446,68 @@ insertNewIBeam:
     // first coords are
     // 0, 1, 2, 3
 
+
     // first check that new block can
     // be inserted
     ldr r0, =gameState
     ldrb r1, [r0, #0]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #1]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #2]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #3]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
 
-
+    // max left shifted value
+    // is 6
+    mov r8, #6
+    bl xorShift
+    mov r8, r1
+    // update offset value
+    ldr r3, =currentBlockLeftOffset
+    strb r8, [r3]
 
     ldr r0, =currentBlock1
     mov r1, #0
+    // add offset
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock2
     mov r1, #1
+    // add offset
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock3
     mov r1, #2
+    // add offset
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock4
     mov r1, #3
+    // add offset
+    add r1, r8
     strb r1, [r0]
 
     // update border tiles
     //
     ldr r0, =currentBorders
     mov r1, #0
+    add r1, r8
     strb r1, [r0]
     // skip 2, as not border
     mov r1, #1
+    add r1, r8
     strb r1, [r0, #1]
     mov r1, #2
+    add r1, r8
     strb r1, [r0, #2]
     mov r1, #3
+    add r1, r8
     strb r1, [r0, #3]
 
 
@@ -557,29 +576,42 @@ insertNewSBeam:
     ldr r0, =gameState
     ldrb r1, [r0, #1]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #2]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #10]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #11]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
+
+    // max left shifted value
+    // is 6
+    mov r8, #7
+    bl xorShift
+    mov r8, r1
+    // update offset value
+    ldr r3, =currentBlockLeftOffset
+    strb r8, [r3]
 
 
     ldr r0, =currentBlock1
     mov r1, #1
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock2
     mov r1, #2
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock3
     mov r1, #10
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock4
     mov r1, #11
+    add r1, r8
     strb r1, [r0]
 
     // update border tiles
@@ -589,10 +621,13 @@ insertNewSBeam:
     strb r1, [r0]
     // skip 2, as not border
     mov r1, #2
+    add r1, r8
     strb r1, [r0, #1]
     mov r1, #10
+    add r1, r8
     strb r1, [r0, #2]
     mov r1, #11
+    add r1, r8
     strb r1, [r0, #3]
 
     // update game state
@@ -662,29 +697,42 @@ insertNewOBeam:
     ldr r0, =gameState
     ldrb r1, [r0, #0]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #1]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #10]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #11]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
+
+    // max left shifted value
+    // is 6
+    mov r8, #8
+    bl xorShift
+    mov r8, r1
+    // update offset value
+    ldr r3, =currentBlockLeftOffset
+    strb r8, [r3]
 
 
     ldr r0, =currentBlock1
     mov r1, #0
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock2
     mov r1, #1
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock3
     mov r1, #10
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock4
     mov r1, #11
+    add r1, r8
     strb r1, [r0]
 
     // update border tiles
@@ -696,8 +744,10 @@ insertNewOBeam:
     mov r1, #255
     strb r1, [r0, #1]
     mov r1, #10
+    add r1, r8
     strb r1, [r0, #2]
     mov r1, #11
+    add r1, r8
     strb r1, [r0, #3]
 
     // update game state
@@ -769,29 +819,42 @@ insertNewWBeam:
     ldr r0, =gameState
     ldrb r1, [r0, #1]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #10]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #11]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #12]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
+
+    // max left shifted value
+    // is 7
+    mov r8, #7
+    bl xorShift
+    mov r8, r1
+    // update offset value
+    ldr r3, =currentBlockLeftOffset
+    strb r8, [r3]
 
 
     ldr r0, =currentBlock1
     mov r1, #1
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock2
     mov r1, #10
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock3
     mov r1, #11
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock4
     mov r1, #12
+    add r1, r8
     strb r1, [r0]
 
     // update border tiles
@@ -801,10 +864,13 @@ insertNewWBeam:
     strb r1, [r0]
     // skip 2, as not border
     mov r1, #10
+    add r1, r8
     strb r1, [r0, #1]
     mov r1, #11
+    add r1, r8
     strb r1, [r0, #2]
     mov r1, #12
+    add r1, r8
     strb r1, [r0, #3]
 
     // update game state
@@ -871,29 +937,41 @@ insertNewLBBeam:
     ldr r0, =gameState
     ldrb r1, [r0, #0]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #10]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #11]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #12]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
 
+    // max left shifted value
+    // is 7
+    mov r8, #7
+    bl xorShift
+    mov r8, r1
+    // update offset value
+    ldr r3, =currentBlockLeftOffset
+    strb r8, [r3]
 
     ldr r0, =currentBlock1
     mov r1, #0
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock2
     mov r1, #10
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock3
     mov r1, #11
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock4
     mov r1, #12
+    add r1, r8
     strb r1, [r0]
 
     // update border tiles
@@ -903,10 +981,13 @@ insertNewLBBeam:
     strb r1, [r0]
     // skip 2, as not border
     mov r1, #10
+    add r1, r8
     strb r1, [r0, #1]
     mov r1, #11
+    add r1, r8
     strb r1, [r0, #2]
     mov r1, #12
+    add r1, r8
     strb r1, [r0, #3]
 
     // update game state
@@ -975,30 +1056,43 @@ insertNewLOBeam:
     ldr r0, =gameState
     ldrb r1, [r0, #2]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #10]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #11]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #12]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
+
+    // max left shifted value
+    // is 7
+    mov r8, #7
+    bl xorShift
+    mov r8, r1
+    // update offset value
+    ldr r3, =currentBlockLeftOffset
+    strb r8, [r3]
 
 
 
     ldr r0, =currentBlock1
     mov r1, #2
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock2
     mov r1, #10
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock3
     mov r1, #11
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock4
     mov r1, #12
+    add r1, r8
     strb r1, [r0]
 
     // update border tiles
@@ -1008,10 +1102,13 @@ insertNewLOBeam:
     strb r1, [r0]
     // skip 2, as not border
     mov r1, #10
+    add r1, r8
     strb r1, [r0, #1]
     mov r1, #11
+    add r1, r8
     strb r1, [r0, #2]
     mov r1, #12
+    add r1, r8
     strb r1, [r0, #3]
 
     // update game state
@@ -1082,43 +1179,59 @@ insertNewSRBeam:
     ldr r0, =gameState
     ldrb r1, [r0, #0]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #1]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #11]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
     ldrb r1, [r0, #12]
     cmp r1, #1
-    beq haltLoop$
+    beq quitProgram
 
     // if it can, continue
+    // max left shifted value
+    // is 7
+    mov r8, #7
+    bl xorShift
+    mov r8, r1
+    // update offset value
+    ldr r3, =currentBlockLeftOffset
+    strb r8, [r3]
+
 
     ldr r0, =currentBlock1
     mov r1, #0
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock2
     mov r1, #1
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock3
     mov r1, #11
+    add r1, r8
     strb r1, [r0]
     ldr r0, =currentBlock4
     mov r1, #12
+    add r1, r8
     strb r1, [r0]
 
     // update border tiles
     //
     ldr r0, =currentBorders
     mov r1, #0
+    add r1, r8
     strb r1, [r0]
     // skip 2, as not border
     mov r1, #255
     strb r1, [r0, #1]
     mov r1, #11
+    add r1, r8
     strb r1, [r0, #2]
     mov r1, #12
+    add r1, r8
     strb r1, [r0, #3]
 
     // update game state
@@ -1235,16 +1348,16 @@ setSeed:
     // clear screen executed, in
     // theory different each time
     // to ensure different sequences
-    mov r5, lr
-    push {r5}
-
-
+    mov r3, lr
+    push {r3}
     ldr r1, =randSeedVal
     ldr r0, =0x3F003000                                 // base clock address
-    ldrh r2, [r0, #4]                                    // get current time
-    strh r2, [r1]
-    pop {r5}
-    mov pc, r5
+    ldr r2, [r0, #4]                                   // get current time
+    // program crashing if more than
+    // byte stored here
+    str r2, [r1]
+    pop {r3}
+    mov pc, r3
 
 
 insertRandomBlock:
@@ -1324,8 +1437,47 @@ drawIntroScreen:
     pop {r3}
     mov pc, r3
 
+
+// sets up intial screen
+drawGameOverScreen:
+    mov r3, lr
+    push {r3}
+    ldr r3, =game_over_screen
+    mov r1, #0
+    mov r0, #0
+    mov r4, #1024
+    mov r5, #768
+    bl drawImage
+    pop {r3}
+    mov pc, r3
+
+// clears memory to avoid having
+// to reload each time
+resetGameState:
+    mov r3, lr
+    push {r3}
+    ldr r0, =gameState
+    mov r3, #0
+    mov r1, #200
+    mov r2, #0
+resetStateLoop:
+    cmp r2, r1
+    beq finishStateReset
+    strb r3, [r0], #1
+    add r2, #1
+    b resetStateLoop
+finishStateReset:
+    pop {r3}
+    mov pc, lr
+
 //----------------------------
 
+
+quitProgram:
+    mov r7, #0x0000
+    bl resetGameState
+    bl drawGameOverScreen
+    b haltLoop$
 
 haltLoop$:
     b       haltLoop$
@@ -1336,6 +1488,7 @@ haltLoop$:
 
 game_block:     .include "images/s_block.txt"
 start_screen:   .include "images/start_screen.txt"
+game_over_screen:   .include "images/game_over.txt"
 myString:       .ascii "Hey there!"
 test:           .ascii "\3407"
 i_block:        .include "images/i_block.txt"
@@ -1385,8 +1538,11 @@ currentBlockSizeX:
 currentBlockSizeY:
     .byte   0
 currentBlockLeftOffset:
-    .byte   300
+    .byte   0
+currentBlockWidth:
+    .byte   0
 topLeftBlock:
     .byte   0
+.align
 randSeedVal:
-    .word   2008                                           // originally 37, now set with setSeed
+    .word   0                                           // originally 37, now set with setSeed
