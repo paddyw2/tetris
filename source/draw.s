@@ -76,6 +76,7 @@ drawImage:
 di_drawOuter:
     cmp r6, r5
     beq di_end 
+    mov r0, r7
     push {r6}
     mov r6, #0
 di_drawInner:
