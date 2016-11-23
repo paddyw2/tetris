@@ -37,6 +37,9 @@ InsertNewBlock:
     // L orange block not stacking properly
     //s red block not working?
     bl insertRandomBlock
+    // add one to user score
+    mov r1, #1
+    bl updateScore
 
     // set initial coords for
     // x
@@ -439,494 +442,13 @@ eraseNoCoordChange:
     pop {r3}
     mov pc, r3
 
-//----------------------------
 
 
 
-// initializes a new ibeam
-// block at 0,0 on the screen
-// and game state
-insertNewIBeam:
-    mov r4, lr
-    push {r4}
-    // first coords are
-    // 0, 1, 2, 3
 
 
-    // first check that new block can
-    // be inserted
-    ldr r0, =gameState
-    ldrb r1, [r0, #0]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #1]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #2]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #3]
-    cmp r1, #1
-    beq quitProgram
 
-    // max left shifted value
-    // is 6
-    mov r8, #6
-    bl xorShift
-    mov r8, r1
-    // update offset value
-    ldr r3, =currentBlockLeftOffset
-    strb r8, [r3]
 
-    ldr r0, =currentBlock1
-    mov r1, #0
-    // add offset
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock2
-    mov r1, #1
-    // add offset
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock3
-    mov r1, #2
-    // add offset
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock4
-    mov r1, #3
-    // add offset
-    add r1, r8
-    strb r1, [r0]
-
-    // update border tiles
-    //
-    ldr r0, =currentBorders
-    mov r1, #0
-    add r1, r8
-    strb r1, [r0]
-    // skip 2, as not border
-    mov r1, #1
-    add r1, r8
-    strb r1, [r0, #1]
-    mov r1, #2
-    add r1, r8
-    strb r1, [r0, #2]
-    mov r1, #3
-    add r1, r8
-    strb r1, [r0, #3]
-
-
-    // update game state
-    // with block at initial
-    // position
-    mov r1, #1
-    ldr r2, =currentBlock1
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock2
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock3
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock4
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    // update current block image
-    // pointer, and size
-    ldr r3, =i_block
-    ldr r2, =currentBlockImage
-    str r3, [r2]
-    ldr r3, =i_block_black
-    ldr r2, =currentBlockImageBlack
-    str r3, [r2]
-    mov r3, #128
-    ldr r2, =currentBlockSizeX
-    strb r3, [r2]
-    mov r3, #32
-    ldr r5, =currentBlockSizeY
-    strb r3, [r5]
-
-    // indicate that top left is filled
-    mov r5, #0
-    ldr r3, =topLeftBlock
-    strb r5, [r3]
-
-
-    pop {r4}
-    mov pc, r4
-
-//----------------------------
-
-
-// initializes a new ibeam
-// block at 0,0 on the screen
-// and game state
-insertNewSBeam:
-    mov r4, lr
-    push {r4}
-    // first coords are
-    // 1,2,10,11
-
-    // first check that new block can
-    // be inserted
-    ldr r0, =gameState
-    ldrb r1, [r0, #1]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #2]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #10]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #11]
-    cmp r1, #1
-    beq quitProgram
-
-    // max left shifted value
-    // is 6
-    mov r8, #7
-    bl xorShift
-    mov r8, r1
-    // update offset value
-    ldr r3, =currentBlockLeftOffset
-    strb r8, [r3]
-
-
-    ldr r0, =currentBlock1
-    mov r1, #1
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock2
-    mov r1, #2
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock3
-    mov r1, #10
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock4
-    mov r1, #11
-    add r1, r8
-    strb r1, [r0]
-
-    // update border tiles
-    //
-    ldr r0, =currentBorders
-    mov r1, #255
-    strb r1, [r0]
-    // skip 2, as not border
-    mov r1, #2
-    add r1, r8
-    strb r1, [r0, #1]
-    mov r1, #10
-    add r1, r8
-    strb r1, [r0, #2]
-    mov r1, #11
-    add r1, r8
-    strb r1, [r0, #3]
-
-    // update game state
-    // with block at initial
-    // position
-    mov r1, #1
-    ldr r2, =currentBlock1
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock2
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock3
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock4
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    // update current block image
-    // pointer, and size
-    ldr r3, =s_block_green
-    ldr r2, =currentBlockImage
-    str r3, [r2]
-    ldr r3, =s_block_green_black
-    ldr r2, =currentBlockImageBlack
-    str r3, [r2]
-    mov r3, #96
-    ldr r2, =currentBlockSizeX
-    strb r3, [r2]
-    mov r3, #64
-    ldr r5, =currentBlockSizeY
-    strb r3, [r5]
-    // add flag indicating top left
-    // position is blank
-    mov r5, #1
-    ldr r3, =topLeftBlock
-    strb r5, [r3]
-
-    pop {r4}
-    mov pc, r4
-
-//----------------------------
-
-//edit n0v 26
-
-
-
-// initializes a new obeam
-// block at 0,0 on the screen
-// and game state
-insertNewOBeam:
-    mov r4, lr
-    push {r4}
-    // first coords are
-    // 0,1,11,12
-
-    // first check that new block can
-    // be inserted
-    ldr r0, =gameState
-    ldrb r1, [r0, #0]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #1]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #10]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #11]
-    cmp r1, #1
-    beq quitProgram
-
-    // max left shifted value
-    // is 6
-    mov r8, #8
-    bl xorShift
-    mov r8, r1
-    // update offset value
-    ldr r3, =currentBlockLeftOffset
-    strb r8, [r3]
-
-
-    ldr r0, =currentBlock1
-    mov r1, #0
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock2
-    mov r1, #1
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock3
-    mov r1, #10
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock4
-    mov r1, #11
-    add r1, r8
-    strb r1, [r0]
-
-    // update border tiles
-    //
-    ldr r0, =currentBorders
-    mov r1, #255
-    strb r1, [r0]
-    // skip 2, as not border
-    mov r1, #255
-    strb r1, [r0, #1]
-    mov r1, #10
-    add r1, r8
-    strb r1, [r0, #2]
-    mov r1, #11
-    add r1, r8
-    strb r1, [r0, #3]
-
-    // update game state
-    // with block at initial
-    // position
-    mov r1, #1
-    ldr r2, =currentBlock1
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock2
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock3
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock4
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    // update current block image
-    // pointer, and size
-    ldr r3, =o_block_yellow
-    ldr r2, =currentBlockImage
-    str r3, [r2]
-    ldr r3, =o_block_yellow_black
-    ldr r2, =currentBlockImageBlack
-    str r3, [r2]
-    mov r3, #64
-    ldr r2, =currentBlockSizeX
-    strb r3, [r2]
-    mov r3, #64
-    ldr r5, =currentBlockSizeY
-    strb r3, [r5]
-
-    // indicate that top left is filled
-    mov r5, #0
-    ldr r3, =topLeftBlock
-    strb r5, [r3]
-
-
-    pop {r4}
-    mov pc, r4
-
-//----------------------------
-
-
-
-
-
-
-// initializes a new obeam
-// block at 0,0 on the screen
-// and game state
-insertNewWBeam:
-    mov r4, lr
-    push {r4}
-    // first coords are
-    // 0,1,11,12
-
-    // first check that new block can
-    // be inserted
-    ldr r0, =gameState
-    ldrb r1, [r0, #1]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #10]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #11]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #12]
-    cmp r1, #1
-    beq quitProgram
-
-    // max left shifted value
-    // is 7
-    mov r8, #7
-    bl xorShift
-    mov r8, r1
-    // update offset value
-    ldr r3, =currentBlockLeftOffset
-    strb r8, [r3]
-
-
-    ldr r0, =currentBlock1
-    mov r1, #1
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock2
-    mov r1, #10
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock3
-    mov r1, #11
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock4
-    mov r1, #12
-    add r1, r8
-    strb r1, [r0]
-
-    // update border tiles
-    //
-    ldr r0, =currentBorders
-    mov r1, #255
-    strb r1, [r0]
-    // skip 2, as not border
-    mov r1, #10
-    add r1, r8
-    strb r1, [r0, #1]
-    mov r1, #11
-    add r1, r8
-    strb r1, [r0, #2]
-    mov r1, #12
-    add r1, r8
-    strb r1, [r0, #3]
-
-    // update game state
-    // with block at initial
-    // position
-    mov r1, #1
-    ldr r2, =currentBlock1
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock2
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock3
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock4
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    // update current block image
-    // pointer, and size
-    ldr r3, =w_block
-    ldr r2, =currentBlockImage
-    str r3, [r2]
-    ldr r3, =w_block_black
-    ldr r2, =currentBlockImageBlack
-    str r3, [r2]
-    mov r3, #96
-    ldr r2, =currentBlockSizeX
-    strb r3, [r2]
-    mov r3, #64
-    ldr r5, =currentBlockSizeY
-    strb r3, [r5]
-    // indicate that top left is filled
-    mov r5, #1
-    ldr r3, =topLeftBlock
-    strb r5, [r3]
-
-
-    pop {r4}
-    mov pc, r4
-
-//----------------------------
 
 
 // initializes a new obeam
@@ -956,7 +478,7 @@ insertNewLBBeam:
 
     // max left shifted value
     // is 7
-    mov r8, #7
+    mov r1, #7
     bl xorShift
     mov r8, r1
     // update offset value
@@ -1075,7 +597,7 @@ insertNewLOBeam:
 
     // max left shifted value
     // is 7
-    mov r8, #7
+    mov r1, #7
     bl xorShift
     mov r8, r1
     // update offset value
@@ -1199,7 +721,7 @@ insertNewSRBeam:
     // if it can, continue
     // max left shifted value
     // is 7
-    mov r8, #7
+    mov r1, #7
     bl xorShift
     mov r8, r1
     // update offset value
@@ -1290,16 +812,16 @@ insertNewSRBeam:
 //----------------------------
 
 
-//edit n0v 26
-
-
+/*************************
+// end of insert blocks //
+**************************/
 
 
 // basic concept referenced from:
 // http://www.arklyffe.com/main/2010/08/29/xorshift-pseudorandom-number-generator/
 xorShift:
     // takes single parameter as
-    // r8 which defines the largest
+    // r1 which defines the largest
     // value allowed
     // note: this will never return
     // 0, so to achieve this 1 is
@@ -1308,69 +830,72 @@ xorShift:
     // value
     // if range is r8=8
     // will generate 0-8 inclusive
-    mov r5, lr
-    push {r5}
+    push {lr}
+    push {r4}
     // range max in r8
     // add 1 to allow for zero
     // values
-    add r8, #1
+    add r1, #1
     // seed value
     ldr r0, =randSeedVal
     ldrb r0, [r0]
-    mov r1, r0
+    mov r4, r0
     // shift seed value by 
     lsl r0, #7
-    eor r1, r0
-    mov r2, r1
-    lsr r1, #5
-    eor r1, r2
-    mov r2, r1
+    eor r4, r0
+    mov r2, r4
+    lsr r4, #5
+    eor r4, r2
+    mov r2, r4
     lsl r2, #3
-    eor r1, r2
+    eor r4, r2
     
     ldr r0, =randSeedVal
-    strb r1, [r0]
+    strb r4, [r0]
 
 // to get a number within range
 // simply modulo until value
 // within range
 randModLoop:
-    cmp r1, r8
+    cmp r4, r1
     ble finishRand
-    sub r1, r8
+    sub r4, r1
     b randModLoop
 finishRand:
     // to allow for zero values
-    sub r1, #1
+    sub r4, #1
+    mov r1, r4
     // return random value in r1
-    pop {r5}
-    mov pc, r5
+    pop {r4}
+    pop {lr}
+    mov pc, lr
 
 
-
+//---------------------------//
 setSeed:
     // sets the seed value
     // to the system time after
     // clear screen executed, in
     // theory different each time
     // to ensure different sequences
-    mov r3, lr
-    push {r3}
+    push {lr}
     ldr r1, =randSeedVal
     ldr r0, =0x3F003000                                 // base clock address
     ldr r2, [r0, #4]                                   // get current time
     // program crashing if more than
     // byte stored here
     str r2, [r1]
-    pop {r3}
-    mov pc, r3
+    pop {lr}
+    mov pc, lr
+
+//---------------------------//
 
 
+//---------------------------//
 insertRandomBlock:
-    mov r5, lr
-    push {r5}
+    push {lr}
 
-    mov r8, #7
+    mov r1, #7
     bl xorShift
     
     cmp r1, #0
@@ -1417,50 +942,58 @@ block7:
     b finishRandInsert
 
 
-
-
 finishRandInsert:
-    pop {r5}
-    mov pc, r5
+    pop {lr}
+    mov pc, lr
 
 
+//---------------------------//
 
 
-
-
+//---------------------------//
 
 // sets up intial screen
 drawIntroScreen:
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r4, r5}
     ldr r3, =start_screen
     mov r1, #0
     mov r0, #0
     mov r4, #1024
     mov r5, #768
     bl drawImage
-    pop {r3}
-    mov pc, r3
+    pop {r4, r5}
+    pop {lr}
+    mov pc, lr
+
+//---------------------------//
 
 
-// sets up intial screen
+//---------------------------//
+// sets up game over screen 
 drawGameOverScreen:
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r4, r5}
     ldr r3, =game_over_screen
     mov r1, #0
     mov r0, #0
     mov r4, #1024
     mov r5, #768
     bl drawImage
-    pop {r3}
-    mov pc, r3
+    pop {r4, r5}
+    pop {lr}
+    mov pc, lr
 
+
+//---------------------------//
+
+
+
+//---------------------------//
 // clears memory to avoid having
 // to reload each time
 resetGameState:
-    mov r3, lr
-    push {r3}
+    push {lr}
     ldr r0, =gameState
     mov r3, #0
     mov r1, #200
@@ -1472,11 +1005,14 @@ resetStateLoop:
     add r2, #1
     b resetStateLoop
 finishStateReset:
-    pop {r3}
+    pop {lr}
     mov pc, lr
 
 //----------------------------//
 
+
+
+//----------------------------//
 checkForCompleteLines:
     // start at bottom of array
     // and loop through backwards
@@ -1486,66 +1022,78 @@ checkForCompleteLines:
     // if a line has no 0s, then
     // trigger clearLine for that
     // line
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r4, r5, r6, r7}
 
-    ldr r0, =gameState
+    ldr r4, =gameState
     // increment address to last
     // byte
-    add r0, #199
-    mov r1, #19
-    mov r2, #0
+    add r4, #199
+    mov r5, #19
+    mov r6, #0
 lineLoop:
-    cmp r2, #10
+    cmp r6, #10
     // if checked whole line, must be cleared
     b clearLine
     // load state address value
     // minus offset of loop counter
-    ldrb r3, [r0, -r2]
-    cmp r3, #0
+    ldrb r7, [r4, -r6]
+    cmp r7, #0
     // if zero, move to next line
     beq nextLine
     // else, inc counter and
     // counter
-    add r2, #1
+    add r6, #1
     b lineLoop
 
 clearLine:
     // clear current line in state
     // takes r1 as current line input
+    mov r1, r5
     mov r1, #17
     bl clearLineGameState
     // clear current line in visual
     // takes r1 as current line input
+    mov r1, r5
     mov r1, #17
     bl clearLineScreen
+    
+    // for every line cleared, update
+    // user score by 10
+    mov r1, #10
+    bl updateScore
 
     b finishCheckLines
     // then move to next line
 
 nextLine:
-    cmp r1, #0
+    cmp r5, #0
     beq finishCheckLines
     // restore loop counter
-    mov r2, #0
+    mov r6, #0
     // decrement line number
-    sub r1, #1
+    sub r5, #1
     // decrement address to next line
-    sub r0, #10
+    sub r4, #10
     b lineLoop
 
 finishCheckLines:
-    pop {r3}
-    mov pc, r3
+    pop {r4, r5, r6, r7}
+    pop {lr}
+    mov pc, lr
+
+//---------------------------------------//
     
 
+
+//---------------------------------------//
+clearLineGameState:
 // loops through game state and replaces
 // each value with value from above
 // takes parameter as r1
 // which indicates the row to start at
-clearLineGameState:
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r4}
     // r1 is line number, 0-19
     ldr r3, =gameState
     // set base offset
@@ -1593,13 +1141,38 @@ updateNextLine:
     b clearLineValues
 
 finishClearValues:
-    pop {r3}
-    mov pc, r3
+    pop {r4}
+    pop {lr}
+    mov pc, lr
+
+//----------------------------------//
 
 
 
-// if game is over
+//----------------------------------//
+updateScore:
+// increments user score by r1 value
+    push {lr}
+    b scoreEnd
+    // r1 is value to increment
+    // score by
+    ldr r0, =currentScore
+    ldr r2, [r0]
+    add r2, r1
+    str r2, [r0]
+    mov r1, r2
+    bl drawCurrentScore
+scoreEnd:    
+    pop {lr}
+    mov pc, lr
+
+//----------------------------------//
+
+
+
+//----------------------------------//
 quitProgram:
+// if game is over
     mov r7, #0x0000
     bl resetGameState
     mov r10, #202
@@ -1607,10 +1180,15 @@ quitProgram:
     //bl drawGameOverScreen
     b haltLoop$
 
+//----------------------------------//
+
+
+
+//----------------------------------//
 haltLoop$:
     b       haltLoop$
 
-
+//----------------------------------//
 
 .section .data
 
@@ -1642,35 +1220,50 @@ l_block_orange_black: .include "images/l_block_orange_black2.txt"
 
 // game state has 1 values for blocks, and 0 for
 // empty space
+.globl gameState
 gameState:
     .rept   200
     .byte   0
     .endr
-
+.globl currentBlock1
 currentBlock1:
     .byte   0
+.globl currentBlock2
 currentBlock2:
     .byte   0
+.globl currentBlock3
 currentBlock3:
     .byte   0
+.globl currentBlock4
 currentBlock4:
     .byte   0
+.globl currentBorders
 currentBorders:
     .byte   0,0,0,0
+.globl currentBlockImage
 currentBlockImage:
     .word   0
+.globl currentBlockImageBlack
 currentBlockImageBlack:
     .word   0
+.globl currentBlockSizeX
 currentBlockSizeX:
     .byte   0
+.globl currentBlockSizeY
 currentBlockSizeY:
     .byte   0
+.globl currentBlockLeftOffset
 currentBlockLeftOffset:
     .byte   0
+.globl currentBlockWidth
 currentBlockWidth:
     .byte   0
+.globl topLeftBlock
 topLeftBlock:
     .byte   0
 .align
 randSeedVal:
     .word   0                                           // originally 37, now set with setSeed
+currentScore:
+    .word   0
+

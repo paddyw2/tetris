@@ -159,6 +159,70 @@ finishShiftScreen:
 
 //---------------------------//
 
+.globl drawCurrentScore
+drawCurrentScore:
+    mov r3, pc
+    push {r3}
+    // score value in r1
+    ldr r0, =currentScoreAscii
+    // convert to ascii
+    mov r4, #0
+    mov r5, #0
+getFirstDigit:
+    cmp r1, #100
+    blt getSecondDigit
+    sub r1, #100
+    add r4, #1
+    b getFirstDigit
+getSecondDigit:
+    cmp r1, #10
+    blt getThirdDigit
+    sub r1, #10
+    add r5, #1
+    b getSecondDigit
+getThirdDigit:
+    // r1 = third digit  
+
+    // update address with
+    // ascii value
+    add r4, #48
+    add r5, #48
+    add r1, #48
+    strb r4, [r0]
+    strb r5, [r0, #1]
+    strb r1, [r0, #2]
+    // clear score area
+
+
+
+   
+    ldr r0, =currentScoreAscii
+    cmp r4, #0
+    beq drawTwo
+    mov r3, r0
+    mov r7, #3
+    b writeScore
+drawTwo:
+    cmp r5, #0
+    beq drawOne
+    add r0, #1
+    mov r3, r0
+    mov r7, #2
+    b writeScore
+drawOne:
+    add r0, #2
+    mov r3, r0
+    mov r7, #1
+writeScore:
+    mov r9, #100
+    mov r6, #100
+    mov r10, #0xff
+    bl drawString
+    
+    pop {r3}
+    mov pc, r3
+   
+
 /* Draw Pixel
  *  r0 - x
  *  r1 - y
@@ -232,3 +296,4 @@ GetPixel:
 .section .data
 
 greenScreen:    .ascii "\3407"
+currentScoreAscii:   .ascii ""
