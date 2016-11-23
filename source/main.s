@@ -14,7 +14,7 @@ main:
     
 
     // clear screen
-    // b StartGame
+    b StartGame
 
     mov r7, #0x0000
     bl clearScreen
@@ -29,7 +29,7 @@ StartGame:
     bl clearScreen
     bl setSeed
 
-
+  mov r11, #0
 InsertNewBlock:
     // initializes new ibeam
     // at 0,0
@@ -52,6 +52,7 @@ InsertNewBlock:
     // moves current block down
     // until it cannot move further
     bl moveBlockDown
+    add r11, #1
 
     // loops until moveBlockDown
     // detects end of game stat
@@ -229,6 +230,11 @@ incFourth:
     add r1, #10
     strb r1, [r0]
 finishInc:
+    
+    //cmp r11, #5
+    //bne blockDelay 
+    //bl checkForCompleteLines
+blockDelay:
     // delay after each block draw
     mov r5, #1000
     lsl r5, #6
@@ -1366,7 +1372,6 @@ insertRandomBlock:
 
     mov r8, #7
     bl xorShift
-    mov r11, r1
     
     cmp r1, #0
     beq block0
@@ -1470,13 +1475,125 @@ finishStateReset:
     pop {r3}
     mov pc, lr
 
-//----------------------------
+//----------------------------//
+
+checkForCompleteLines:
+    // start at bottom of array
+    // and loop through backwards
+    // checking each line for a 0
+    // if a line has a 0, move to
+    // next line
+    // if a line has no 0s, then
+    // trigger clearLine for that
+    // line
+    mov r3, lr
+    push {r3}
+
+    ldr r0, =gameState
+    // increment address to last
+    // byte
+    add r0, #199
+    mov r1, #19
+    mov r2, #0
+lineLoop:
+    cmp r2, #10
+    // if checked whole line, must be cleared
+    beq clearLine
+    // load state address value
+    // minus offset of loop counter
+    ldrb r3, [r0, -r2]
+    cmp r3, #0
+    // if zero, move to next line
+    beq nextLine
+    // else, inc counter and
+    // counter
+    add r2, #1
+    b lineLoop
+
+clearLine:
+    // clear current line in state
+    // takes r1 as current line input
+    bl clearLineGameState
+    // clear current line in visual
+    // takes r1 as current line input
+    bl clearLineScreen
+    // then move to next line
+
+nextLine:
+    cmp r1, #0
+    beq finishCheckLines
+    // restore loop counter
+    mov r2, #0
+    // decrement line number
+    sub r1, #1
+    // decrement address to next line
+    sub r0, #10
+
+finishCheckLines:
+    pop {r3}
+    mov pc, r3
+    
+
+// loops through game state and replaces
+// each value with value from above
+// takes parameter as r1
+// which indicates the row to start at
+clearLineGameState:
+    mov r3, lr
+    push {r3}
+    // r1 is line number, 0-19
+    ldr r3, =gameState
+    mov r0, #0
+getLineLoop:
+    cmp r0, r1
+    beq clearLineValues
+    // increment counter
+    add r0, #1
+    // increment address to next line
+    add r3, #10
+    b getLineLoop
+
+clearLineValues:
+    // now line address in r3
+    // loop over each 
+    // check if line to cleared is top
+    ldr r0, =gameState
+    cmp r3, r0
+    beq finishClearValues
+    // set counter
+    mov r0, #0
+    // get address of line above
+    // for copying
+    mov r1, r3
+    sub r1, #10
+clearValuesLoop:
+    cmp r0, #10
+    beq updateNextLine
+    // value from line above
+    ldrb r4, [r1, r0]
+    // store in line below
+    strb r4, [r3, r0]
+    add r0, #1
+    b clearValuesLoop
+
+updateNextLine:
+    // move address to next line
+    // and loop
+    sub r3, #10
+    b clearLineValues
+
+finishClearValues:
+    pop {r3}
+    mov pc, r3
 
 
+
+// if game is over
 quitProgram:
     mov r7, #0x0000
     bl resetGameState
-    bl drawGameOverScreen
+    bl clearScreen
+    //bl drawGameOverScreen
     b haltLoop$
 
 haltLoop$:
@@ -1487,8 +1604,8 @@ haltLoop$:
 .section .data
 
 game_block:     .include "images/s_block.txt"
-start_screen:   .include "images/start_screen.txt"
-game_over_screen:   .include "images/game_over.txt"
+start_screen:   .include "images/empty.txt"//"images/start_screen.txt"
+game_over_screen:   .include "images/empty.txt"//"images/game_over.txt"
 myString:       .ascii "Hey there!"
 test:           .ascii "\3407"
 i_block:        .include "images/i_block.txt"

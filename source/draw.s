@@ -101,14 +101,69 @@ di_end:
     mov pc, r6
 
 
+//----------------------------//
 
+
+.globl clearLineScreen
+clearLineScreen:
+    // takes r1 as row to start at
+    mov r3, lr
+    push {r3}
+    // must start at r1*32 (y) + 32*10
+    // y
+    lsl r1, #5
+    // x
+drawY:
+    // set x as far right 620
+    mov r0, #300
+    add r0, #320
+    // check y
+    cmp r1, #0
+    // if y value is less than 0, finish
+    blt finishShiftScreen
+    // else, draw x
+drawX:
+    cmp r0, #300
+    // if x is less than 300, move up one line
+    blt finishX
+    // must first get pixel above
+    sub r1, #32
+    sub r0, #32
+    push {r1}
+    push {r0}
+    bl GetPixel
+    pop {r0}
+    pop {r1}
+    // now colour is in r2
+    add r1, #32
+    add r0, #32
+    push {r0}
+    push {r1}
+    // now draw pixel above, but below
+    bl DrawPixel
+    pop {r1}
+    pop {r0}
+    // decrement x coord
+    sub r0, #1
+    mov r10, r0
+    b drawX
+
+finishX:
+    // move to next line
+    sub r1, #32
+    b drawY
+    
+finishShiftScreen:
+    pop {r3}
+    mov pc, r3
+
+//---------------------------//
 
 /* Draw Pixel
  *  r0 - x
  *  r1 - y
  *  r2 - color
- */
-
+ */ 
 .globl DrawPixel
 DrawPixel:
     push    {r4}
@@ -136,6 +191,41 @@ DrawPixel:
     strh    r2, [r0, offset]
 
 dp_skipPrint:
+    pop     {r3}
+    pop     {r4}
+    bx      lr
+
+
+.globl GetPixel
+GetPixel:
+    // copy of drawPixel
+    // that gets the current color value
+    // at an x,y coordinate
+    push    {r4}
+    push    {r3}
+    offset  .req    r4
+
+    // offset = (y * 1024) + x = x + (y << 10)
+
+    add     offset, r0, r1, lsl #10
+    // offset *= 2 (for 16 bits per pixel = 2 bytes per pixel)
+
+    lsl     offset, #1
+    // load the colour (half word) at framebuffer pointer + offset
+    // into r2
+
+    ldr r0, =FrameBufferPointer
+    ldr r0, [r0]
+
+    // now instead of storing our r2 value in the buffer
+    // location, we instead load the buffer location value
+    // into r2, and return it
+    ldrh    r2, [r0, offset]
+
+    // now we will print the r2 value to drawPixel, only
+    // at coordinates -10 on the y axis, and within 300 to
+    // 620 on the x (stopping at the top of the game grid)
+    // and this will shift our game visuals down a block
     pop     {r3}
     pop     {r4}
     bx      lr
