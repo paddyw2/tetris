@@ -52,6 +52,10 @@ InsertNewBlock:
     // moves current block down
     // until it cannot move further
     bl moveBlockDown
+    cmp r11, #5
+    bne blockDelay 
+    bl checkForCompleteLines
+blockDelay:
     add r11, #1
 
     // loops until moveBlockDown
@@ -231,10 +235,6 @@ incFourth:
     strb r1, [r0]
 finishInc:
     
-    //cmp r11, #5
-    //bne blockDelay 
-    //bl checkForCompleteLines
-blockDelay:
     // delay after each block draw
     mov r5, #1000
     lsl r5, #6
@@ -1498,7 +1498,7 @@ checkForCompleteLines:
 lineLoop:
     cmp r2, #10
     // if checked whole line, must be cleared
-    beq clearLine
+    b clearLine
     // load state address value
     // minus offset of loop counter
     ldrb r3, [r0, -r2]
@@ -1513,10 +1513,14 @@ lineLoop:
 clearLine:
     // clear current line in state
     // takes r1 as current line input
+    mov r1, #17
     bl clearLineGameState
     // clear current line in visual
     // takes r1 as current line input
+    mov r1, #17
     bl clearLineScreen
+
+    b finishCheckLines
     // then move to next line
 
 nextLine:
@@ -1528,6 +1532,7 @@ nextLine:
     sub r1, #1
     // decrement address to next line
     sub r0, #10
+    b lineLoop
 
 finishCheckLines:
     pop {r3}
@@ -1543,6 +1548,8 @@ clearLineGameState:
     push {r3}
     // r1 is line number, 0-19
     ldr r3, =gameState
+    // set base offset
+    mov r2, #0
     mov r0, #0
 getLineLoop:
     cmp r0, r1
@@ -1550,36 +1557,39 @@ getLineLoop:
     // increment counter
     add r0, #1
     // increment address to next line
-    add r3, #10
+    add r2, #10
     b getLineLoop
 
 clearLineValues:
     // now line address in r3
+    // offset is in r2
     // loop over each 
     // check if line to cleared is top
-    ldr r0, =gameState
-    cmp r3, r0
+    cmp r2, #0
     beq finishClearValues
     // set counter
     mov r0, #0
     // get address of line above
     // for copying
-    mov r1, r3
+    mov r1, r2
     sub r1, #10
 clearValuesLoop:
     cmp r0, #10
     beq updateNextLine
     // value from line above
-    ldrb r4, [r1, r0]
+    ldrb r4, [r3, r1]
+    mov r10, r4
     // store in line below
-    strb r4, [r3, r0]
+    strb r4, [r3, r2]
+    add r2, #1
+    add r1, #1
     add r0, #1
     b clearValuesLoop
 
 updateNextLine:
     // move address to next line
     // and loop
-    sub r3, #10
+    sub r2, #20
     b clearLineValues
 
 finishClearValues:
@@ -1592,6 +1602,7 @@ finishClearValues:
 quitProgram:
     mov r7, #0x0000
     bl resetGameState
+    mov r10, #202
     bl clearScreen
     //bl drawGameOverScreen
     b haltLoop$

@@ -106,11 +106,14 @@ di_end:
 
 .globl clearLineScreen
 clearLineScreen:
+    
     // takes r1 as row to start at
     mov r3, lr
     push {r3}
+    
     // must start at r1*32 (y) + 32*10
     // y
+    add r1, #1
     lsl r1, #5
     // x
 drawY:
@@ -118,7 +121,7 @@ drawY:
     mov r0, #300
     add r0, #320
     // check y
-    cmp r1, #0
+    cmp r1, #32
     // if y value is less than 0, finish
     blt finishShiftScreen
     // else, draw x
@@ -128,7 +131,6 @@ drawX:
     blt finishX
     // must first get pixel above
     sub r1, #32
-    sub r0, #32
     push {r1}
     push {r0}
     bl GetPixel
@@ -136,7 +138,6 @@ drawX:
     pop {r1}
     // now colour is in r2
     add r1, #32
-    add r0, #32
     push {r0}
     push {r1}
     // now draw pixel above, but below
@@ -145,12 +146,11 @@ drawX:
     pop {r0}
     // decrement x coord
     sub r0, #1
-    mov r10, r0
     b drawX
 
 finishX:
     // move to next line
-    sub r1, #32
+    sub r1, #1
     b drawY
     
 finishShiftScreen:
@@ -202,7 +202,6 @@ GetPixel:
     // that gets the current color value
     // at an x,y coordinate
     push    {r4}
-    push    {r3}
     offset  .req    r4
 
     // offset = (y * 1024) + x = x + (y << 10)
@@ -226,7 +225,6 @@ GetPixel:
     // at coordinates -10 on the y axis, and within 300 to
     // 620 on the x (stopping at the top of the game grid)
     // and this will shift our game visuals down a block
-    pop     {r3}
     pop     {r4}
     bx      lr
 
