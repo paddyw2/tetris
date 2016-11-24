@@ -1,3 +1,11 @@
+/*
+ * TETRIS
+ * Creators: Patrick Withams and Michael Tretiak
+ * Date: 20/11/16
+ * 
+ *
+ */
+
 .section    .init
 .globl     _start
 
@@ -19,42 +27,32 @@ main:
     // clear screen
     b StartGame
 
-
-    // draw intro screen
-    bl drawIntroScreen
-
-
 StartGame:
     // clear on game
     // start
     bl clearScreen
     bl setSeed
     mov r11, #0
-
+    // draw main menu and wait
+    // for user to choose an option
     bl runStartMenu
 
-
-
+//---------------------------//
 .globl InsertNewBlock
+// main program loop
 InsertNewBlock:
-    // initializes new ibeam
-    // at 0,0
-
-    // L orange block not stacking properly
-    //s red block not working?
+    // insert random block at a
+    // random x coordinate on the
+    // grid
     bl insertRandomBlock
     // add one to user score
     mov r1, #1
     bl updateScore
 
-    // set initial coords for
-    // x
-    ldr r0, =currentBlockLeftOffset
-    ldrb r0, [r0]
-    lsl r0, #5
-    add r0, #300
-    // set y to 0
-    mov r1, #0
+    // load current block array
+    // position
+    ldr r0, =currentBlock1
+    ldrb r1, [r0]
     // draws intial block position
     bl drawCurrentBlock
 
@@ -68,8 +66,7 @@ blockDelay:
     add r11, #1
 
     // loops until moveBlockDown
-    // detects end of game stat
-
+    // detects end of game state
     b InsertNewBlock
 
 
@@ -102,32 +99,10 @@ moveBlockLoop:
     ldr r0, =gameState
     strb r1, [r0, r2]
 
-    // commented out for debugging
-    // draw black image
-    // divide coordinate by 10
-    // to get y
-    mov r7, r2
-    mov r6, #0
-modLoop:
-    subs r2, #10
-    blt endMod
-    add r6, #1
-    mov r7, r2
-    b modLoop
-endMod:
-    // counter is division
-    // r7 is remainder
-
-    mov r1, #0
-    lsl r6, #5
-    add r1, r6
-    // now calc x
-    ldr r0, =currentBlockLeftOffset
-    ldrb r0, [r0]
-    // x32 to get pixel value
-    lsl r0, #5
-    // add base offset
-    add r0, #300
+    // send currentBlock1 value
+    // to erase subroutine as
+    // parameter in r1
+    mov r1, r2
 
     bl eraseCurrentBlock
 
@@ -158,34 +133,7 @@ endMod:
     strb r2, [r3]
     ldr r0, =gameState
     strb r1, [r0, r2]
-
-    // draw regular image
-    // divide coordinate by 10
-    // to get y
-    mov r7, r2
-    mov r6, #0
-modLoop2:
-    subs r2, #10
-    blt endMod2
-    add r6, #1
-    mov r7, r2
-    b modLoop2
-endMod2:
-    // counter is division
-    // r7 is remainder
-
-    mov r1, #0
-    lsl r6, #5
-    add r1, r6
-
-    // now calc x
-    ldr r0, =currentBlockLeftOffset
-    ldrb r0, [r0]
-    // x32 to get pixel value
-    lsl r0, #5
-    // add base offset
-    add r0, #300
-
+    mov r1, r2
     bl drawCurrentBlock
 
 
@@ -363,19 +311,55 @@ FinishCheckGameOver:
     pop {r3}
     mov pc, r3
 
-//----------------------------
+//----------------------------//
 
 
+//----------------------------//
+.globl drawCurrentBlock
 // draws the current block
 // to screen
 drawCurrentBlock:
     /*
-    takes coordinates
-    as parameters
+    takes block array
+    position as parameter
+    in r1
     */
     push {lr}
-    push {r4}
+    push {r4, r6, r7}
+    // set parameters
+    mov r2, r1
+    // divide coordinate by 10
+    // to get y
+    mov r7, r2
+    mov r6, #0
+drawModLoop:
+    subs r2, #10
+    blt drawEndMod
+    add r6, #1
+    mov r7, r2
+    b drawModLoop
+drawEndMod:
+    // counter is division
+    // r7 is remainder
+    
+    // where 0 is the base
+    // y coord
+    mov r1, #0
+    lsl r6, #5
+    add r1, r6
 
+    // now calc x
+    ldr r0, =currentBlockLeftOffset
+    ldrb r0, [r0]
+    // x32 to get pixel value
+    lsl r0, #5
+    // add base offset
+    // where 300 is the base
+    // x coord
+    add r0, #300
+
+
+/* not used */
     ldr r3, =topLeftBlock
     ldrb r3, [r3]
     cmp r3, #0
@@ -387,6 +371,7 @@ coordChange:
 topOfGrid:
     add r1, #32
 noCoordChange:
+/* end not used */
 
     // get block width
     ldr r3, =currentBlockSizeX
@@ -401,20 +386,57 @@ noCoordChange:
     ldr r4, [r4]
 
     bl drawImage
-    pop {r4}
+    pop {r4, r6, r7}
     pop {lr}
     mov pc, lr
 
+//----------------------------//
 
+
+//----------------------------//
+.globl eraseCurrentBlock
 // draws the black version
 // of the current block
 eraseCurrentBlock:
     /*
-    takes coordinates
-    as parameters
+    takes block array
+    position as parameter
+    in r1 
     */
     push {lr}
     push {r4}
+    // set up parameter
+    mov r2, r1
+    // divide coordinate by 10
+    // to get y
+    mov r7, r2
+    mov r6, #0
+eraseModLoop:
+    subs r2, #10
+    blt eraseEndMod
+    add r6, #1
+    mov r7, r2
+    b eraseModLoop
+eraseEndMod:
+    // counter is division
+    // r7 is remainder
+    
+    // where 0 is the base
+    // y coord
+    mov r1, #0
+    lsl r6, #5
+    add r1, r6
+    // now calc x
+    ldr r0, =currentBlockLeftOffset
+    ldrb r0, [r0]
+    // x32 to get pixel value
+    lsl r0, #5
+    // add base offset
+    // where 300 is base
+    // x coord
+    add r0, #300
+
+/* not used */
     ldr r3, =topLeftBlock
     ldrb r3, [r3]
     cmp r3, #0
@@ -426,6 +448,7 @@ eraseCoordChange:
 eraseTopOfGrid:
     add r1, #32
 eraseNoCoordChange:
+/* end not used */
 
 
     // get block width
@@ -445,6 +468,12 @@ eraseNoCoordChange:
     pop {lr}
     mov pc, lr
 
+//----------------------------//
+
+
+
+
+//----------------------------//
 .globl xorShift
 // basic concept referenced from:
 // http://www.arklyffe.com/main/2010/08/29/xorshift-pseudorandom-number-generator/

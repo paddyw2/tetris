@@ -125,6 +125,11 @@ insertNewIBeam:
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
 
+    // update block width
+    mov r1, #4
+    ldr r0, =currentBlockWidth
+    strb r1, [r0]
+
     // indicate that top left is filled
     mov r5, #0
     ldr r3, =topLeftBlock
@@ -240,6 +245,14 @@ insertNewSBeam:
     mov r3, #64
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
+
+    // update block width
+    mov r1, #3
+    ldr r0, =currentBlockWidth
+    strb r1, [r0]
+
+
+
     // add flag indicating top left
     // position is blank
     mov r5, #1
@@ -361,6 +374,14 @@ insertNewSRBeam:
     mov r3, #64
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
+
+
+    // update block width
+    mov r1, #3
+    ldr r0, =currentBlockWidth
+    strb r1, [r0]
+
+
     // indicate that top left is filled
     mov r5, #0
     ldr r3, =topLeftBlock
@@ -481,6 +502,12 @@ insertNewOBeam:
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
 
+    // update block width
+    mov r1, #2
+    ldr r0, =currentBlockWidth
+    strb r1, [r0]
+
+
     // indicate that top left is filled
     mov r5, #0
     ldr r3, =topLeftBlock
@@ -600,6 +627,13 @@ insertNewWBeam:
     mov r3, #64
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
+
+    // update block width
+    mov r1, #3
+    ldr r0, =currentBlockWidth
+    strb r1, [r0]
+
+
     // indicate that top left is filled
     mov r5, #1
     ldr r3, =topLeftBlock
@@ -718,6 +752,13 @@ insertNewLBBeam:
     mov r3, #64
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
+
+    // update block width
+    mov r1, #3
+    ldr r0, =currentBlockWidth
+    strb r1, [r0]
+
+
     // indicate that top left is filled
     mov r5, #0
     ldr r3, =topLeftBlock
@@ -838,6 +879,12 @@ insertNewLOBeam:
     mov r3, #64
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
+
+    // update block width
+    mov r1, #3
+    ldr r0, =currentBlockWidth
+    strb r1, [r0]
+
     // add flag indicating top left
     // position is blank
     mov r5, #1
