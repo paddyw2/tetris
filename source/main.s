@@ -11,7 +11,11 @@ main:
 
     bl      EnableJTAG
     bl      InitFrameBuffer
-    
+
+    // Intialize SNES
+    // set function codes of each line
+    bl Set_Lines
+
     // clear screen
     b StartGame
 
@@ -815,7 +819,7 @@ haltLoop$:
 .globl game_block
 game_block:     .include "images/s_block.txt"
 .globl start_screen
-start_screen:   .include "images/empty.txt"//"images/start_screen.txt"
+start_screen:   .include "images/empty.txt"//"images/start_screen_blank.txt"
 .globl game_over_screen
 game_over_screen:   .include "images/empty.txt"//"images/game_over.txt"
 .globl i_block

@@ -121,6 +121,8 @@ pulseLoop:
     b pulseLoop
 
 endPulseLoop:
+    // return button register in r0
+    mov r0, r9
     pop {r4-r9}
     pop {lr}
     mov pc, lr
