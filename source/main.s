@@ -19,18 +19,23 @@ main:
     // clear screen
     b StartGame
 
-    bl clearScreen
 
     // draw intro screen
     bl drawIntroScreen
+
 
 StartGame:
     // clear on game
     // start
     bl clearScreen
     bl setSeed
-
     mov r11, #0
+
+    bl runStartMenu
+
+
+
+.globl InsertNewBlock
 InsertNewBlock:
     // initializes new ibeam
     // at 0,0
@@ -56,8 +61,8 @@ InsertNewBlock:
     // moves current block down
     // until it cannot move further
     bl moveBlockDown
-    cmp r11, #5
-    bne blockDelay 
+    cmp r11, #12
+    bne blockDelay
     bl checkForCompleteLines
 blockDelay:
     add r11, #1
@@ -234,7 +239,7 @@ incFourth:
     add r1, #10
     strb r1, [r0]
 finishInc:
-    
+
     // delay after each block draw
     mov r1, #1000
     lsl r1, #6
@@ -381,7 +386,7 @@ coordChange:
     b noCoordChange
 topOfGrid:
     add r1, #32
-noCoordChange: 
+noCoordChange:
 
     // get block width
     ldr r3, =currentBlockSizeX
@@ -464,7 +469,7 @@ xorShift:
     ldr r0, =randSeedVal
     ldrb r0, [r0]
     mov r4, r0
-    // shift seed value by 
+    // shift seed value by
     lsl r0, #7
     eor r4, r0
     mov r2, r4
@@ -473,7 +478,7 @@ xorShift:
     mov r2, r4
     lsl r2, #3
     eor r4, r2
-    
+
     ldr r0, =randSeedVal
     strb r4, [r0]
 
@@ -521,7 +526,7 @@ insertRandomBlock:
 
     mov r1, #7
     bl xorShift
-    
+
     cmp r1, #0
     beq block0
     cmp r1, #1
@@ -577,6 +582,7 @@ finishRandInsert:
 //---------------------------//
 
 // sets up intial screen
+.globl drawIntroScreen
 drawIntroScreen:
     push {lr}
     push {r4, r5}
@@ -593,9 +599,25 @@ drawIntroScreen:
 
 //---------------------------//
 
+drawGameArea:
+    push {lr}
+    push {r4, r5}
+    ldr r4, =game_area
+    mov r1, #0
+    mov r0, #0
+    mov r2, #1024
+    mov r3, #768
+
+    bl drawImage
+    pop {r4, r5}
+    pop {lr}
+    mov pc, lr
+
+
+
 
 //---------------------------//
-// sets up game over screen 
+// sets up game over screen
 drawGameOverScreen:
     push {lr}
     push {r4, r5}
@@ -618,6 +640,7 @@ drawGameOverScreen:
 //---------------------------//
 // clears memory to avoid having
 // to reload each time
+.globl resetGameState
 resetGameState:
     push {lr}
     ldr r0, =gameState
@@ -660,7 +683,8 @@ checkForCompleteLines:
 lineLoop:
     cmp r6, #10
     // if checked whole line, must be cleared
-    b clearLine
+    //CHANGE TO BEQ when done!
+     b clearLine
     // load state address value
     // minus offset of loop counter
     ldrb r7, [r4, -r6]
@@ -683,7 +707,7 @@ clearLine:
     mov r1, r5
     mov r1, #17
     bl clearLineScreen
-    
+
     // for every line cleared, update
     // user score by 10
     mov r1, #10
@@ -709,7 +733,7 @@ finishCheckLines:
     mov pc, lr
 
 //---------------------------------------//
-    
+
 
 
 //---------------------------------------//
@@ -737,7 +761,7 @@ getLineLoop:
 clearLineValues:
     // now line address in r3
     // offset is in r2
-    // loop over each 
+    // loop over each
     // check if line to cleared is top
     cmp r2, #0
     beq finishClearValues
@@ -752,7 +776,6 @@ clearValuesLoop:
     beq updateNextLine
     // value from line above
     ldrb r4, [r3, r1]
-    mov r10, r4
     // store in line below
     strb r4, [r3, r2]
     add r2, #1
@@ -779,7 +802,7 @@ finishClearValues:
 updateScore:
 // increments user score by r1 value
     push {lr}
-    b scoreEnd
+    @b scoreEnd
     // r1 is value to increment
     // score by
     ldr r0, =currentScore
@@ -788,7 +811,7 @@ updateScore:
     str r2, [r0]
     mov r1, r2
     bl drawCurrentScore
-scoreEnd:    
+scoreEnd:
     pop {lr}
     mov pc, lr
 
@@ -819,7 +842,9 @@ haltLoop$:
 .globl game_block
 game_block:     .include "images/s_block.txt"
 .globl start_screen
-start_screen:   .include "images/empty.txt"//"images/start_screen_blank.txt"
+start_screen:   .include "images/start_screen_blank.txt"
+.globl game_area
+game_area: .include "images/tetris_game_area.txt"
 .globl game_over_screen
 game_over_screen:   .include "images/empty.txt"//"images/game_over.txt"
 .globl i_block
@@ -850,6 +875,7 @@ l_block_blue_black: .include "images/l_block_blue_black.txt"
 l_block_orange: .include "images/l_block_orange2.txt"
 .globl l_block_orange_black
 l_block_orange_black: .include "images/l_block_orange_black2.txt"
+
 
 
 // game state has 1 values for blocks, and 0 for

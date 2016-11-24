@@ -7,12 +7,12 @@
 // if user presses up/down it
 // changes selection
 // if the user presses a, then
-// the current selection is 
+// the current selection is
 // activated
 runStartMenu:
     push {lr}
     // draw initial image
-    bl drawStartScreen
+    bl drawIntroScreen
     // draw state1 image
     bl startState1
 startUserInputLoop:
@@ -30,10 +30,10 @@ startUserInputLoop:
     // else check if up or down pressed
     mov r1, #1
 checkUp:
-    lsl r1, #5
+    lsl r1, #4
     tst r0, r1
     beq checkDown
-    bl startState2
+    bl startState1
     b getNextInput
 checkDown:
     lsl r1, #1
@@ -57,15 +57,15 @@ startState1:
 
     // clear area and draw
     // new selection
-    bl clearState
-    mov r1, =state1
+    @bl clearState
+    ldr r1, =state1
     bl drawState
 
     // update user selection
     ldr r0, =currentChoice
     mov r1, #0
     strb r1, [r0]
-    
+
     pop {r4}
     pop {lr}
     mov pc, lr
@@ -81,8 +81,8 @@ startState2:
 
     // clear area and draw
     // new selection
-    bl clearState
-    mov r1, =state2
+    @bl clearState
+    ldr r1, =state2
     bl drawState
 
     // update user selection
@@ -102,32 +102,32 @@ drawState:
     push {lr}
     push {r4}
     mov r4, r1
-    mov r3, #155
-    mov r2, #382
+    mov r3, #200
+    mov r2, #400
     mov r1, #300
-    mov r1, #400
+    mov r0, #400
     bl drawImage
     pop {r4}
     pop {lr}
     mov pc, lr
 //-----------------------------//
-    
-    
+
+
 
 //-----------------------------//
-clearState:
-    // clears selection choices
-    push {lr}
-    push {r4}
-    mov r4, =blankState
-    mov r3, #155
-    mov r2, #382
-    mov r1, #300
-    mov r1, #400
-    bl drawImage
-    pop {r4}
-    pop {lr}
-    mov pc, lr
+@clearState:
+@    // clears selection choices
+@    push {lr}
+@    push {r4}
+@    ldr r4, =blankState
+@    mov r3, #200
+@    mov r2, #400
+@    mov r1, #300
+@    mov r1, #400
+@    bl drawImage
+@    pop {r4}
+@    pop {lr}
+@    mov pc, lr
 //-----------------------------//
 
 
@@ -148,17 +148,18 @@ quitGame:
 startGame:
     // clear state, and start game
     bl resetGameState
-    bl InsertBlock
+    bl clearScreen
+    bl InsertNewBlock
 
 //-----------------------------//
 
 .section .data
-
-currentChoice:
-    .byte 0
 state1:
     .include "images/state1.txt"
 state2:
     .include "images/state2.txt"
-blankState:
-    .include "images/blankState.txt"
+@blankState:
+@    .include "images/blank_state.txt"
+
+currentChoice:
+    .byte 0

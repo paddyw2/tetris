@@ -30,11 +30,11 @@ clearScreen:
 drawBlock:
     push {lr}
     /*
-    r5 = starting y
-    r6 = starting x
-    r7 = color
-    r8 = x
-    r9 = y
+    r1 = starting y
+    r0 = starting x
+    r2 = color
+    r3 = x
+    r4 = y
     */
     push {r5-r9}
     // set parameters
@@ -50,7 +50,7 @@ cs_drawHeight:
     cmp r5, r9
     beq cs_totalEnd
     push {r6}
-cs_drawLoop:   
+cs_drawLoop:
     cmp r6, r8
     beq cs_endLoop
     mov r0, r6
@@ -92,7 +92,7 @@ drawImage:
     mov r6, #0
 di_drawOuter:
     cmp r6, r3
-    beq di_end 
+    beq di_end
     mov r0, r7
     push {r6}
     mov r6, #0
@@ -125,11 +125,11 @@ di_end:
 // moves board graphics down by
 // 32px
 clearLineScreen:
-    
+
     // takes r1 as row to start at
     push {lr}
     push {r5, r6}
-    
+
     // must start at r1*32 (y) + 32*10
     // y
     add r1, #1
@@ -171,7 +171,7 @@ finishX:
     // move to next line
     sub r6, #1
     b drawY
-    
+
 finishShiftScreen:
     pop {r5, r6}
     pop {lr}
@@ -204,7 +204,7 @@ getSecondDigit:
     add r5, #1
     b getSecondDigit
 getThirdDigit:
-    // r1 = third digit  
+    // r1 = third digit
 
     // update address with
     // ascii value
@@ -215,15 +215,28 @@ getThirdDigit:
     strb r5, [r0, #1]
     strb r1, [r0, #2]
     // clear score area
-   
+    /*
+    r1 = starting y
+    r0 = starting x
+    r2 = color
+    r3 = x
+    r4 = y
+    */
+    mov r0, #100
+    mov r1, #75
+    mov r2, #0
+    mov r3, #200
+    mov r4, #200
+    bl drawBlock
+
     ldr r0, =currentScoreAscii
-    cmp r4, #0
+    cmp r4, #48
     beq drawTwo
     mov r3, r0
     mov r7, #3
     b writeScore
 drawTwo:
-    cmp r5, #0
+    cmp r5, #48
     beq drawOne
     add r0, #1
     mov r3, r0
@@ -238,11 +251,11 @@ writeScore:
     mov r6, #100
     mov r10, #0xff
     bl drawString
-    
+
     pop {r4, r5, r7}
     pop {lr}
     mov pc, lr
-   
+
 //---------------------//
 
 
@@ -250,11 +263,11 @@ writeScore:
 .globl DrawPixel
 // draws pixel color at x,y coordinate
 DrawPixel:
-   /*  
+   /*
     *  r0 - x
     *  r1 - y
     *  r2 - color
-    */ 
+    */
     push    {r4}
     push    {r3}
     offset  .req    r4
