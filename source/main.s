@@ -443,380 +443,7 @@ eraseNoCoordChange:
     mov pc, r3
 
 
-
-
-
-
-
-
-
-
-// initializes a new obeam
-// block at 0,0 on the screen
-// and game state
-insertNewLBBeam:
-    mov r4, lr
-    push {r4}
-    // first coords are
-    // 0,1,11,12
-
-    // first check that new block can
-    // be inserted
-    ldr r0, =gameState
-    ldrb r1, [r0, #0]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #10]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #11]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #12]
-    cmp r1, #1
-    beq quitProgram
-
-    // max left shifted value
-    // is 7
-    mov r1, #7
-    bl xorShift
-    mov r8, r1
-    // update offset value
-    ldr r3, =currentBlockLeftOffset
-    strb r8, [r3]
-
-    ldr r0, =currentBlock1
-    mov r1, #0
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock2
-    mov r1, #10
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock3
-    mov r1, #11
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock4
-    mov r1, #12
-    add r1, r8
-    strb r1, [r0]
-
-    // update border tiles
-    //
-    ldr r0, =currentBorders
-    mov r1, #255
-    strb r1, [r0]
-    // skip 2, as not border
-    mov r1, #10
-    add r1, r8
-    strb r1, [r0, #1]
-    mov r1, #11
-    add r1, r8
-    strb r1, [r0, #2]
-    mov r1, #12
-    add r1, r8
-    strb r1, [r0, #3]
-
-    // update game state
-    // with block at initial
-    // position
-    mov r1, #1
-    ldr r2, =currentBlock1
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock2
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock3
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock4
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    // update current block image
-    // pointer, and size
-    ldr r3, =l_block_blue
-    ldr r2, =currentBlockImage
-    str r3, [r2]
-    ldr r3, =l_block_blue_black
-    ldr r2, =currentBlockImageBlack
-    str r3, [r2]
-    mov r3, #96
-    ldr r2, =currentBlockSizeX
-    strb r3, [r2]
-    mov r3, #64
-    ldr r5, =currentBlockSizeY
-    strb r3, [r5]
-    // indicate that top left is filled
-    mov r5, #0
-    ldr r3, =topLeftBlock
-    strb r5, [r3]
-
-
-    pop {r4}
-    mov pc, r4
-
-//----------------------------
-
-
-
-
-// initializes a new obeam
-// block at 0,0 on the screen
-// and game state
-insertNewLOBeam:
-    mov r4, lr
-    push {r4}
-    // first coords are
-    // 0,1,11,12
-
-    // first check that new block can
-    // be inserted
-    ldr r0, =gameState
-    ldrb r1, [r0, #2]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #10]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #11]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #12]
-    cmp r1, #1
-    beq quitProgram
-
-    // max left shifted value
-    // is 7
-    mov r1, #7
-    bl xorShift
-    mov r8, r1
-    // update offset value
-    ldr r3, =currentBlockLeftOffset
-    strb r8, [r3]
-
-
-
-    ldr r0, =currentBlock1
-    mov r1, #2
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock2
-    mov r1, #10
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock3
-    mov r1, #11
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock4
-    mov r1, #12
-    add r1, r8
-    strb r1, [r0]
-
-    // update border tiles
-    //
-    ldr r0, =currentBorders
-    mov r1, #255
-    strb r1, [r0]
-    // skip 2, as not border
-    mov r1, #10
-    add r1, r8
-    strb r1, [r0, #1]
-    mov r1, #11
-    add r1, r8
-    strb r1, [r0, #2]
-    mov r1, #12
-    add r1, r8
-    strb r1, [r0, #3]
-
-    // update game state
-    // with block at initial
-    // position
-    mov r1, #1
-    ldr r2, =currentBlock1
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock2
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock3
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock4
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    // update current block image
-    // pointer, and size
-    ldr r3, =l_block_orange
-    ldr r2, =currentBlockImage
-    str r3, [r2]
-    ldr r3, =l_block_orange_black
-    ldr r2, =currentBlockImageBlack
-    str r3, [r2]
-    mov r3, #96
-    ldr r2, =currentBlockSizeX
-    strb r3, [r2]
-    mov r3, #64
-    ldr r5, =currentBlockSizeY
-    strb r3, [r5]
-    // add flag indicating top left
-    // position is blank
-    mov r5, #1
-    ldr r3, =topLeftBlock
-    strb r5, [r3]
-
-    pop {r4}
-    mov pc, r4
-
-//----------------------------
-
-
-
-
-
-
-// initializes a new obeam
-// block at 0,0 on the screen
-// and game state
-insertNewSRBeam:
-    mov r4, lr
-    push {r4}
-    // first coords are
-    // 0,1,11,12
-
-    // first check that new block can
-    // be inserted
-    ldr r0, =gameState
-    ldrb r1, [r0, #0]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #1]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #11]
-    cmp r1, #1
-    beq quitProgram
-    ldrb r1, [r0, #12]
-    cmp r1, #1
-    beq quitProgram
-
-    // if it can, continue
-    // max left shifted value
-    // is 7
-    mov r1, #7
-    bl xorShift
-    mov r8, r1
-    // update offset value
-    ldr r3, =currentBlockLeftOffset
-    strb r8, [r3]
-
-
-    ldr r0, =currentBlock1
-    mov r1, #0
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock2
-    mov r1, #1
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock3
-    mov r1, #11
-    add r1, r8
-    strb r1, [r0]
-    ldr r0, =currentBlock4
-    mov r1, #12
-    add r1, r8
-    strb r1, [r0]
-
-    // update border tiles
-    //
-    ldr r0, =currentBorders
-    mov r1, #0
-    add r1, r8
-    strb r1, [r0]
-    // skip 2, as not border
-    mov r1, #255
-    strb r1, [r0, #1]
-    mov r1, #11
-    add r1, r8
-    strb r1, [r0, #2]
-    mov r1, #12
-    add r1, r8
-    strb r1, [r0, #3]
-
-    // update game state
-    // with block at initial
-    // position
-    mov r1, #1
-    ldr r2, =currentBlock1
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock2
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock3
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    ldr r2, =currentBlock4
-    ldrb r2, [r2]
-    ldr r0, =gameState
-    strb r1, [r0, r2]
-
-    // update current block image
-    // pointer, and size
-    ldr r3, =s_block_red
-    ldr r2, =currentBlockImage
-    str r3, [r2]
-    ldr r3, =s_block_red_black
-    ldr r2, =currentBlockImageBlack
-    str r3, [r2]
-    mov r3, #96
-    ldr r2, =currentBlockSizeX
-    strb r3, [r2]
-    mov r3, #64
-    ldr r5, =currentBlockSizeY
-    strb r3, [r5]
-    // indicate that top left is filled
-    mov r5, #0
-    ldr r3, =topLeftBlock
-    strb r5, [r3]
-
-
-    pop {r4}
-    mov pc, r4
-
-//----------------------------
-
-
-/*************************
-// end of insert blocks //
-**************************/
-
-
+.globl xorShift
 // basic concept referenced from:
 // http://www.arklyffe.com/main/2010/08/29/xorshift-pseudorandom-number-generator/
 xorShift:
@@ -1171,6 +798,7 @@ scoreEnd:
 
 
 //----------------------------------//
+.globl quitProgram
 quitProgram:
 // if game is over
     mov r7, #0x0000
@@ -1191,30 +819,39 @@ haltLoop$:
 //----------------------------------//
 
 .section .data
-
+.globl game_block
 game_block:     .include "images/s_block.txt"
+.globl start_screen
 start_screen:   .include "images/empty.txt"//"images/start_screen.txt"
+.globl game_over_screen
 game_over_screen:   .include "images/empty.txt"//"images/game_over.txt"
-myString:       .ascii "Hey there!"
-test:           .ascii "\3407"
+.globl i_block
 i_block:        .include "images/i_block.txt"
+.globl i_block_black
 i_block_black:  .include "images/i_block_black.txt"
+.globl s_block_green
 s_block_green:        .include "images/s_block_green.txt"
+.globl s_block_green_black
 s_block_green_black:  .include "images/s_block_green_black.txt"
+.globl s_block_red
 s_block_red:    .include "images/s_block_red.txt"
+.globl s_block_red_black
 s_block_red_black: .include "images/s_block_red_black.txt"
-
+.globl o_block_yellow
 o_block_yellow: .include "images/o_block_yellow.txt"
+.globl o_block_yellow_black
 o_block_yellow_black: .include "images/o_block_yellow_black.txt"
-
+.globl w_block
 w_block: .include "images/w_block.txt"
+.globl w_block_black
 w_block_black: .include "images/w_block_black.txt"
-
+.globl l_block_blue
 l_block_blue: .include "images/l_block_blue.txt"
+.globl l_block_blue_black
 l_block_blue_black: .include "images/l_block_blue_black.txt"
-
-
+.globl l_block_orange
 l_block_orange: .include "images/l_block_orange2.txt"
+.globl l_block_orange_black
 l_block_orange_black: .include "images/l_block_orange_black2.txt"
 
 
