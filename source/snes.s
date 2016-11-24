@@ -15,32 +15,33 @@ Set_Lines:
     // to desired function codes
     // i.e. 9 and 11 to output
     // 10 to input
-    mov r3, lr
-    push {r3}
-    mov r4, #9
-    mov r5, #0b001
+    push {lr}
+    mov r0, #9
+    mov r1, #0b001
     bl Init_GPIO
-    mov r4, #10
-    mov r5, #0b000
+    mov r0, #10
+    mov r1, #0b000
     bl Init_GPIO
-    mov r4, #11
-    mov r5, #0b001
+    mov r0, #11
+    mov r1, #0b001
     bl Init_GPIO
-    pop {r3}
-    mov pc, r3
+    pop {lr}
+    mov pc, lr
 
 
 //----------- Init_GPIO -----------//
-//Parameters: r4=pin, r5=code
+//Parameters: r0=pin, r1=code
 //Registers: r3,r4,r6,r7,r9
 //Creates: getModTen,finishedMod
 //Uses: getModTen,finishedMod
 //--------------------------------//
 Init_GPIO:
-    // r4 is pin number
-    // r5 is function code
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r4-r9}
+    // set parameters
+    mov r4, r0
+    mov r5, r1
+    // set counter
     mov r6, #0
     mov r7, r4                                          // get remainder before first iteration
   getModTen:
@@ -61,8 +62,10 @@ Init_GPIO:
       mov r2, r5                                          // get  output code from r5
       orr r1, r2, lsl r7                                  // set output code
       str r1, [r0]                                        // store
-      pop {r3}
-      mov pc, r3
+    
+      pop {r4-r9}
+      pop {lr}
+      mov pc, lr
 
 
 .globl Read_Data
@@ -76,17 +79,17 @@ Init_GPIO:
 Read_Data:
     // store in one register, then shift bits one
     // by one
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r4-r9}
     // set up inital communication
     mov r9, #0                                          // button input register
-    mov r5, #28
+    mov r1, #28
     bl Write_Clock                                      // set clock
-    mov r5, #28
+    mov r1, #28
     bl Write_Latch                                      // set latch
-    mov r5, #12
+    mov r1, #12
     bl Wait                                             // first cycle 12ms
-    mov r5, #40
+    mov r1, #40
     bl Write_Latch                                      // clear latch
 
     // loop over each 16 inputs
@@ -95,11 +98,11 @@ Read_Data:
 pulseLoop:
     cmp r6, #16
     bge endPulseLoop
-    mov r5, #6
+    mov r1, #6
     bl Wait                                             // wait 6ms
-    mov r5, #40
+    mov r1, #40
     bl Write_Clock                                      // clear clock
-    mov r5, #6
+    mov r1, #6
     bl Wait                                             // wait 6ms
     bl Read_SNES                                        // read input
     // if first loop, so B button
@@ -107,23 +110,25 @@ pulseLoop:
     // r9=0000000
     // or r5 and r9 equals last bit
     // set
+    mov r5, r0
     lsl r5, r6                                          // shift return value by loop times
     orr r9, r5                                          // or adjusted val with button reg
     add r6, #1                                          // increment counter
     // new cycle
-    mov r5, #28
+    mov r1, #28
     bl Write_Clock                                       // set clock
     // loop
     b pulseLoop
 
 endPulseLoop:
-    pop {r3}
-    mov pc, r3
+    pop {r4-r9}
+    pop {lr}
+    mov pc, lr
 
 
 .globl Check_Buttons
 //--------------- Check_Buttons -------------//
-//Parameters: r9=button register
+//Parameters: r0=button register
 //Registers: r3,r4,r5,r6,r9
 //Creates: checkButtonLoop, continueButtonLoop,
 //         finishButtonLoop
@@ -140,8 +145,10 @@ Check_Buttons:
     r7= routine to call
         on button press
     */
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r4-r9}
+    // set parameters
+    mov r9, r0
     routine  .req    r2
     mov r4, r9                                          // get copy of button register
     mov r6, #0                                          // set button counter (B=0, Y=1 etc)
@@ -158,70 +165,76 @@ continueButtonLoop:
     b checkButtonLoop
 finishButtonLoop:
     .unreq routine
-    pop {r3}
-    mov pc, r3
+    pop {r4-r9}
+    pop {lr}
+    mov pc, lr
 
 //--------------- Write_Clock -------------//
-//Parameters: r5=set or clear (#40 or #28)
+//Parameters: r1=set or clear (#40 or #28)
 //Registers: r0,r3,r5
 //Uses: stack
 //-----------------------------------------//
 Write_Clock:
     // set or clear defined by r5 value
     // either #40 or #28 (set)
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r5}
+    mov r5, r1
     ldr r0, =0x3F200000
     add r0, r5
     mov r3, #1                                          // set code
     lsl r3, #11                                         // target pin
     str r3, [r0]                                        // update clock
-    pop {r3}
-    mov pc, r3
+    pop {r5}
+    pop {lr}
+    mov pc, lr
 
 
 //--------------- Write_Latch -------------//
-//Parameters: r5=set or clear (#40 or #28)
+//Parameters: r1=set or clear (#40 or #28)
 //Registers: r0,r3,r5
 //Uses: stack
 //-----------------------------------------//
 Write_Latch:
     // set or clear defined by r5 value
     // either #40 or #28 (set)
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r5}
+    mov r5, r1
     ldr r0, =0x3F200000
     add r0, r5
     mov r3, #1                    // set code
     lsl r3, #9                    // target latch
     str r3, [r0]                  // update latch
-    pop {r3}
-    mov pc, r3
+    pop {r5}
+    pop {lr}
+    mov pc, lr
 
 .globl Wait
 //--------------- Wait-------------//
-//Parameters: r5=wait time
-//Registers: r0,r3,r4,r5
+//Parameters: r1=wait time
+//Registers: r0,r3,r4
 //Creates: cycleLoop, cycleFinished
 //Uses: stack
 //--------------------------------//
 Wait:
-    // delay amount defined by r5
+    // delay amount defined by r1
     // either #6 or #12
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r4}
     ldr r0, =0x3F003000          // base clock address
     add r0, #4                   // get low counter
     ldr r3, [r0]                 // current time in r3
-    add r4, r3, r5               // r4 = desired time
+    add r4, r3, r1               // r4 = desired time
   cycleLoop:
-      ldr r3, [r0]               // load new time
-      cmp r3, r4
-      bge cycleFinished
-      b cycleLoop
-  cycleFinished:
-      pop {r3}
-      mov pc, r3
+    ldr r3, [r0]               // load new time
+    cmp r3, r4
+    bge cycleFinished
+    b cycleLoop
+cycleFinished:
+    pop {r4}
+    pop {lr}
+    mov pc, lr
 
 
 //--------------- Read_SNES -------------//
@@ -230,9 +243,9 @@ Wait:
 //Uses: Stack
 //-------------------------------------- //
 Read_SNES:
-    // output in r5
-    mov r3, lr
-    push {r3}
+    // output in r0
+    push {lr}
+    push {r4,r5}
     ldr r0, =0x3F200000
     add r0, #52
     ldr r4, [r0]            // get the 32bit value of pins
@@ -241,8 +254,10 @@ Read_SNES:
     tst r3, r4              // and with r4, could be 11111101111
     moveq r5, #1            // if pin not set, then input (zero flag)
     movne r5, #0            // else no input, return 0 (no flag)
-    pop {r3}
-    mov pc, r3
+    mov r0, r5
+    pop {r4,r5}
+    pop {lr}
+    mov pc, lr
 
 
 

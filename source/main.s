@@ -12,11 +12,9 @@ main:
     bl      EnableJTAG
     bl      InitFrameBuffer
     
-
     // clear screen
     b StartGame
 
-    mov r7, #0x0000
     bl clearScreen
 
     // draw intro screen
@@ -25,11 +23,10 @@ main:
 StartGame:
     // clear on game
     // start
-    mov r7, #0x0000
     bl clearScreen
     bl setSeed
 
-  mov r11, #0
+    mov r11, #0
 InsertNewBlock:
     // initializes new ibeam
     // at 0,0
@@ -65,10 +62,6 @@ blockDelay:
     // detects end of game stat
 
     b InsertNewBlock
-
-
-
-
 
 
 //
@@ -239,8 +232,8 @@ incFourth:
 finishInc:
     
     // delay after each block draw
-    mov r5, #1000
-    lsl r5, #6
+    mov r1, #1000
+    lsl r1, #6
     bl Wait
     // end delay
 
@@ -371,8 +364,8 @@ drawCurrentBlock:
     takes coordinates
     as parameters
     */
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r4}
 
     ldr r3, =topLeftBlock
     ldrb r3, [r3]
@@ -385,22 +378,23 @@ coordChange:
 topOfGrid:
     add r1, #32
 noCoordChange: 
-    ldr r3, =topLeftBlock
+
     // get block width
     ldr r3, =currentBlockSizeX
     ldrb r3, [r3]
-    mov r4, r3
+    mov r2, r3
     // get block height
     ldr r3, =currentBlockSizeY
     ldrb r3, [r3]
-    mov r5, r3
     // load pointer to image
     // address
-    ldr r3, =currentBlockImage
-    ldr r3, [r3]
+    ldr r4, =currentBlockImage
+    ldr r4, [r4]
+
     bl drawImage
-    pop {r3}
-    mov pc, r3
+    pop {r4}
+    pop {lr}
+    mov pc, lr
 
 
 // draws the black version
@@ -410,8 +404,8 @@ eraseCurrentBlock:
     takes coordinates
     as parameters
     */
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r4}
     ldr r3, =topLeftBlock
     ldrb r3, [r3]
     cmp r3, #0
@@ -428,20 +422,19 @@ eraseNoCoordChange:
     // get block width
     ldr r3, =currentBlockSizeX
     ldrb r3, [r3]
-    mov r4, r3
+    mov r2, r3
     // get block height
     ldr r3, =currentBlockSizeY
     ldrb r3, [r3]
-    mov r5, r3
     // load pointer to image
     // address
-    ldr r3, =currentBlockImageBlack
-    ldr r3, [r3]
+    ldr r4, =currentBlockImageBlack
+    ldr r4, [r4]
 
     bl drawImage
-    pop {r3}
-    mov pc, r3
-
+    pop {r4}
+    pop {lr}
+    mov pc, lr
 
 .globl xorShift
 // basic concept referenced from:
@@ -583,11 +576,12 @@ finishRandInsert:
 drawIntroScreen:
     push {lr}
     push {r4, r5}
-    ldr r3, =start_screen
+    ldr r4, =start_screen
     mov r1, #0
     mov r0, #0
-    mov r4, #1024
-    mov r5, #768
+    mov r2, #1024
+    mov r3, #768
+
     bl drawImage
     pop {r4, r5}
     pop {lr}
@@ -601,11 +595,12 @@ drawIntroScreen:
 drawGameOverScreen:
     push {lr}
     push {r4, r5}
-    ldr r3, =game_over_screen
+    ldr r4, =game_over_screen
     mov r1, #0
     mov r0, #0
-    mov r4, #1024
-    mov r5, #768
+    mov r2, #1024
+    mov r3, #768
+
     bl drawImage
     pop {r4, r5}
     pop {lr}
@@ -801,9 +796,7 @@ scoreEnd:
 .globl quitProgram
 quitProgram:
 // if game is over
-    mov r7, #0x0000
     bl resetGameState
-    mov r10, #202
     bl clearScreen
     //bl drawGameOverScreen
     b haltLoop$
@@ -903,4 +896,4 @@ randSeedVal:
     .word   0                                           // originally 37, now set with setSeed
 currentScore:
     .word   0
-
+.align

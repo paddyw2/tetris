@@ -366,6 +366,7 @@ insertNewSRBeam:
     ldr r3, =topLeftBlock
     strb r5, [r3]
 
+    pop {r5, r8}
     pop {lr}
     mov pc, lr
 
@@ -604,7 +605,7 @@ insertNewWBeam:
     ldr r3, =topLeftBlock
     strb r5, [r3]
     
-    pop {r4, r5}
+    pop {r5, r8}
     pop {lr}
     mov pc, lr
 
@@ -736,6 +737,7 @@ insertNewLBBeam:
 // x coordinate
 insertNewLOBeam:
     push {lr}
+    push {r5, r8}
     // first coords are
     // 2,10,11,12
 

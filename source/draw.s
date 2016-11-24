@@ -1,30 +1,34 @@
 .section .text
 
 /* Sub Routines */
+// mainly regarding graphics
 
-// clear screen
+//---------------------//
 .globl clearScreen
+// clear screen
 clearScreen:
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r4}
 
-    /*
-    r7 = color
-    */
-    mov r8, #1024
-    mov r9, #768
-    mov r5, #0
-    mov r6, #0
+    mov r2, #0
+    mov r3, #1024
+    mov r4, #768
+    mov r1, #0
+    mov r0, #0
+
     bl drawBlock
-    pop {r3}
-    mov pc, r3
+    pop {r4}
+    pop {lr}
+    mov pc, lr
+
+//---------------------//
 
 
-// draw block
+//---------------------//
 .globl drawBlock
+// draw block
 drawBlock:
-    mov r3, lr
-    push {r3}
+    push {lr}
     /*
     r5 = starting y
     r6 = starting x
@@ -32,6 +36,13 @@ drawBlock:
     r8 = x
     r9 = y
     */
+    push {r5-r9}
+    // set parameters
+    mov r5, r1
+    mov r6, r0
+    mov r7, r2
+    mov r8, r3
+    mov r9, r4
     // add height of image
     // to starting y coord
     add r9, r5
@@ -53,38 +64,44 @@ cs_endLoop:
     pop {r6}
     b cs_drawHeight
 cs_totalEnd:
-    pop {r3}
-    mov pc, r3
+
+    pop {r5-r9}
+    pop {lr}
+    mov pc, lr
+
+//---------------------//
 
 
 
-// draw image to screen
-
+//---------------------//
 .globl drawImage
+// draw image to screen
 drawImage:
-    mov r6, lr
-    push {r6}
+    push {lr}
+    push {r6, r7, r8}
     /*
-    r5 = image height
-    r4 = image width
-    r3 = image address
+    r4 = image address
+    r3 = image height
+    r2 = image width
     r1 = start y
     r0 = start x
     */
+    // get width into r8
+    mov r8, r2
     mov r7, r0
     mov r6, #0
 di_drawOuter:
-    cmp r6, r5
+    cmp r6, r3
     beq di_end 
     mov r0, r7
     push {r6}
     mov r6, #0
 di_drawInner:
-    cmp r6, r4
+    cmp r6, r8
     beq di_endDraw
-    ldrh r2, [r3]
+    ldrh r2, [r4]
     bl DrawPixel
-    add r3, #2
+    add r4, #2
     add r6, #1
     mov r0, r6
     add r0, r7
@@ -96,73 +113,79 @@ di_endDraw:
     b di_drawOuter
 di_end:
 
-    mov r12, r2
-    pop {r6}
-    mov pc, r6
-
+    pop {r6, r7, r8}
+    pop {lr}
+    mov pc, lr
 
 //----------------------------//
 
 
+//---------------------------//
 .globl clearLineScreen
+// moves board graphics down by
+// 32px
 clearLineScreen:
     
     // takes r1 as row to start at
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r5, r6}
     
     // must start at r1*32 (y) + 32*10
     // y
     add r1, #1
     lsl r1, #5
+    mov r6, r1
     // x
+    // set to 620 as default
 drawY:
     // set x as far right 620
     mov r0, #300
     add r0, #320
+    // use r5, r6
+    mov r5, r0
     // check y
-    cmp r1, #32
+    cmp r6, #32
     // if y value is less than 0, finish
     blt finishShiftScreen
     // else, draw x
 drawX:
-    cmp r0, #300
+    cmp r5, #300
     // if x is less than 300, move up one line
     blt finishX
     // must first get pixel above
-    sub r1, #32
-    push {r1}
-    push {r0}
+    sub r6, #32
+    mov r0, r5
+    mov r1, r6
     bl GetPixel
-    pop {r0}
-    pop {r1}
     // now colour is in r2
-    add r1, #32
-    push {r0}
-    push {r1}
+    add r6, #32
+    mov r0, r5
+    mov r1, r6
     // now draw pixel above, but below
     bl DrawPixel
-    pop {r1}
-    pop {r0}
     // decrement x coord
-    sub r0, #1
+    sub r5, #1
     b drawX
 
 finishX:
     // move to next line
-    sub r1, #1
+    sub r6, #1
     b drawY
     
 finishShiftScreen:
-    pop {r3}
-    mov pc, r3
+    pop {r5, r6}
+    pop {lr}
+    mov pc, lr
 
 //---------------------------//
 
+
+//---------------------------//
 .globl drawCurrentScore
+// draws current score to scorebox
 drawCurrentScore:
-    mov r3, pc
-    push {r3}
+    push {lr}
+    push {r4, r5, r7}
     // score value in r1
     ldr r0, =currentScoreAscii
     // convert to ascii
@@ -192,9 +215,6 @@ getThirdDigit:
     strb r5, [r0, #1]
     strb r1, [r0, #2]
     // clear score area
-
-
-
    
     ldr r0, =currentScoreAscii
     cmp r4, #0
@@ -219,17 +239,22 @@ writeScore:
     mov r10, #0xff
     bl drawString
     
-    pop {r3}
-    mov pc, r3
+    pop {r4, r5, r7}
+    pop {lr}
+    mov pc, lr
    
+//---------------------//
 
-/* Draw Pixel
- *  r0 - x
- *  r1 - y
- *  r2 - color
- */ 
+
+//---------------------//
 .globl DrawPixel
+// draws pixel color at x,y coordinate
 DrawPixel:
+   /*  
+    *  r0 - x
+    *  r1 - y
+    *  r2 - color
+    */ 
     push    {r4}
     push    {r3}
     offset  .req    r4
@@ -259,9 +284,17 @@ dp_skipPrint:
     pop     {r4}
     bx      lr
 
+//---------------------//
 
+
+
+//---------------------//
 .globl GetPixel
+// returns pixel color at x,y coordinate
 GetPixel:
+   /*  r0 - x
+    *  r1 - y
+    */
     // copy of drawPixel
     // that gets the current color value
     // at an x,y coordinate

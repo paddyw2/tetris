@@ -65,67 +65,67 @@ LOAD build/main.o
 .igot.plt       0x00030d70        0x0
  .igot.plt      0x00000000        0x0 build/jtag.o
 
-.text           0x00030d70     0x1794
+.text           0x00030d70     0x1690
  *.c.o(.text)
  *(.text)
  .text          0x00030d70       0x8c build/jtag.o
                 0x00030d70                EnableJTAG
  .text          0x00030dfc       0x80 build/framebuffer.o
                 0x00030dfc                InitFrameBuffer
- .text          0x00030e7c      0x974 build/blockinsert.o
+ .text          0x00030e7c      0x97c build/blockinsert.o
                 0x00030e7c                insertNewIBeam
                 0x00030fcc                insertNewSBeam
                 0x00031118                insertNewSRBeam
-                0x00031260                insertNewOBeam
-                0x000313a8                insertNewWBeam
-                0x000314f4                insertNewLBBeam
-                0x00031640                insertNewLOBeam
- .text          0x000317f0      0x250 build/draw.o
-                0x000317f0                clearScreen
-                0x00031814                drawBlock
-                0x00031860                drawImage
-                0x000318c4                clearLineScreen
-                0x00031934                drawCurrentScore
-                0x000319dc                DrawPixel
-                0x00031a14                GetPixel
- .text          0x00031a40       0x88 build/write.o
-                0x00031a40                drawString
- .text          0x00031ac8      0x1e8 build/snes.o
-                0x00031ac8                Set_Lines
-                0x00031b50                Read_Data
-                0x00031bc4                Check_Buttons
-                0x00031c48                Wait
- .text          0x00031cb0      0x854 build/main.o
-                0x000321ec                xorShift
-                0x000324a0                quitProgram
+                0x00031264                insertNewOBeam
+                0x000313ac                insertNewWBeam
+                0x000314f8                insertNewLBBeam
+                0x00031644                insertNewLOBeam
+ .text          0x000317f8      0x274 build/draw.o
+                0x000317f8                clearScreen
+                0x00031824                drawBlock
+                0x00031888                drawImage
+                0x000318f0                clearLineScreen
+                0x0003195c                drawCurrentScore
+                0x00031a08                DrawPixel
+                0x00031a40                GetPixel
+ .text          0x00031a6c       0x88 build/write.o
+                0x00031a6c                drawString
+ .text          0x00031af4      0x21c build/snes.o
+                0x00031af4                Set_Lines
+                0x00031b84                Read_Data
+                0x00031c00                Check_Buttons
+                0x00031c9c                Wait
+ .text          0x00031d10      0x6f0 build/main.o
+                0x000320f8                xorShift
+                0x000323ac                quitProgram
 OUTPUT(build/output.elf elf32-littlearm)
 
-.glue_7         0x00032504        0x0
+.glue_7         0x00032400        0x0
  .glue_7        0x00000000        0x0 linker stubs
 
-.glue_7t        0x00032504        0x0
+.glue_7t        0x00032400        0x0
  .glue_7t       0x00000000        0x0 linker stubs
 
-.vfp11_veneer   0x00032504        0x0
+.vfp11_veneer   0x00032400        0x0
  .vfp11_veneer  0x00000000        0x0 linker stubs
 
-.v4_bx          0x00032504        0x0
+.v4_bx          0x00032400        0x0
  .v4_bx         0x00000000        0x0 linker stubs
 
-.iplt           0x00032504        0x0
+.iplt           0x00032400        0x0
  .iplt          0x00000000        0x0 build/jtag.o
 
-.rel.dyn        0x00032504        0x0
+.rel.dyn        0x00032400        0x0
  .rel.iplt      0x00000000        0x0 build/jtag.o
 
-.bss            0x00032504        0x0
- .bss           0x00032504        0x0 build/jtag.o
- .bss           0x00032504        0x0 build/framebuffer.o
- .bss           0x00032504        0x0 build/blockinsert.o
- .bss           0x00032504        0x0 build/draw.o
- .bss           0x00032504        0x0 build/write.o
- .bss           0x00032504        0x0 build/snes.o
- .bss           0x00032504        0x0 build/main.o
+.bss            0x00032400        0x0
+ .bss           0x00032400        0x0 build/jtag.o
+ .bss           0x00032400        0x0 build/framebuffer.o
+ .bss           0x00032400        0x0 build/blockinsert.o
+ .bss           0x00032400        0x0 build/draw.o
+ .bss           0x00032400        0x0 build/write.o
+ .bss           0x00032400        0x0 build/snes.o
+ .bss           0x00032400        0x0 build/main.o
 
 .ARM.attributes
                 0x00000000       0x29
@@ -144,23 +144,23 @@ OUTPUT(build/output.elf elf32-littlearm)
  .ARM.attributes
                 0x000000f6       0x29 build/main.o
 
-.debug_line     0x00000000      0x82e
+.debug_line     0x00000000      0x7f4
  .debug_line    0x00000000       0x61 build/jtag.o
  .debug_line    0x00000061       0x67 build/framebuffer.o
- .debug_line    0x000000c8      0x2c3 build/blockinsert.o
- .debug_line    0x0000038b       0xdc build/draw.o
- .debug_line    0x00000467       0x63 build/write.o
- .debug_line    0x000004ca       0xca build/snes.o
- .debug_line    0x00000594      0x29a build/main.o
+ .debug_line    0x000000c8      0x2c7 build/blockinsert.o
+ .debug_line    0x0000038f       0xef build/draw.o
+ .debug_line    0x0000047e       0x63 build/write.o
+ .debug_line    0x000004e1       0xd7 build/snes.o
+ .debug_line    0x000005b8      0x23c build/main.o
 
-.debug_info     0x00000000      0x2da
+.debug_info     0x00000000      0x2ec
  .debug_info    0x00000000       0x5f build/jtag.o
  .debug_info    0x0000005f       0x66 build/framebuffer.o
  .debug_info    0x000000c5       0x78 build/blockinsert.o
  .debug_info    0x0000013d       0x71 build/draw.o
  .debug_info    0x000001ae       0x60 build/write.o
- .debug_info    0x0000020e       0x5f build/snes.o
- .debug_info    0x0000026d       0x6d build/main.o
+ .debug_info    0x0000020e       0x71 build/snes.o
+ .debug_info    0x0000027f       0x6d build/main.o
 
 .debug_abbrev   0x00000000       0x8a
  .debug_abbrev  0x00000000       0x14 build/jtag.o
