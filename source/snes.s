@@ -4,6 +4,53 @@
 //           subroutines
 //----------------------------------//
 
+.globl WaitAndCheckSNES
+//----------------------------------//
+// Waits a certain delay, every certain
+// micro seconds checking the SNES
+// controller for input
+//----------------------------------//
+WaitAndCheckSNES:
+    push {lr}
+    push {r6, r9}
+    mov r6, #0
+WaitAndCheck:
+    cmp r6, #100
+    beq FinishWaitCheck
+    // first check SNES
+    bl Read_Data
+    mov r9, r0
+    // set mask for all arrow
+    // buttons
+    mov r1, #15
+    lsl r1, #4
+    tst r9, r1
+    beq noButtonInput
+    // if test and makes
+    // non zero then some arrow
+    // pressed, so process
+    mov r1, r9
+    bl moveCurrentBlock
+    // if down pressed, then
+    // r0=0 on return
+    cmp r0, #0
+    beq FinishWaitCheck
+noButtonInput:
+    // wait 1000 microseconds
+    mov r1, #500
+    bl Wait
+    add r6, #1
+    b WaitAndCheck
+
+FinishWaitCheck:
+    // no input received, so
+    // continue move block down
+    pop {r6, r9}
+    pop {lr}
+    mov pc, lr
+    
+
+
 .globl Set_Lines
 //----------- Set_Lines -----------//
 //Parameters: NA

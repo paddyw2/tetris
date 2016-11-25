@@ -84,8 +84,8 @@ blockDelay:
 // drawing at new location, each
 // time updating the game state
 moveBlockDown:
-    mov r3, lr
-    push {r3}
+    push {lr}
+    push {r6}
 
 moveBlockLoop:
 
@@ -159,7 +159,11 @@ moveBlockLoop:
     ldr r0, =gameState
     strb r1, [r0, r2]
 
+    mov r6, #0
     ldr r0, =currentBorders
+incBordersLoop:
+    cmp r6, #3
+    beq finishIncBorderLoop
     ldrb r1, [r0]
     cmp r1, #255
     beq incSecond
@@ -187,19 +191,22 @@ incFourth:
     add r1, #10
     strb r1, [r0]
 finishInc:
+    add r6, #1
+    add r0, #1
+    b incBordersLoop
+finishIncBorderLoop:
 
     // delay after each block draw
-    mov r1, #1000
-    lsl r1, #6
-    bl Wait
+    bl WaitAndCheckSNES
     // end delay
 
     b moveBlockLoop
 
 NoMove:
     bl CheckGameOver
-    pop {r3}
-    mov pc, r3
+    pop {r6}
+    pop {lr}
+    mov pc, lr
 
 //----------------------------
 
@@ -899,6 +906,12 @@ currentBlock4:
     .byte   0
 .globl currentBorders
 currentBorders:
+    .byte   0,0,0,0
+.globl currentLeftBorders
+currentLeftBorders:
+    .byte   0,0,0,0
+.globl currentRightBorders
+currentRightBorders:
     .byte   0,0,0,0
 .globl currentBlockImage
 currentBlockImage:

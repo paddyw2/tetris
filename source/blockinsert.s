@@ -70,11 +70,11 @@ insertNewIBeam:
 
     // update border tiles
     //
+    // main borders
     ldr r0, =currentBorders
     mov r1, #0
     add r1, r8
     strb r1, [r0]
-    // skip 2, as not border
     mov r1, #1
     add r1, r8
     strb r1, [r0, #1]
@@ -84,6 +84,33 @@ insertNewIBeam:
     mov r1, #3
     add r1, r8
     strb r1, [r0, #3]
+    // left borders
+    ldr r0, =currentLeftBorders
+    mov r1, #0
+    add r1, r8
+    strb r1, [r0]
+    // skip the rest, as not border
+    mov r1, #255
+    strb r1, [r0, #1]
+    mov r1, #255
+    strb r1, [r0, #2]
+    mov r1, #255
+    strb r1, [r0, #3]
+    // right borders
+    ldr r0, =currentRightBorders
+    mov r1, #255
+    strb r1, [r0]
+    // skip 2, as not border
+    mov r1, #255
+    strb r1, [r0, #1]
+    mov r1, #255
+    strb r1, [r0, #2]
+    // only the far right coordinate
+    // a right border
+    mov r1, #3
+    add r1, r8
+    strb r1, [r0, #3]
+
 
 
     // update game state
@@ -201,6 +228,33 @@ insertNewSBeam:
     mov r1, #11
     add r1, r8
     strb r1, [r0, #3]
+    // left borders
+    ldr r0, =currentLeftBorders
+    mov r1, #1
+    add r1, r8
+    strb r1, [r0]
+    mov r1, #255
+    strb r1, [r0, #1]
+    mov r1, #10
+    add r1, r8
+    strb r1, [r0, #2]
+    mov r1, #255
+    strb r1, [r0, #3]
+    // right borders
+    ldr r0, =currentRightBorders
+    mov r1, #255
+    strb r1, [r0]
+    mov r1, #2
+    add r1, r8
+    strb r1, [r0, #1]
+    mov r1, #255
+    strb r1, [r0, #2]
+    mov r1, #11
+    add r1, r8
+    strb r1, [r0, #3]
+
+
+
 
     // update game state
     // with block at initial
@@ -322,6 +376,32 @@ insertNewSRBeam:
     mov r1, #12
     add r1, r8
     strb r1, [r0, #3]
+
+    // left borders
+    ldr r0, =currentLeftBorders
+    mov r1, #0
+    add r1, r8
+    strb r1, [r0]
+    mov r1, #255
+    strb r1, [r0, #1]
+    mov r1, #11
+    add r1, r8
+    strb r1, [r0, #2]
+    mov r1, #255
+    strb r1, [r0, #3]
+    // right borders
+    ldr r0, =currentRightBorders
+    mov r1, #255
+    strb r1, [r0]
+    mov r1, #1
+    add r1, r8
+    strb r1, [r0, #1]
+    mov r1, #255
+    strb r1, [r0, #2]
+    mov r1, #12
+    add r1, r8
+    strb r1, [r0, #3]
+
 
     // update game state
     // with block at initial
@@ -445,6 +525,33 @@ insertNewOBeam:
     add r1, r8
     strb r1, [r0, #3]
 
+    // left borders
+    ldr r0, =currentLeftBorders
+    mov r1, #0
+    add r1, r8
+    strb r1, [r0]
+    mov r1, #255
+    strb r1, [r0, #1]
+    mov r1, #10
+    add r1, r8
+    strb r1, [r0, #2]
+    mov r1, #255
+    strb r1, [r0, #3]
+    // right borders
+    ldr r0, =currentRightBorders
+    mov r1, #255
+    strb r1, [r0]
+    mov r1, #1
+    add r1, r8
+    strb r1, [r0, #1]
+    mov r1, #255
+    strb r1, [r0, #2]
+    mov r1, #11
+    add r1, r8
+    strb r1, [r0, #3]
+
+
+
     // update game state
     // with block at initial
     // position
@@ -566,6 +673,34 @@ insertNewWBeam:
     add r1, r8
     strb r1, [r0, #3]
 
+    // left borders
+    ldr r0, =currentLeftBorders
+    mov r1, #0
+    add r1, r8
+    strb r1, [r0]
+    mov r1, #255
+    strb r1, [r0, #1]
+    mov r1, #10
+    add r1, r8
+    strb r1, [r0, #2]
+    mov r1, #255
+    strb r1, [r0, #3]
+    // right borders
+    ldr r0, =currentRightBorders
+    mov r1, #255
+    strb r1, [r0]
+    mov r1, #1
+    add r1, r8
+    strb r1, [r0, #1]
+    mov r1, #255
+    strb r1, [r0, #2]
+    mov r1, #12
+    add r1, r8
+    strb r1, [r0, #3]
+
+
+
+
     // update game state
     // with block at initial
     // position
@@ -685,6 +820,33 @@ insertNewLBBeam:
     mov r1, #12
     add r1, r8
     strb r1, [r0, #3]
+
+    // left borders
+    ldr r0, =currentLeftBorders
+    mov r1, #0
+    add r1, r8
+    strb r1, [r0]
+    mov r1, #10
+    add r1, r8
+    strb r1, [r0, #1]
+    mov r1, #255
+    strb r1, [r0, #2]
+    mov r1, #255
+    strb r1, [r0, #3]
+    // right borders
+    ldr r0, =currentRightBorders
+    mov r1, #0
+    add r1, r8
+    strb r1, [r0]
+    mov r1, #255
+    strb r1, [r0, #1]
+    mov r1, #255
+    strb r1, [r0, #2]
+    mov r1, #12
+    add r1, r8
+    strb r1, [r0, #3]
+
+
 
     // update game state
     // with block at initial
@@ -808,6 +970,33 @@ insertNewLOBeam:
     mov r1, #12
     add r1, r8
     strb r1, [r0, #3]
+
+    // left borders
+    ldr r0, =currentLeftBorders
+    mov r1, #2
+    add r1, r8
+    strb r1, [r0]
+    mov r1, #10
+    add r1, r8
+    strb r1, [r0, #1]
+    mov r1, #255
+    strb r1, [r0, #2]
+    mov r1, #255
+    strb r1, [r0, #3]
+    // right borders
+    ldr r0, =currentRightBorders
+    mov r1, #2
+    add r1, r8
+    strb r1, [r0]
+    mov r1, #255
+    strb r1, [r0, #1]
+    mov r1, #255
+    strb r1, [r0, #2]
+    mov r1, #12
+    add r1, r8
+    strb r1, [r0, #3]
+
+
 
     // update game state
     // with block at initial

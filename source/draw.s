@@ -135,21 +135,23 @@ clearLineScreen:
     add r1, #1
     lsl r1, #5
     mov r6, r1
+    // base y coord
+    add r6, #100
     // x
     // set to 620 as default
 drawY:
     // set x as far right 620
-    mov r0, #300
+    mov r0, #384
     add r0, #320
     // use r5, r6
     mov r5, r0
     // check y
-    cmp r6, #32
+    cmp r6, #320
     // if y value is less than 0, finish
     blt finishShiftScreen
     // else, draw x
 drawX:
-    cmp r5, #300
+    cmp r5, #384
     // if x is less than 300, move up one line
     blt finishX
     // must first get pixel above
@@ -316,6 +318,10 @@ GetPixel:
     // at an x,y coordinate
     push    {r4}
     offset  .req    r4
+    cmp r0, #0
+    blt setBlackPixel
+    cmp r1, #0
+    blt setBlackPixel
 
     // offset = (y * 1024) + x = x + (y << 10)
 
@@ -333,7 +339,12 @@ GetPixel:
     // location, we instead load the buffer location value
     // into r2, and return it
     ldrh    r2, [r0, offset]
-
+    b returnPixelColor
+setBlackPixel:
+    // if accessed pixel is out of bounds
+    // return black
+    mov r2, #0
+returnPixelColor:
     // now we will print the r2 value to drawPixel, only
     // at coordinates -10 on the y axis, and within 300 to
     // 620 on the x (stopping at the top of the game grid)
