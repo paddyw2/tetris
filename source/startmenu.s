@@ -99,13 +99,15 @@ startState2:
 drawState:
     // draws a state image address
     // r1 = image address
+    @r1 = start y
+    @r0 = start x
     push {lr}
     push {r4}
     mov r4, r1
-    mov r3, #200
+    mov r0, #320
+    mov r1, #352
     mov r2, #400
-    mov r1, #300
-    mov r0, #400
+    mov r3, #200
     bl drawImage
     pop {r4}
     pop {lr}
@@ -149,6 +151,7 @@ startGame:
     // clear state, and start game
     bl resetGameState
     bl clearScreen
+    bl drawGameArea
     bl InsertNewBlock
 
 //-----------------------------//

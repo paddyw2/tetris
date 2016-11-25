@@ -9,7 +9,7 @@ board
 
 */
 
-.section .text 
+.section .text
 
 //----------------------------//
 .globl insertNewIBeam
@@ -130,11 +130,6 @@ insertNewIBeam:
     ldr r0, =currentBlockWidth
     strb r1, [r0]
 
-    // indicate that top left is filled
-    mov r5, #0
-    ldr r3, =topLeftBlock
-    strb r5, [r3]
-    
     pop {r5, r8}
     pop {lr}
     mov pc, lr
@@ -251,14 +246,6 @@ insertNewSBeam:
     ldr r0, =currentBlockWidth
     strb r1, [r0]
 
-
-
-    // add flag indicating top left
-    // position is blank
-    mov r5, #1
-    ldr r3, =topLeftBlock
-    strb r5, [r3]
-    
     pop {r5, r8}
     pop {lr}
     mov pc, lr
@@ -382,11 +369,6 @@ insertNewSRBeam:
     strb r1, [r0]
 
 
-    // indicate that top left is filled
-    mov r5, #0
-    ldr r3, =topLeftBlock
-    strb r5, [r3]
-
     pop {r5, r8}
     pop {lr}
     mov pc, lr
@@ -507,11 +489,6 @@ insertNewOBeam:
     ldr r0, =currentBlockWidth
     strb r1, [r0]
 
-
-    // indicate that top left is filled
-    mov r5, #0
-    ldr r3, =topLeftBlock
-    strb r5, [r3]
 
     pop {r5, r8}
     pop {lr}
@@ -634,11 +611,6 @@ insertNewWBeam:
     strb r1, [r0]
 
 
-    // indicate that top left is filled
-    mov r5, #1
-    ldr r3, =topLeftBlock
-    strb r5, [r3]
-    
     pop {r5, r8}
     pop {lr}
     mov pc, lr
@@ -759,10 +731,6 @@ insertNewLBBeam:
     strb r1, [r0]
 
 
-    // indicate that top left is filled
-    mov r5, #0
-    ldr r3, =topLeftBlock
-    strb r5, [r3]
 
     pop {r5, r8}
     pop {lr}
@@ -885,12 +853,7 @@ insertNewLOBeam:
     ldr r0, =currentBlockWidth
     strb r1, [r0]
 
-    // add flag indicating top left
-    // position is blank
-    mov r5, #1
-    ldr r3, =topLeftBlock
-    strb r5, [r3]
-    
+
     pop {r5, r8}
     pop {lr}
     mov pc, lr

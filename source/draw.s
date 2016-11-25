@@ -222,12 +222,12 @@ getThirdDigit:
     r3 = x
     r4 = y
     */
-    mov r0, #100
-    mov r1, #75
-    mov r2, #0
-    mov r3, #200
-    mov r4, #200
-    bl drawBlock
+    @mov r0, #100
+    @mov r1, #75
+    @mov r2, #0
+    @mov r3, #200
+    @mov r4, #200
+    @bl drawBlock
 
     ldr r0, =currentScoreAscii
     cmp r4, #48
@@ -247,8 +247,11 @@ drawOne:
     mov r3, r0
     mov r7, #1
 writeScore:
+// r9=startx
+// r6=y
+// r10=color
     mov r9, #100
-    mov r6, #100
+    mov r6, #800
     mov r10, #0xff
     bl drawString
 
@@ -309,7 +312,7 @@ GetPixel:
     *  r1 - y
     */
     // copy of drawPixel
-    // that gets the current color value
+    // that gets the current color valuej _
     // at an x,y coordinate
     push    {r4}
     offset  .req    r4

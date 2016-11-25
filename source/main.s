@@ -2,9 +2,9 @@
  * TETRIS
  * Creators: Patrick Withams and Michael Tretiak
  * Date: 20/11/16
- * 
  *
- */
+ *
+ *///
 
 .section    .init
 .globl     _start
@@ -341,10 +341,10 @@ drawModLoop:
 drawEndMod:
     // counter is division
     // r7 is remainder
-    
+
     // where 0 is the base
     // y coord
-    mov r1, #0
+    mov r1, #100
     lsl r6, #5
     add r1, r6
 
@@ -356,22 +356,7 @@ drawEndMod:
     // add base offset
     // where 300 is the base
     // x coord
-    add r0, #300
-
-
-/* not used */
-    ldr r3, =topLeftBlock
-    ldrb r3, [r3]
-    cmp r3, #0
-    b noCoordChange
-coordChange:
-    subs r1, #32
-    blt topOfGrid
-    b noCoordChange
-topOfGrid:
-    add r1, #32
-noCoordChange:
-/* end not used */
+    add r0, #384
 
     // get block width
     ldr r3, =currentBlockSizeX
@@ -401,7 +386,7 @@ eraseCurrentBlock:
     /*
     takes block array
     position as parameter
-    in r1 
+    in r1
     */
     push {lr}
     push {r4}
@@ -420,10 +405,10 @@ eraseModLoop:
 eraseEndMod:
     // counter is division
     // r7 is remainder
-    
+
     // where 0 is the base
     // y coord
-    mov r1, #0
+    mov r1, #100
     lsl r6, #5
     add r1, r6
     // now calc x
@@ -434,22 +419,7 @@ eraseEndMod:
     // add base offset
     // where 300 is base
     // x coord
-    add r0, #300
-
-/* not used */
-    ldr r3, =topLeftBlock
-    ldrb r3, [r3]
-    cmp r3, #0
-    b eraseNoCoordChange
-eraseCoordChange:
-    subs r1, #32
-    blt eraseTopOfGrid
-    b eraseNoCoordChange
-eraseTopOfGrid:
-    add r1, #32
-eraseNoCoordChange:
-/* end not used */
-
+    add r0, #384
 
     // get block width
     ldr r3, =currentBlockSizeX
@@ -628,6 +598,7 @@ drawIntroScreen:
 
 //---------------------------//
 
+.globl drawGameArea
 drawGameArea:
     push {lr}
     push {r4, r5}
@@ -885,7 +856,7 @@ s_block_green:        .include "images/s_block_green.txt"
 .globl s_block_green_black
 s_block_green_black:  .include "images/s_block_green_black.txt"
 .globl s_block_red
-s_block_red:    .include "images/s_block_red.txt"
+s_block_red:    .include "images/s_block_saviour.txt"
 .globl s_block_red_black
 s_block_red_black: .include "images/s_block_red_black.txt"
 .globl o_block_yellow
@@ -901,7 +872,7 @@ l_block_blue: .include "images/l_block_blue.txt"
 .globl l_block_blue_black
 l_block_blue_black: .include "images/l_block_blue_black.txt"
 .globl l_block_orange
-l_block_orange: .include "images/l_block_orange2.txt"
+l_block_orange: .include "images/l_block_orange.txt"
 .globl l_block_orange_black
 l_block_orange_black: .include "images/l_block_orange_black2.txt"
 
@@ -947,9 +918,7 @@ currentBlockLeftOffset:
 .globl currentBlockWidth
 currentBlockWidth:
     .byte   0
-.globl topLeftBlock
-topLeftBlock:
-    .byte   0
+
 .align
 randSeedVal:
     .word   0                                           // originally 37, now set with setSeed
