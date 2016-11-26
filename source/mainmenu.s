@@ -102,8 +102,8 @@ drawState:
     mov r4, r1
     mov r0, #320
     mov r1, #352
-    mov r2, #400
-    mov r3, #200
+    ldr r2, =#306
+    ldr r3, =#79
     bl drawImage
     pop {r4}
     pop {lr}
@@ -262,26 +262,26 @@ finishMod:
 //--------------------------//
 .section .data
 menustate1:
-    .include "images/state1.txt"
+    .include "images/mainmenu/menustate1.txt"
 menustate2:
-    .include "images/state2.txt"
+    .include "images/mainmenu/menustate2.txt"
 // block squares
 blackSquare:
-    .include "images/squares/black.txt"
+    .include "images/squares/blackSquare.txt"
 lBlueSquare:
-    .include "images/squares/lblue.txt"
+    .include "images/squares/lblueSquare.txt"
 greenSquare:
-    .include "images/squares/green.txt"
+    .include "images/squares/greenSquare.txt"
 redSquare:
-    .include "images/squares/red.txt"
+    .include "images/squares/redSquare.txt"
 yellowSquare:
-    .include "images/squares/yellow.txt"
+    .include "images/squares/yellowSquare.txt"
 purpleSquare:
-    .include "images/squares/purple.txt"
+    .include "images/squares/purpleSquare.txt"
 blueSquare:
-    .include "images/squares/blue.txt"
+    .include "images/squares/blueSquare.txt"
 orangeSquare:
-    .include "images/squares/orange.txt"
+    .include "images/squares/orangeSquare.txt"
 // menu choice variable
 currentMenuChoice:
     .byte 0
