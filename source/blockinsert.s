@@ -7,6 +7,15 @@ the chosen block at a random
 x coordinate at top of the game
 board
 
+Block Types:
+0 = I Block
+1 = Green S
+2 = Red S
+3 = O Block
+4 = W Block
+5 = Blue L
+6 = Orange L
+
 */
 
 .section .text
@@ -157,6 +166,16 @@ insertNewIBeam:
     ldr r0, =currentBlockWidth
     strb r1, [r0]
 
+    // update block type
+    ldr r0, =currentBlockType
+    mov r1, #0
+    strb r1, [r0]
+
+    // update block rotation
+    ldr r0, =currentBlockRotation
+    mov r1, #0
+    strb r1, [r0]
+
     pop {r5, r8}
     pop {lr}
     mov pc, lr
@@ -300,6 +319,17 @@ insertNewSBeam:
     ldr r0, =currentBlockWidth
     strb r1, [r0]
 
+    // update block type
+    ldr r0, =currentBlockType
+    mov r1, #1
+    strb r1, [r0]
+
+    // update block rotation
+    ldr r0, =currentBlockRotation
+    mov r1, #0
+    strb r1, [r0]
+
+
     pop {r5, r8}
     pop {lr}
     mov pc, lr
@@ -442,12 +472,20 @@ insertNewSRBeam:
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
 
-
     // update block width
     mov r1, #3
     ldr r0, =currentBlockWidth
     strb r1, [r0]
 
+    // update block type
+    ldr r0, =currentBlockType
+    mov r1, #2
+    strb r1, [r0]
+
+    // update block rotation
+    ldr r0, =currentBlockRotation
+    mov r1, #0
+    strb r1, [r0]
 
     pop {r5, r8}
     pop {lr}
@@ -594,6 +632,16 @@ insertNewOBeam:
     // update block width
     mov r1, #2
     ldr r0, =currentBlockWidth
+    strb r1, [r0]
+
+    // update block type
+    ldr r0, =currentBlockType
+    mov r1, #3
+    strb r1, [r0]
+
+    // update block rotation
+    ldr r0, =currentBlockRotation
+    mov r1, #0
     strb r1, [r0]
 
 
@@ -745,6 +793,17 @@ insertNewWBeam:
     ldr r0, =currentBlockWidth
     strb r1, [r0]
 
+    // update block type
+    ldr r0, =currentBlockType
+    mov r1, #4
+    strb r1, [r0]
+
+    // update block rotation
+    ldr r0, =currentBlockRotation
+    mov r1, #0
+    strb r1, [r0]
+
+
 
     pop {r5, r8}
     pop {lr}
@@ -892,7 +951,15 @@ insertNewLBBeam:
     ldr r0, =currentBlockWidth
     strb r1, [r0]
 
+    // update block type
+    ldr r0, =currentBlockType
+    mov r1, #5
+    strb r1, [r0]
 
+    // update block rotation
+    ldr r0, =currentBlockRotation
+    mov r1, #0
+    strb r1, [r0]
 
     pop {r5, r8}
     pop {lr}
@@ -1040,6 +1107,16 @@ insertNewLOBeam:
     // update block width
     mov r1, #3
     ldr r0, =currentBlockWidth
+    strb r1, [r0]
+
+    // update block type
+    ldr r0, =currentBlockType
+    mov r1, #6
+    strb r1, [r0]
+
+    // update block rotation
+    ldr r0, =currentBlockRotation
+    mov r1, #0
     strb r1, [r0]
 
 

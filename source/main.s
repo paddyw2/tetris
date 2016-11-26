@@ -1,10 +1,11 @@
 /*
- * TETRIS
- * Creators: Patrick Withams and Michael Tretiak
- * Date: 20/11/16
- *
- *
- *///
+
+TETRIS - Main File
+
+Creators: Patrick Withams and Michael Tretiak
+Date: 20/11/16
+
+*/
 
 .section    .init
 .globl     _start
@@ -931,7 +932,14 @@ currentBlockLeftOffset:
 .globl currentBlockWidth
 currentBlockWidth:
     .byte   0
-
+.globl currentBlockType
+currentBlockType:
+    // 0 to 6
+    .byte   0
+.globl currentBlockRotation
+currentBlockRotation:
+    // 0 to 3
+    .byte   0
 .align
 randSeedVal:
     .word   0                                           // originally 37, now set with setSeed

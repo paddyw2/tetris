@@ -1,3 +1,16 @@
+/*
+
+MOVE BLOCK
+
+Processes SNES input and
+determines which subroutines
+to call. If rotation, calls
+an outside file. If left,
+right, or down, then handled
+in file.
+
+*/
+
 
 //------------------------//
 .globl moveCurrentBlock
