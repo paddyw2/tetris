@@ -8,13 +8,13 @@ x coordinate at top of the game
 board
 
 Block Types:
-0 = I Block
-1 = Green S
-2 = Red S
-3 = O Block
-4 = W Block
-5 = Blue L
-6 = Orange L
+1 = I Block
+2 = Green S
+3 = Red S
+4 = O Block
+5 = W Block
+6 = Blue L
+7 = Orange L
 
 */
 
@@ -168,7 +168,7 @@ insertNewIBeam:
 
     // update block type
     ldr r0, =currentBlockType
-    mov r1, #0
+    mov r1, #1
     strb r1, [r0]
 
     // update block rotation
@@ -278,7 +278,7 @@ insertNewSBeam:
     // update game state
     // with block at initial
     // position
-    mov r1, #1
+    mov r1, #2
     ldr r2, =currentBlock1
     ldrb r2, [r2]
     ldr r0, =gameState
@@ -321,7 +321,7 @@ insertNewSBeam:
 
     // update block type
     ldr r0, =currentBlockType
-    mov r1, #1
+    mov r1, #2
     strb r1, [r0]
 
     // update block rotation
@@ -436,7 +436,7 @@ insertNewSRBeam:
     // update game state
     // with block at initial
     // position
-    mov r1, #1
+    mov r1, #3
     ldr r2, =currentBlock1
     ldrb r2, [r2]
     ldr r0, =gameState
@@ -479,7 +479,7 @@ insertNewSRBeam:
 
     // update block type
     ldr r0, =currentBlockType
-    mov r1, #2
+    mov r1, #3
     strb r1, [r0]
 
     // update block rotation
@@ -593,7 +593,7 @@ insertNewOBeam:
     // update game state
     // with block at initial
     // position
-    mov r1, #1
+    mov r1, #4
     ldr r2, =currentBlock1
     ldrb r2, [r2]
     ldr r0, =gameState
@@ -636,7 +636,7 @@ insertNewOBeam:
 
     // update block type
     ldr r0, =currentBlockType
-    mov r1, #3
+    mov r1, #4
     strb r1, [r0]
 
     // update block rotation
@@ -752,7 +752,7 @@ insertNewWBeam:
     // update game state
     // with block at initial
     // position
-    mov r1, #1
+    mov r1, #5
     ldr r2, =currentBlock1
     ldrb r2, [r2]
     ldr r0, =gameState
@@ -795,7 +795,7 @@ insertNewWBeam:
 
     // update block type
     ldr r0, =currentBlockType
-    mov r1, #4
+    mov r1, #5
     strb r1, [r0]
 
     // update block rotation
@@ -910,7 +910,7 @@ insertNewLBBeam:
     // update game state
     // with block at initial
     // position
-    mov r1, #1
+    mov r1, #6
     ldr r2, =currentBlock1
     ldrb r2, [r2]
     ldr r0, =gameState
@@ -953,7 +953,7 @@ insertNewLBBeam:
 
     // update block type
     ldr r0, =currentBlockType
-    mov r1, #5
+    mov r1, #6
     strb r1, [r0]
 
     // update block rotation
@@ -1068,7 +1068,7 @@ insertNewLOBeam:
     // update game state
     // with block at initial
     // position
-    mov r1, #1
+    mov r1, #7
     ldr r2, =currentBlock1
     ldrb r2, [r2]
     ldr r0, =gameState
@@ -1111,7 +1111,7 @@ insertNewLOBeam:
 
     // update block type
     ldr r0, =currentBlockType
-    mov r1, #6
+    mov r1, #7
     strb r1, [r0]
 
     // update block rotation

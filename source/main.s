@@ -91,7 +91,7 @@ moveBlockDown:
 moveBlockLoop:
 
     bl CheckBlockMove
-    cmp r5, #0
+    cmp r1, #0
     beq NoMove
     // clear game state
     mov r1, #0
@@ -127,6 +127,8 @@ moveBlockLoop:
 
     // update state with new
     // block position
+    ldr r1, =currentBlockType
+    ldrb r1, [r1]
     mov r1, #1
     ldr r3, =currentBlock1
     ldrb r2, [r3]
@@ -216,8 +218,7 @@ NoMove:
 // down, returns true false
 // in r1
 CheckBlockMove:
-    mov r3, lr
-    push {r3}
+    push {lr}
 
 checkFirstCoord:
     ldr r3, =currentBorders
@@ -230,7 +231,7 @@ checkFirstCoord:
     ldr r0, =gameState
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq hitOtherBlock
+    bge hitOtherBlock
 
 checkSecondCoord:
     ldr r3, =currentBorders
@@ -243,7 +244,7 @@ checkSecondCoord:
     ldr r0, =gameState
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq hitOtherBlock
+    bge hitOtherBlock
 
 checkThirdCoord:
     ldr r3, =currentBorders
@@ -256,7 +257,7 @@ checkThirdCoord:
     ldr r0, =gameState
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq hitOtherBlock
+    bge hitOtherBlock
 
 checkFourthCoord:
     ldr r3, =currentBorders
@@ -269,19 +270,19 @@ checkFourthCoord:
     ldr r0, =gameState
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq hitOtherBlock
+    bge hitOtherBlock
 
     b CanMove
 
 hitOtherBlock:
 bottomOfGrid:
-    mov r5, #0
+    mov r1, #0
     b endCheckBlock
 CanMove:
-    mov r5, #1
+    mov r1, #1
 endCheckBlock:
-    pop {r3}
-    mov pc, r3
+    pop {lr}
+    mov pc, lr
 
 //----------------------------
 
@@ -691,8 +692,7 @@ checkForCompleteLines:
 lineLoop:
     cmp r6, #10
     // if checked whole line, must be cleared
-    //CHANGE TO BEQ when done!
-     b clearLine
+    beq clearLine
     // load state address value
     // minus offset of loop counter
     ldrb r7, [r4, -r6]
@@ -700,7 +700,7 @@ lineLoop:
     // if zero, move to next line
     beq nextLine
     // else, inc counter and
-    // counter
+    // loop
     add r6, #1
     b lineLoop
 
@@ -934,7 +934,7 @@ currentBlockWidth:
     .byte   0
 .globl currentBlockType
 currentBlockType:
-    // 0 to 6
+    // 1 to 7
     .byte   0
 .globl currentBlockRotation
 currentBlockRotation:

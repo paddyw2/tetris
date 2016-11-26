@@ -90,7 +90,7 @@ moveCurrentBlockLeft:
     sub r2, #1
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove
+    bge noMove
 secondLeft:
     ldr r2, =currentLeftBorders
     ldrb r2, [r2, #1]
@@ -99,7 +99,7 @@ secondLeft:
     sub r2, #1
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove
+    bge noMove
 thirdLeft:
     ldr r2, =currentLeftBorders
     ldrb r2, [r2, #2]
@@ -108,7 +108,7 @@ thirdLeft:
     sub r2, #1
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove
+    bge noMove
 fourthLeft:
     ldr r2, =currentLeftBorders
     ldrb r2, [r2, #3]
@@ -117,7 +117,7 @@ fourthLeft:
     sub r2, #1
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove
+    bge noMove
 
 finishLeftCheck: 
 
@@ -164,7 +164,8 @@ finishLeftCheck:
 
     // update state with new
     // block position
-    mov r1, #1
+    ldr r1, =currentBlockType
+    ldrb r1, [r1]
     ldr r3, =currentBlock1
     ldrb r2, [r3]
     sub r2, #1
@@ -175,7 +176,8 @@ finishLeftCheck:
     bl drawCurrentBlock
 
 
-    mov r1, #1
+    ldr r1, =currentBlockType
+    ldrb r1, [r1]
     ldr r3, =currentBlock2
     ldrb r2, [r3]
     sub r2, #1
@@ -236,8 +238,6 @@ finishInc:
     b incBordersLoop
 finishIncBorderLoop:
 
-    
-
 noMove:
     pop {r6}
     pop {lr}
@@ -262,7 +262,6 @@ moveCurrentBlockRight:
     add r1, r0
     cmp r1, #10
     bge r_noMove
-    mov r10, #440
     // if move possible 
 
     // now check if move legal
@@ -278,8 +277,7 @@ moveCurrentBlockRight:
     add r2, #1
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq r_noMove
-    mov r10, #98
+    bge r_noMove
 secondRight:
     ldr r2, =currentRightBorders
     ldrb r2, [r2, #1]
@@ -288,8 +286,7 @@ secondRight:
     add r2, #1
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq r_noMove
-    mov r10, #58
+    bge r_noMove
 thirdRight:
     ldr r2, =currentRightBorders
     ldrb r2, [r2, #2]
@@ -298,8 +295,7 @@ thirdRight:
     add r2, #1
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq r_noMove
-    mov r10, #28
+    bge r_noMove
 fourthRight:
     ldr r2, =currentRightBorders
     ldrb r2, [r2, #3]
@@ -308,11 +304,10 @@ fourthRight:
     add r2, #1
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq r_noMove
+    bge r_noMove
 
 finishRightCheck: 
     // else legal move
-    mov r10, #304
 
     // clear game state
     mov r1, #0
@@ -354,7 +349,8 @@ finishRightCheck:
 
     // update state with new
     // block position
-    mov r1, #1
+    ldr r1, =currentBlockType
+    ldrb r1, [r1]
     ldr r3, =currentBlock1
     ldrb r2, [r3]
     add r2, #1
@@ -365,7 +361,8 @@ finishRightCheck:
     bl drawCurrentBlock
 
 
-    mov r1, #1
+    ldr r1, =currentBlockType
+    ldrb r1, [r1]
     ldr r3, =currentBlock2
     ldrb r2, [r3]
     add r2, #1

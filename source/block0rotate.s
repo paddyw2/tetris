@@ -34,7 +34,7 @@ rotate0_AB:
     // not occupied
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_AB
+    bge noMove_AB
     // check second coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock2
@@ -51,7 +51,7 @@ rotate0_AB:
 
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_AB
+    bge noMove_AB
     // check third coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock3
@@ -68,7 +68,7 @@ rotate0_AB:
 
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_AB
+    bge noMove_AB
     // check fourth coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock4
@@ -85,7 +85,7 @@ rotate0_AB:
 
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_AB
+    bge noMove_AB
 
     // block can move
 
@@ -143,7 +143,8 @@ rotate0_AB:
 
     // step4. update game state with
     // new block position
-    mov r3, #1
+    ldr r3, =currentBlockType
+    ldr r3, [r3]
     ldr r2, =gameState
     ldr r0, =currentBlock1
     ldrb r1, [r0]
@@ -286,7 +287,7 @@ rotate0_BC:
     // occupied
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_BC
+    bge noMove_BC
     // check second coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock2
@@ -302,7 +303,7 @@ rotate0_BC:
     // not occupied
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_BC
+    bge noMove_BC
     // check third coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock3
@@ -314,7 +315,7 @@ rotate0_BC:
     blt noMove_BC
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_BC
+    bge noMove_BC
     // check fourth coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock4
@@ -327,7 +328,7 @@ rotate0_BC:
     blt noMove_BC
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_BC
+    bge noMove_BC
 
     // block can move
 
@@ -386,7 +387,8 @@ rotate0_BC:
 
     // step4. update game state with
     // new block position
-    mov r3, #1
+    ldr r3, =currentBlockType
+    ldrb r3, [r3]
     ldr r2, =gameState
     ldr r0, =currentBlock1
     ldrb r1, [r0]
@@ -523,7 +525,7 @@ rotate0_CD:
     // occupied
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_CD
+    bge noMove_CD
     // check second coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock2
@@ -539,7 +541,7 @@ rotate0_CD:
     // not occupied
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_CD
+    bge noMove_CD
     // check third coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock3
@@ -551,7 +553,7 @@ rotate0_CD:
     blt noMove_CD
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_CD
+    bge noMove_CD
     // check fourth coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock4
@@ -564,7 +566,7 @@ rotate0_CD:
     blt noMove_CD
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_CD
+    bge noMove_CD
 
     // block can move
 
@@ -623,7 +625,8 @@ rotate0_CD:
 
     // step4. update game state with
     // new block position
-    mov r3, #1
+    ldr r3, =currentBlockType
+    ldrb r3, [r3]
     ldr r2, =gameState
     ldr r0, =currentBlock1
     ldrb r1, [r0]
@@ -756,7 +759,7 @@ rotate0_DA:
     // occupied
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_DA
+    bge noMove_DA
     // check second coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock2
@@ -772,7 +775,7 @@ rotate0_DA:
     // not occupied
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_DA
+    bge noMove_DA
     // check third coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock3
@@ -784,7 +787,7 @@ rotate0_DA:
     blt noMove_DA
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_DA
+    bge noMove_DA
     // check fourth coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock4
@@ -797,7 +800,7 @@ rotate0_DA:
     blt noMove_DA
     ldrb r1, [r0, r2]
     cmp r1, #1
-    beq noMove_DA
+    bge noMove_DA
 
     // block can move
 
@@ -856,7 +859,8 @@ rotate0_DA:
 
     // step4. update game state with
     // new block position
-    mov r3, #1
+    ldr r3, =currentBlockType
+    ldrb r3, [r3]
     ldr r2, =gameState
     ldr r0, =currentBlock1
     ldrb r1, [r0]

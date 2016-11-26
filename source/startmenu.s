@@ -161,8 +161,6 @@ state1:
     .include "images/state1.txt"
 state2:
     .include "images/state2.txt"
-@blankState:
-@    .include "images/blank_state.txt"
 
 currentChoice:
     .byte 0
