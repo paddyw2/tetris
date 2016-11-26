@@ -41,6 +41,7 @@ moveCurrentBlock:
     bne moveBlockRight
     b noButtonsPressed
 rotateBlock:
+    bl rotateBlock
     mov r0, #1
     b noButtonsPressed
 moveBlockLeft:

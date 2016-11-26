@@ -24,11 +24,40 @@ rotateBlock:
     // check for I Block
     cmp r1, #0
     beq block0
+    cmp r1, #1
+    beq block1
+    cmp r1, #2
+    beq block2
+    cmp r1, #3
+    beq block3
+    cmp r1, #4
+    beq block4
+    cmp r1, #5
+    beq block5
+    cmp r1, #6
+    beq block6
     b noRotate
 block0:
     bl rotateIBlock
-
-
+    b noRotate
+block1:
+    // rotate Green S
+    b noRotate
+block2:
+    // rotate Red S
+    b noRotate
+block3:
+    // rotate O Block
+    b noRotate
+block4:
+    // rotate W Block
+    b noRotate
+block5:
+    // rotate Blue L
+    b noRotate
+block6:
+    // rotate Orange L
+    b noRotate
 noRotate:
     pop {lr}
     mov pc, lr
