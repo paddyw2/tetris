@@ -34,6 +34,7 @@ StartGame:
     bl clearScreen
     bl setSeed
     mov r11, #0
+    b InsertNewBlock
     // draw main menu and wait
     // for user to choose an option
     bl runStartMenu
@@ -139,8 +140,8 @@ moveBlockLoop:
     mov r1, r2
     bl drawCurrentBlock
 
-
-    mov r1, #1
+    ldr r1, =currentBlockType
+    ldrb r1, [r1]
     ldr r3, =currentBlock2
     ldrb r2, [r3]
     add r2, #10
@@ -534,6 +535,7 @@ insertRandomBlock:
 
     mov r1, #7
     bl xorShift
+    mov r1, #6
 
     cmp r1, #0
     beq block0
@@ -847,18 +849,26 @@ haltLoop$:
 //----------------------------------//
 
 .section .data
+
 .globl game_block
 game_block:     .include "images/s_block.txt"
+// Large Images
 .globl start_screen
-start_screen:   .include "images/start_screen_blank.txt"
+start_screen:   .include "images/empty.txt"//"images/start_screen_blank.txt"
 .globl game_area
-game_area: .include "images/tetris_game_area.txt"
+game_area: .include "images/empty.txt" //"images/tetris_game_area.txt"
 .globl game_over_screen
 game_over_screen:   .include "images/empty.txt"//"images/game_over.txt"
+// I Block
 .globl i_block
 i_block:        .include "images/i_block.txt"
 .globl i_block_black
 i_block_black:  .include "images/i_block_black.txt"
+.globl i_block_B
+i_block_B:       .include "images/rotation/i_block_B.txt"
+.globl i_block_black_B
+i_block_black_B:       .include "images/rotation/i_block_B_black.txt"
+// Green Block
 .globl s_block_green
 s_block_green:        .include "images/s_block_green.txt"
 .globl s_block_green_black

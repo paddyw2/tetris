@@ -8,6 +8,7 @@ to call
 
 */
 
+.section .text
 
 //-----------------------//
 .globl rotateBlock
@@ -22,8 +23,6 @@ rotateBlock:
     ldr r0, =currentBlockType
     ldrb r1, [r0]
     // check for I Block
-    cmp r1, #0
-    beq block0
     cmp r1, #1
     beq block1
     cmp r1, #2
@@ -36,26 +35,28 @@ rotateBlock:
     beq block5
     cmp r1, #6
     beq block6
-    b noRotate
-block0:
-    bl rotateIBlock
+    cmp r1, #7
+    beq block7
     b noRotate
 block1:
-    // rotate Green S
+    bl rotateIBlock
     b noRotate
 block2:
-    // rotate Red S
+    // rotate Green S
     b noRotate
 block3:
-    // rotate O Block
+    // rotate Red S
     b noRotate
 block4:
-    // rotate W Block
+    // rotate O Block
     b noRotate
 block5:
-    // rotate Blue L
+    // rotate W Block
     b noRotate
 block6:
+    // rotate Blue L
+    b noRotate
+block7:
     // rotate Orange L
     b noRotate
 noRotate:
@@ -85,11 +86,11 @@ rotateIBlock:
 state0:
     bl rotate0_AB
 state1:
-    bl rotate0_BC
+    //bl rotate0_BC
 state2:
-    bl rotate0_CD
+    //bl rotate0_CD
 state3:
-    bl rotate0_DA
+    //bl rotate0_DA
 finishIRotation:
     pop {lr}
     mov pc, lr

@@ -27,14 +27,16 @@ rotate0_AB:
     // check value is not
     // out of bounds
     cmp r2, #199
-    bgt noMove_BC
+    bgt noMove_AB
     cmp r2, #0
-    blt noMove_BC
+    blt noMove_AB
     // check position is
     // not occupied
     ldrb r1, [r0, r2]
     cmp r1, #1
     bge noMove_AB
+    /* no check as same
+    as current block
     // check second coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock2
@@ -43,15 +45,16 @@ rotate0_AB:
     // check value is not
     // out of bounds
     cmp r2, #199
-    bgt noMove_BC
+    bgt noMove_AB
     cmp r2, #0
-    blt noMove_BC
+    blt noMove_AB
     // check position is
     // not occupied
 
     ldrb r1, [r0, r2]
     cmp r1, #1
     bge noMove_AB
+    */
     // check third coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock3
@@ -60,9 +63,9 @@ rotate0_AB:
     // check value is not
     // out of bounds
     cmp r2, #199
-    bgt noMove_BC
+    bgt noMove_AB
     cmp r2, #0
-    blt noMove_BC
+    blt noMove_AB
     // check position is
     // not occupied
 
@@ -73,13 +76,14 @@ rotate0_AB:
     ldr r0, =gameState
     ldr r2, =currentBlock4
     ldrb r2, [r2]
+    sub r2, #1
     add r2, #20
     // check value is not
     // out of bounds
     cmp r2, #199
-    bgt noMove_BC
+    bgt noMove_AB
     cmp r2, #0
-    blt noMove_BC
+    blt noMove_AB
     // check position is
     // not occupied
 
@@ -114,7 +118,7 @@ rotate0_AB:
     strb r1, [r0, r2]
     // fourth coordinate
     ldr r0, =gameState
-    ldr r2, =currentBlock3
+    ldr r2, =currentBlock4
     ldrb r2, [r2]
     mov r1, #0
     strb r1, [r0, r2]
@@ -124,7 +128,7 @@ rotate0_AB:
     ldrb r2, [r0]
     sub r2, #10
     add r2, #2
-    strb r2, [r0]
+    //strb r2, [r0]
     // update second coordinate
     ldr r0, =currentBlock2
     ldrb r2, [r0]
@@ -138,6 +142,7 @@ rotate0_AB:
     // update fourth coordinate
     ldr r0, =currentBlock4
     ldrb r2, [r0]
+    sub r2, #1
     add r2, #20
     strb r1, [r0]
 
@@ -165,18 +170,18 @@ rotate0_AB:
     // step5. update border tiles
     // main borders
     ldr r0, =currentBorders
-    // first two bottom borders
+    // first three bottom borders
     // are deleted
     mov r1, #255
     strb r1, [r0]
-    strb r1, [r0, #1]
-    // load third
-    ldrb r1, [r0, #2] 
-    // move down two lines
-    add r1, #20
-    strb r1, [r0, #2]
-    // delete last border
     mov r1, #255
+    strb r1, [r0, #1]
+    mov r1, #255
+    strb r1, [r0, #2]
+    // last becomes only bottom
+    ldrb r1, [r0, #3] 
+    add r1, #20
+    sub r1, #1
     strb r1, [r0, #3]
 
     // left borders
@@ -254,8 +259,9 @@ rotate0_AB:
     ldr r0, =currentBlock1
     ldrb r1, [r0]
     bl drawCurrentBlock
-
 noMove_AB:
+
+finishTester:
     pop {lr}
     mov pc, lr
 

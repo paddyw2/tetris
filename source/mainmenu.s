@@ -102,8 +102,8 @@ drawState:
     mov r4, r1
     mov r0, #320
     mov r1, #352
-    ldr r2, =#306
-    ldr r3, =#79
+    ldr r2, =306
+    ldr r3, =79
     bl drawImage
     pop {r4}
     pop {lr}
@@ -171,35 +171,35 @@ restoreLoop:
     beq drawOrange 
     b finishRestore
 drawBlack:
-    mov r3, =blackSquare
+    ldr r3, =blackSquare
     bl drawSquare
     b continueRestore
 drawLightBlue:
-    mov r3, =lBlueSquare
+    ldr r3, =lBlueSquare
     bl drawSquare
     b continueRestore
 drawGreen:
-    mov r3, =greenSquare
+    ldr r3, =greenSquare
     bl drawSquare
     b continueRestore
 drawRed:
-    mov r3, =redSquare
+    ldr r3, =redSquare
     bl drawSquare
     b continueRestore
 drawYellow:
-    mov r3, =yellowSquare
+    ldr r3, =yellowSquare
     bl drawSquare
     b continueRestore
 drawPurple:
-    mov r3, =purpleSquare
+    ldr r3, =purpleSquare
     bl drawSquare
     b continueRestore
 drawBlue:
-    mov r3, =blueSquare
+    ldr r3, =blueSquare
     bl drawSquare
     b continueRestore
 drawOrange:
-    mov r3, =orangeSquare
+    ldr r3, =orangeSquare
     bl drawSquare
     b continueRestore
 

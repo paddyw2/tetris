@@ -21,7 +21,6 @@ in file.
 moveCurrentBlock:
     push {lr}
     push {r6, r9}
-    mov r10, #23
     mov r9, r1
     cmp r9, #0
     beq noButtonsPressed
@@ -29,7 +28,7 @@ moveCurrentBlock:
     // check user pressed left
     lsl r1, #4
     tst r9, r1
-    bne rotateBlock
+    bne blockRotate
     lsl r1, #1
     tst r9, r1
     bne moveBlockDown
@@ -40,7 +39,7 @@ moveCurrentBlock:
     tst r9, r1
     bne moveBlockRight
     b noButtonsPressed
-rotateBlock:
+blockRotate:
     bl rotateBlock
     mov r0, #1
     b noButtonsPressed
@@ -253,7 +252,6 @@ moveCurrentBlockRight:
     // left
     push {lr}
     push {r6}
-    mov r10, #123
     // get offset
     ldr r0, =currentBlockLeftOffset
     ldrb r1, [r0]

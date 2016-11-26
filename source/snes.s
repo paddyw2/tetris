@@ -15,8 +15,11 @@ WaitAndCheckSNES:
     push {r6, r9}
     mov r6, #0
 WaitAndCheck:
-    cmp r6, #100
+    cmp r6, #500
     beq FinishWaitCheck
+    mov r1, #500
+    bl Wait
+
     // first check SNES
     bl Read_Data
     mov r9, r0
@@ -31,6 +34,8 @@ WaitAndCheck:
     // pressed, so process
     mov r1, r9
     bl moveCurrentBlock
+    // set infinity
+    mov r6, #0
     // if down pressed, then
     // r0=0 on return
     cmp r0, #0

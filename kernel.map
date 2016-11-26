@@ -7,6 +7,8 @@ Name             Origin             Length             Attributes
 Linker script and memory map
 
 LOAD build/startmenu.o
+LOAD build/blockrotate.o
+LOAD build/block0rotate.o
 LOAD build/jtag.o
 LOAD build/framebuffer.o
 LOAD build/blockinsert.o
@@ -15,15 +17,18 @@ LOAD build/draw.o
 LOAD build/write.o
 LOAD build/snes.o
 LOAD build/main.o
+LOAD build/mainmenu.o
 
 .init           0x00008000        0x4
  *(.init)
  .init          0x00008000        0x4 build/main.o
                 0x00008000                _start
 
-.data           0x00009080   0x375efc
+.data           0x00009080    0x958c1
  *(.data)
  .data          0x00009080    0x4e201 build/startmenu.o
+ .data          0x00057281        0x0 build/blockrotate.o
+ .data          0x00057281        0x0 build/block0rotate.o
  .data          0x00057281        0x0 build/jtag.o
  *fill*         0x00057281        0xf 3f3f3f3f
  .data          0x00057290       0x70 build/framebuffer.o
@@ -34,183 +39,230 @@ LOAD build/main.o
  *fill*         0x00057302        0xe 3f3f3f3f
  .data          0x00057310      0x800 build/write.o
  .data          0x00057b10        0x0 build/snes.o
- .data          0x00057b10   0x32746c build/main.o
+ .data          0x00057b10    0x2b478 build/main.o
                 0x00057b10                game_block
+                0x00058e98                i_block
                 0x00058e98                start_screen
-                0x001d8e98                game_area
-                0x00358e98                i_block
-                0x00358e98                game_over_screen
-                0x0035ae98                i_block_black
-                0x0035ce98                s_block_green
-                0x0035fe98                s_block_green_black
-                0x00362e98                s_block_red
-                0x00365e98                s_block_red_black
-                0x00368e98                o_block_yellow
-                0x0036ae98                o_block_yellow_black
-                0x0036ce98                w_block
-                0x0036fe98                w_block_black
-                0x00372e98                l_block_blue
-                0x00375e98                l_block_blue_black
-                0x00378e98                l_block_orange
-                0x0037be98                l_block_orange_black
-                0x0037ee98                gameState
-                0x0037ef60                currentBlock1
-                0x0037ef61                currentBlock2
-                0x0037ef62                currentBlock3
-                0x0037ef63                currentBlock4
-                0x0037ef64                currentBorders
-                0x0037ef68                currentBlockImage
-                0x0037ef6c                currentBlockImageBlack
-                0x0037ef70                currentBlockSizeX
-                0x0037ef71                currentBlockSizeY
-                0x0037ef72                currentBlockLeftOffset
-                0x0037ef73                currentBlockWidth
+                0x00058e98                game_area
+                0x00058e98                game_over_screen
+                0x0005ae98                i_block_black
+                0x0005ce98                i_block_B
+                0x0005ee98                i_block_black_B
+                0x00060e98                s_block_green
+                0x00063e98                s_block_green_black
+                0x00066e98                s_block_red
+                0x00069e98                s_block_red_black
+                0x0006ce98                o_block_yellow
+                0x0006ee98                o_block_yellow_black
+                0x00070e98                w_block
+                0x00073e98                w_block_black
+                0x00076e98                l_block_blue
+                0x00079e98                l_block_blue_black
+                0x0007ce98                l_block_orange
+                0x0007fe98                l_block_orange_black
+                0x00082e98                gameState
+                0x00082f60                currentBlock1
+                0x00082f61                currentBlock2
+                0x00082f62                currentBlock3
+                0x00082f63                currentBlock4
+                0x00082f64                currentBorders
+                0x00082f68                currentLeftBorders
+                0x00082f6c                currentRightBorders
+                0x00082f70                currentBlockImage
+                0x00082f74                currentBlockImageBlack
+                0x00082f78                currentBlockSizeX
+                0x00082f79                currentBlockSizeY
+                0x00082f7a                currentBlockLeftOffset
+                0x00082f7b                currentBlockWidth
+                0x00082f7c                currentBlockType
+                0x00082f7d                currentBlockRotation
+ .data          0x00082f88    0x1b9b9 build/mainmenu.o
  *.c.o(*)
 
-.igot.plt       0x0037ef7c        0x0
+.igot.plt       0x0009e944        0x0
  .igot.plt      0x00000000        0x0 build/startmenu.o
 
-.text           0x0037ef7c     0x1770
+.text           0x0009e944     0x2d30
  *.c.o(.text)
  *(.text)
- .text          0x0037ef7c       0xf4 build/startmenu.o
-                0x0037ef7c                runStartMenu
- .text          0x0037f070       0x8c build/jtag.o
-                0x0037f070                EnableJTAG
- .text          0x0037f0fc       0x80 build/framebuffer.o
-                0x0037f0fc                InitFrameBuffer
- .text          0x0037f17c      0x97c build/blockinsert.o
-                0x0037f17c                insertNewIBeam
-                0x0037f2cc                insertNewSBeam
-                0x0037f418                insertNewSRBeam
-                0x0037f564                insertNewOBeam
-                0x0037f6ac                insertNewWBeam
-                0x0037f7f8                insertNewLBBeam
-                0x0037f944                insertNewLOBeam
- .text          0x0037faf8        0x0 build/blockmove.o
- .text          0x0037faf8      0x274 build/draw.o
-                0x0037faf8                clearScreen
-                0x0037fb24                drawBlock
-                0x0037fb88                drawImage
-                0x0037fbf0                clearLineScreen
-                0x0037fc5c                drawCurrentScore
-                0x0037fd08                DrawPixel
-                0x0037fd40                GetPixel
- .text          0x0037fd6c       0x88 build/write.o
-                0x0037fd6c                drawString
- .text          0x0037fdf4      0x220 build/snes.o
-                0x0037fdf4                Set_Lines
-                0x0037fe84                Read_Data
-                0x0037ff04                Check_Buttons
-                0x0037ffa0                Wait
- .text          0x00380014      0x6d8 build/main.o
-                0x00380038                InsertNewBlock
-                0x003802e0                drawCurrentBlock
-                0x00380350                eraseCurrentBlock
-                0x003803c0                xorShift
-                0x003804d4                drawIntroScreen
-                0x00380500                drawGameArea
-                0x00380558                resetGameState
-                0x00380698                quitProgram
+ .text          0x0009e944       0xf4 build/startmenu.o
+                0x0009e944                runStartMenu
+ .text          0x0009ea38       0xb4 build/blockrotate.o
+                0x0009ea38                rotateBlock
+ .text          0x0009eaec      0xa44 build/block0rotate.o
+                0x0009eaec                rotate0_AB
+                0x0009ed58                rotate0_BC
+                0x0009efd4                rotate0_CD
+                0x0009f264                rotate0_DA
+ .text          0x0009f530       0x8c build/jtag.o
+                0x0009f530                EnableJTAG
+ .text          0x0009f5bc       0x80 build/framebuffer.o
+                0x0009f5bc                InitFrameBuffer
+ .text          0x0009f63c      0xc98 build/blockinsert.o
+                0x0009f63c                insertNewIBeam
+                0x0009f7f8                insertNewSBeam
+                0x0009f9b4                insertNewSRBeam
+                0x0009fb70                insertNewOBeam
+                0x0009fd28                insertNewWBeam
+                0x0009fee4                insertNewLBBeam
+                0x000a00a0                insertNewLOBeam
+ .text          0x000a02d4      0x4ac build/blockmove.o
+                0x000a02d4                moveCurrentBlock
+ .text          0x000a0780      0x290 build/draw.o
+                0x000a0780                clearScreen
+                0x000a07ac                drawBlock
+                0x000a0810                drawImage
+                0x000a0878                clearLineScreen
+                0x000a08e8                drawCurrentScore
+                0x000a0994                DrawPixel
+                0x000a09cc                GetPixel
+ .text          0x000a0a10       0x88 build/write.o
+                0x000a0a10                drawString
+ .text          0x000a0a98      0x284 build/snes.o
+                0x000a0a98                WaitAndCheckSNES
+                0x000a0afc                Set_Lines
+                0x000a0b8c                Read_Data
+                0x000a0c0c                Check_Buttons
+                0x000a0ca8                Wait
+ .text          0x000a0d1c      0x700 build/main.o
+                0x000a0d44                InsertNewBlock
+                0x000a1008                drawCurrentBlock
+                0x000a1078                eraseCurrentBlock
+                0x000a10e8                xorShift
+                0x000a1200                drawIntroScreen
+                0x000a122c                drawGameArea
+                0x000a1284                resetGameState
+                0x000a13c4                quitProgram
+ .text          0x000a141c      0x258 build/mainmenu.o
+                0x000a141c                runMainMenu
 OUTPUT(build/output.elf elf32-littlearm)
 
-.glue_7         0x003806ec        0x0
+.glue_7         0x000a1674        0x0
  .glue_7        0x00000000        0x0 linker stubs
 
-.glue_7t        0x003806ec        0x0
+.glue_7t        0x000a1674        0x0
  .glue_7t       0x00000000        0x0 linker stubs
 
-.vfp11_veneer   0x003806ec        0x0
+.vfp11_veneer   0x000a1674        0x0
  .vfp11_veneer  0x00000000        0x0 linker stubs
 
-.v4_bx          0x003806ec        0x0
+.v4_bx          0x000a1674        0x0
  .v4_bx         0x00000000        0x0 linker stubs
 
-.iplt           0x003806ec        0x0
+.iplt           0x000a1674        0x0
  .iplt          0x00000000        0x0 build/startmenu.o
 
-.rel.dyn        0x003806ec        0x0
+.rel.dyn        0x000a1674        0x0
  .rel.iplt      0x00000000        0x0 build/startmenu.o
 
-.bss            0x003806ec        0x0
- .bss           0x003806ec        0x0 build/startmenu.o
- .bss           0x003806ec        0x0 build/jtag.o
- .bss           0x003806ec        0x0 build/framebuffer.o
- .bss           0x003806ec        0x0 build/blockinsert.o
- .bss           0x003806ec        0x0 build/blockmove.o
- .bss           0x003806ec        0x0 build/draw.o
- .bss           0x003806ec        0x0 build/write.o
- .bss           0x003806ec        0x0 build/snes.o
- .bss           0x003806ec        0x0 build/main.o
+.bss            0x000a1674        0x0
+ .bss           0x000a1674        0x0 build/startmenu.o
+ .bss           0x000a1674        0x0 build/blockrotate.o
+ .bss           0x000a1674        0x0 build/block0rotate.o
+ .bss           0x000a1674        0x0 build/jtag.o
+ .bss           0x000a1674        0x0 build/framebuffer.o
+ .bss           0x000a1674        0x0 build/blockinsert.o
+ .bss           0x000a1674        0x0 build/blockmove.o
+ .bss           0x000a1674        0x0 build/draw.o
+ .bss           0x000a1674        0x0 build/write.o
+ .bss           0x000a1674        0x0 build/snes.o
+ .bss           0x000a1674        0x0 build/main.o
+ .bss           0x000a1674        0x0 build/mainmenu.o
 
 .ARM.attributes
                 0x00000000       0x29
  .ARM.attributes
                 0x00000000       0x29 build/startmenu.o
  .ARM.attributes
-                0x00000029       0x29 build/jtag.o
+                0x00000029       0x29 build/blockrotate.o
  .ARM.attributes
-                0x00000052       0x29 build/framebuffer.o
+                0x00000052       0x29 build/block0rotate.o
  .ARM.attributes
-                0x0000007b       0x29 build/blockinsert.o
+                0x0000007b       0x29 build/jtag.o
  .ARM.attributes
-                0x000000a4       0x29 build/blockmove.o
+                0x000000a4       0x29 build/framebuffer.o
  .ARM.attributes
-                0x000000cd       0x29 build/draw.o
+                0x000000cd       0x29 build/blockinsert.o
  .ARM.attributes
-                0x000000f6       0x29 build/write.o
+                0x000000f6       0x29 build/blockmove.o
  .ARM.attributes
-                0x0000011f       0x29 build/snes.o
+                0x0000011f       0x29 build/draw.o
  .ARM.attributes
-                0x00000148       0x29 build/main.o
+                0x00000148       0x29 build/write.o
+ .ARM.attributes
+                0x00000171       0x29 build/snes.o
+ .ARM.attributes
+                0x0000019a       0x29 build/main.o
+ .ARM.attributes
+                0x000001c3       0x29 build/mainmenu.o
 
-.debug_line     0x00000000      0x881
+.debug_line     0x00000000      0xf4e
  .debug_line    0x00000000       0x8b build/startmenu.o
- .debug_line    0x0000008b       0x61 build/jtag.o
- .debug_line    0x000000ec       0x67 build/framebuffer.o
- .debug_line    0x00000153      0x2c7 build/blockinsert.o
- .debug_line    0x0000041a       0xf1 build/draw.o
- .debug_line    0x0000050b       0x63 build/write.o
- .debug_line    0x0000056e       0xd8 build/snes.o
- .debug_line    0x00000646      0x23b build/main.o
+ .debug_line    0x0000008b       0x77 build/blockrotate.o
+ .debug_line    0x00000102      0x2f3 build/block0rotate.o
+ .debug_line    0x000003f5       0x61 build/jtag.o
+ .debug_line    0x00000456       0x67 build/framebuffer.o
+ .debug_line    0x000004bd      0x394 build/blockinsert.o
+ .debug_line    0x00000851      0x181 build/blockmove.o
+ .debug_line    0x000009d2       0xf8 build/draw.o
+ .debug_line    0x00000aca       0x63 build/write.o
+ .debug_line    0x00000b2d       0xf3 build/snes.o
+ .debug_line    0x00000c20      0x245 build/main.o
+ .debug_line    0x00000e65       0xe9 build/mainmenu.o
 
-.debug_info     0x00000000      0x308
- .debug_info    0x00000000       0x64 build/startmenu.o
- .debug_info    0x00000064       0x5f build/jtag.o
- .debug_info    0x000000c3       0x66 build/framebuffer.o
- .debug_info    0x00000129       0x66 build/blockinsert.o
- .debug_info    0x0000018f       0x5f build/draw.o
- .debug_info    0x000001ee       0x60 build/write.o
- .debug_info    0x0000024e       0x5f build/snes.o
- .debug_info    0x000002ad       0x5b build/main.o
+.debug_info     0x00000000      0x53e
+ .debug_info    0x00000000       0x76 build/startmenu.o
+ .debug_info    0x00000076       0x78 build/blockrotate.o
+ .debug_info    0x000000ee       0x79 build/block0rotate.o
+ .debug_info    0x00000167       0x5f build/jtag.o
+ .debug_info    0x000001c6       0x66 build/framebuffer.o
+ .debug_info    0x0000022c       0x78 build/blockinsert.o
+ .debug_info    0x000002a4       0x76 build/blockmove.o
+ .debug_info    0x0000031a       0x71 build/draw.o
+ .debug_info    0x0000038b       0x60 build/write.o
+ .debug_info    0x000003eb       0x71 build/snes.o
+ .debug_info    0x0000045c       0x6d build/main.o
+ .debug_info    0x000004c9       0x75 build/mainmenu.o
 
-.debug_abbrev   0x00000000       0x9e
+.debug_abbrev   0x00000000       0xee
  .debug_abbrev  0x00000000       0x14 build/startmenu.o
- .debug_abbrev  0x00000014       0x14 build/jtag.o
- .debug_abbrev  0x00000028       0x14 build/framebuffer.o
- .debug_abbrev  0x0000003c       0x14 build/blockinsert.o
- .debug_abbrev  0x00000050       0x14 build/draw.o
- .debug_abbrev  0x00000064       0x14 build/write.o
- .debug_abbrev  0x00000078       0x14 build/snes.o
- .debug_abbrev  0x0000008c       0x12 build/main.o
+ .debug_abbrev  0x00000014       0x14 build/blockrotate.o
+ .debug_abbrev  0x00000028       0x14 build/block0rotate.o
+ .debug_abbrev  0x0000003c       0x14 build/jtag.o
+ .debug_abbrev  0x00000050       0x14 build/framebuffer.o
+ .debug_abbrev  0x00000064       0x14 build/blockinsert.o
+ .debug_abbrev  0x00000078       0x14 build/blockmove.o
+ .debug_abbrev  0x0000008c       0x14 build/draw.o
+ .debug_abbrev  0x000000a0       0x14 build/write.o
+ .debug_abbrev  0x000000b4       0x14 build/snes.o
+ .debug_abbrev  0x000000c8       0x12 build/main.o
+ .debug_abbrev  0x000000da       0x14 build/mainmenu.o
 
-.debug_aranges  0x00000000      0x108
+.debug_aranges  0x00000000      0x188
  .debug_aranges
                 0x00000000       0x20 build/startmenu.o
  .debug_aranges
-                0x00000020       0x20 build/jtag.o
+                0x00000020       0x20 build/blockrotate.o
  .debug_aranges
-                0x00000040       0x20 build/framebuffer.o
+                0x00000040       0x20 build/block0rotate.o
  .debug_aranges
-                0x00000060       0x20 build/blockinsert.o
+                0x00000060       0x20 build/jtag.o
  .debug_aranges
-                0x00000080       0x20 build/draw.o
+                0x00000080       0x20 build/framebuffer.o
  .debug_aranges
-                0x000000a0       0x20 build/write.o
+                0x000000a0       0x20 build/blockinsert.o
  .debug_aranges
-                0x000000c0       0x20 build/snes.o
+                0x000000c0       0x20 build/blockmove.o
  .debug_aranges
-                0x000000e0       0x28 build/main.o
+                0x000000e0       0x20 build/draw.o
+ .debug_aranges
+                0x00000100       0x20 build/write.o
+ .debug_aranges
+                0x00000120       0x20 build/snes.o
+ .debug_aranges
+                0x00000140       0x28 build/main.o
+ .debug_aranges
+                0x00000168       0x20 build/mainmenu.o
 
 .debug_ranges   0x00000000       0x20
  .debug_ranges  0x00000000       0x20 build/main.o
