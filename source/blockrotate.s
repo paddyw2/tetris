@@ -42,7 +42,7 @@ block1:
     bl rotateIBlock
     b noRotate
 block2:
-    // rotate Green S
+    bl rotateSGreenBlock
     b noRotate
 block3:
     // rotate Red S
@@ -85,13 +85,53 @@ rotateIBlock:
     b finishIRotation
 state0:
     bl rotate0_AB
+    b finishIRotation
 state1:
-    //bl rotate0_BC
+    bl rotate0_BC
+    b finishIRotation
 state2:
-    //bl rotate0_CD
+    bl rotate0_CD
+    b finishIRotation
 state3:
-    //bl rotate0_DA
+    bl rotate0_DA
+    b finishIRotation
 finishIRotation:
+    pop {lr}
+    mov pc, lr
+
+//-----------------------//
+
+
+//-----------------------//
+rotateSGreenBlock:
+    // now check current rotation
+    // and execute relevant state
+    // change 
+    push {lr}
+    ldr r0, =currentBlockRotation
+    ldrb r1, [r0]
+    cmp r1, #0
+    beq sg_state0
+    cmp r1, #1
+    beq sg_state1
+    cmp r1, #2
+    beq sg_state2
+    cmp r1, #3
+    beq sg_state3
+    b sg_finishIRotation
+sg_state0:
+    bl rotate1_AB
+    b sg_finishIRotation
+sg_state1:
+    bl rotate1_BC
+    b sg_finishIRotation
+sg_state2:
+    bl rotate1_CD
+    b sg_finishIRotation
+sg_state3:
+    bl rotate1_DA
+    b sg_finishIRotation
+sg_finishIRotation:
     pop {lr}
     mov pc, lr
 

@@ -13,15 +13,19 @@
 WaitAndCheckSNES:
     push {lr}
     push {r6, r9}
+    mov r9, #0
     mov r6, #0
 WaitAndCheck:
-    cmp r6, #500
+    cmp r6, #200
     beq FinishWaitCheck
-    mov r1, #500
+    mov r1, #1000
     bl Wait
 
     // first check SNES
     bl Read_Data
+    // stop repeated input
+    cmp r9, r0
+    beq noButtonInput
     mov r9, r0
     // set mask for all arrow
     // buttons
@@ -42,7 +46,7 @@ WaitAndCheck:
     beq FinishWaitCheck
 noButtonInput:
     // wait 1000 microseconds
-    mov r1, #500
+    mov r1, #1000
     bl Wait
     add r6, #1
     b WaitAndCheck

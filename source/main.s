@@ -33,7 +33,6 @@ StartGame:
     // start
     bl clearScreen
     bl setSeed
-    mov r11, #0
     b InsertNewBlock
     // draw main menu and wait
     // for user to choose an option
@@ -61,11 +60,7 @@ InsertNewBlock:
     // moves current block down
     // until it cannot move further
     bl moveBlockDown
-    cmp r11, #12
-    bne blockDelay
     bl checkForCompleteLines
-blockDelay:
-    add r11, #1
 
     // loops until moveBlockDown
     // detects end of game state
@@ -535,7 +530,7 @@ insertRandomBlock:
 
     mov r1, #7
     bl xorShift
-    mov r1, #6
+    mov r1, #5
 
     cmp r1, #0
     beq block0
@@ -710,20 +705,20 @@ clearLine:
     // clear current line in state
     // takes r1 as current line input
     mov r1, r5
-    mov r1, #17
     bl clearLineGameState
     // clear current line in visual
     // takes r1 as current line input
     mov r1, r5
-    mov r1, #17
     bl clearLineScreen
 
     // for every line cleared, update
     // user score by 10
     mov r1, #10
     bl updateScore
+    // to account for dropped line
+    add r5, #1
+    add r4, #10
 
-    b finishCheckLines
     // then move to next line
 
 nextLine:
@@ -812,7 +807,6 @@ finishClearValues:
 updateScore:
 // increments user score by r1 value
     push {lr}
-    @b scoreEnd
     // r1 is value to increment
     // score by
     ldr r0, =currentScore
@@ -873,6 +867,12 @@ i_block_black_B:       .include "images/rotation/i_block_B_black.txt"
 s_block_green:        .include "images/s_block_green.txt"
 .globl s_block_green_black
 s_block_green_black:  .include "images/s_block_green_black.txt"
+.globl s_block_green_B
+s_block_green_B:        .include "images/s_block_green_B.txt"
+.globl s_block_g_b_B
+s_block_g_b_B:  .include "images/s_block_g_b_B2.txt"
+// Red Block
+
 .globl s_block_red
 s_block_red:    .include "images/s_block_saviour.txt"
 .globl s_block_red_black

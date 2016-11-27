@@ -1,24 +1,25 @@
 /*
 
-I BLOCK ROTATION
+GREEN BLOCK ROTATION
 
 This file contains the protocols
-for each rotation of the I Block
+for each rotation of the Green Block
 
 */
 
 .section .text
 
 //----------------------------//
-.globl rotate0_AB
+.globl rotate1_AB
 // moves I Block from initial
 // state to vertical
 // that is, it moves the I
 // Block from state A to B
-rotate0_AB:
+rotate1_AB:
     push {lr}
     // step1. check rotation
     // possible
+    /* no change first coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock1
     ldrb r2, [r2]
@@ -59,7 +60,7 @@ rotate0_AB:
     ldr r0, =gameState
     ldr r2, =currentBlock3
     ldrb r2, [r2]
-    add r2, #10
+    add r2, #2
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -76,8 +77,8 @@ rotate0_AB:
     ldr r0, =gameState
     ldr r2, =currentBlock4
     ldrb r2, [r2]
-    sub r2, #1
-    add r2, #20
+    add r2, #10
+    add r2, #1
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -86,7 +87,6 @@ rotate0_AB:
     blt noMove_AB
     // check position is
     // not occupied
-
     ldrb r1, [r0, r2]
     cmp r1, #1
     bge noMove_AB
@@ -126,24 +126,23 @@ rotate0_AB:
     // step3. update block coordinates
     ldr r0, =currentBlock1
     ldrb r2, [r0]
-    sub r2, #10
-    add r2, #2
-    strb r2, [r0]
+    // no change
     // update second coordinate
     ldr r0, =currentBlock2
     ldrb r2, [r0]
-    add r2, #1
+    add r2, #10
+    sub r2, #1
     strb r2, [r0]
     // update third coordinate
     ldr r0, =currentBlock3
     ldrb r2, [r0]
-    add r2, #10
+    add r2, #2
     strb r2, [r0]
     // update fourth coordinate
     ldr r0, =currentBlock4
     ldrb r2, [r0]
-    sub r2, #1
-    add r2, #20
+    add r2, #10
+    add r2, #1
     strb r2, [r0]
 
     // step4. update game state with
@@ -176,7 +175,8 @@ rotate0_AB:
     strb r1, [r0]
     mov r1, #255
     strb r1, [r0, #1]
-    mov r1, #255
+    ldr r1, =currentBlock2
+    ldrb r1, [r1]
     strb r1, [r0, #2]
     // last becomes only bottom
     ldr r1, =currentBlock4
@@ -193,11 +193,9 @@ rotate0_AB:
     strb r1, [r0]
     // second
     ldr r1, =currentBlock2
-    ldrb r1, [r1]
     strb r1, [r0, #1]
     // third
-    ldr r1, =currentBlock3
-    ldrb r1, [r1]
+    mov r1, #255
     strb r1, [r0, #2]
     // fourth
     ldr r1, =currentBlock4
@@ -211,8 +209,7 @@ rotate0_AB:
     ldrb r1, [r1]
     strb r1, [r0]
     // second
-    ldr r1, =currentBlock2
-    ldrb r1, [r1]
+    mov r1, #255
     strb r1, [r0, #1]
     // third
     ldr r1, =currentBlock3
@@ -225,28 +222,28 @@ rotate0_AB:
 
     // step6. update image files
     // and image x, y
-    ldr r3, =i_block_B
+    ldr r3, =s_block_green_B
     ldr r2, =currentBlockImage
     str r3, [r2]
-    ldr r3, =i_block_black_B
+    ldr r3, =s_block_g_b_B
     ldr r2, =currentBlockImageBlack
     str r3, [r2]
-    mov r3, #32
+    mov r3, #64
     ldr r2, =currentBlockSizeX
     strb r3, [r2]
-    mov r3, #128
+    mov r3, #96
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
 
     // step7. update x offset
     ldr r0, =currentBlockLeftOffset
     ldrb r1, [r0]
-    add r1, #2
+    add r1, #1
     strb r1, [r0]
 
     // step8. update block width
     ldr r0, =currentBlockWidth
-    mov r1, #1
+    mov r1, #2
     strb r1, [r0]
 
     // step9. update block state
@@ -260,7 +257,6 @@ rotate0_AB:
     bl drawCurrentBlock
 noMove_AB:
 
-finishTester:
     pop {lr}
     mov pc, lr
 
@@ -268,16 +264,16 @@ finishTester:
 
 
 //----------------------------//
-.globl rotate0_BC
+.globl rotate1_BC
 // moves I Block from vertical
 // state to horizontal
 // that is, it moves the I
 // Block from state B to C
-rotate0_BC:
+rotate1_BC:
     push {lr}
-    mov r12, #400
     // step1. check rotation
     // possible
+    /* one and two are old block
     ldr r0, =gameState
     ldr r2, =currentBlock1
     ldrb r2, [r2]
@@ -311,12 +307,13 @@ rotate0_BC:
     ldrb r1, [r0, r2]
     cmp r1, #1
     bge noMove_BC
+    */
     // check third coordinate
-    /* third is old block
     ldr r0, =gameState
     ldr r2, =currentBlock3
     ldrb r2, [r2]
-    sub r2, #1
+    add r2, #10
+    sub r2, #2
     cmp r2, #199
     bgt noMove_BC
     cmp r2, #0
@@ -324,13 +321,11 @@ rotate0_BC:
     ldrb r1, [r0, r2]
     cmp r1, #1
     bge noMove_BC
-    */
     // check fourth coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock4
     ldrb r2, [r2]
-    sub r2, #10
-    add r2, #1
+    sub r2, #1
     cmp r2, #199
     bgt noMove_BC
     cmp r2, #0
@@ -341,7 +336,6 @@ rotate0_BC:
 
     // block can move
 
-    mov r12, #500
     // delete block on screen
     ldr r0, =currentBlock1
     ldrb r1, [r0]
@@ -375,26 +369,23 @@ rotate0_BC:
     // step3. update block coordinates
     ldr r0, =currentBlock1
     ldrb r2, [r0]
-    add r2, #20
-    sub r2, #2
+    add r2, #10
     strb r2, [r0]
     // update second coordinate
     ldr r0, =currentBlock2
     ldrb r2, [r0]
-    add r2, #10
-    sub r2, #1
+    add r2, #1
     strb r2, [r0]
     // update third coordinate
     ldr r0, =currentBlock3
     ldrb r2, [r0]
-    // no change
-    //sub r2, #1
-    //strb r2, [r0]
+    add r2, #10
+    sub r2, #2
+    strb r2, [r0]
     // update fourth coordinate
     ldr r0, =currentBlock4
     ldrb r2, [r0]
-    sub r2, #10
-    add r2, #1
+    sub r2, #1
     strb r2, [r0]
 
     // step4. update game state with
@@ -423,8 +414,7 @@ rotate0_BC:
     ldr r0, =currentBorders
     // each bottom border is
     // same as all coordinates
-    ldr r3, =currentBlock1
-    ldrb r1, [r3]
+    mov r1, #255
     strb r1, [r0]
     ldr r3, =currentBlock2
     ldrb r1, [r3]
@@ -449,14 +439,17 @@ rotate0_BC:
     mov r1, #255
     strb r1, [r0, #1]
     // third
+    ldr r1, =currentBlock3
+    ldrb r1, [r1]
     strb r1, [r0, #2]
     // fourth
+    mov r1, #255
     strb r1, [r0, #3]
 
     // same for right coordinates
     ldr r0, =currentRightBorders
-    // first
-    ldr r1, =currentBlock4
+    // first is now last coordinate
+    ldr r1, =currentBlock2
     ldrb r1, [r1]
     strb r1, [r0]
     // the rest are null
@@ -464,34 +457,37 @@ rotate0_BC:
     mov r1, #255
     strb r1, [r0, #1]
     // third
+    ldr r1, =currentBlock4
+    ldrb r1, [r1]
     strb r1, [r0, #2]
     // fourth
+    mov r1, #255
     strb r1, [r0, #3]
 
     // step6. update image files
     // and image x, y
-    ldr r3, =i_block
+    ldr r3, =s_block_green
     ldr r2, =currentBlockImage
     str r3, [r2]
-    ldr r3, =i_block_black
+    ldr r3, =s_block_green_black
     ldr r2, =currentBlockImageBlack
     str r3, [r2]
-    mov r3, #128
+    mov r3, #96
     ldr r2, =currentBlockSizeX
     strb r3, [r2]
-    mov r3, #32
+    mov r3, #64
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
 
     // step7. update x offset
     ldr r0, =currentBlockLeftOffset
     ldrb r1, [r0]
-    sub r1, #2
+    sub r1, #1
     strb r1, [r0]
 
     // step8. update block width
     ldr r0, =currentBlockWidth
-    mov r1, #4
+    mov r1, #3
     strb r1, [r0]
 
     // step9. update block state
@@ -504,6 +500,7 @@ rotate0_BC:
     ldrb r1, [r0]
     bl drawCurrentBlock
 
+
 noMove_BC:
     pop {lr}
     mov pc, lr
@@ -512,12 +509,12 @@ noMove_BC:
 
 
 //----------------------------//
-.globl rotate0_CD
+.globl rotate1_CD
 // moves I Block from horizontal
 // state to vertical
 // that is, it moves the I
 // Block from state C to D
-rotate0_CD:
+rotate1_CD:
     push {lr}
 
     // step1. check rotation
@@ -525,8 +522,8 @@ rotate0_CD:
     ldr r0, =gameState
     ldr r2, =currentBlock1
     ldrb r2, [r2]
-    sub r2, #20
-    add r2, #1
+    sub r2, #10
+    sub r2, #1
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -542,7 +539,7 @@ rotate0_CD:
     ldr r0, =gameState
     ldr r2, =currentBlock2
     ldrb r2, [r2]
-    sub r2, #10
+    sub r2, #2
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -567,7 +564,6 @@ rotate0_CD:
     ldrb r1, [r0, r2]
     cmp r1, #1
     bge noMove_CD
-    */
     // check fourth coordinate
     ldr r0, =gameState
     ldr r2, =currentBlock4
@@ -581,7 +577,7 @@ rotate0_CD:
     ldrb r1, [r0, r2]
     cmp r1, #1
     bge noMove_CD
-
+    */
     // block can move
 
     // delete block on screen
@@ -617,25 +613,25 @@ rotate0_CD:
     // step3. update block coordinates
     ldr r0, =currentBlock1
     ldrb r2, [r0]
-    sub r2, #20
-    add r2, #1
+    sub r2, #10
+    sub r2, #1
     strb r2, [r0]
     // update second coordinate
     ldr r0, =currentBlock2
     ldrb r2, [r0]
-    sub r2, #10
+    sub r2, #2
     strb r2, [r0]
     // update third coordinate
     ldr r0, =currentBlock3
     ldrb r2, [r0]
-    sub r2, #1
+    sub r2, #10
+    add r2, #1
     strb r2, [r0]
     // update fourth coordinate
     ldr r0, =currentBlock4
     ldrb r2, [r0]
-    add r2, #10
-    sub r2, #2
-    strb r2, [r0]
+    // no change
+    //strb r2, [r0]
 
     // step4. update game state with
     // new block position
@@ -663,14 +659,18 @@ rotate0_CD:
     ldr r0, =currentBorders
     // coordinate 1 is now
     // bottom
-    ldr r3, =currentBlock4
-    ldrb r1, [r3]
+    mov r1, #255
     strb r1, [r0]
+    ldr r3, =currentBlock2
+    ldrb r1, [r3]
+    strb r1, [r0, #1]
     // no more bottom tiles
     mov r1, #255
-    strb r1, [r0, #1]
     strb r1, [r0, #2]
+    ldr r3, =currentBlock4
+    ldrb r1, [r3]
     strb r1, [r0, #3]
+
 
     // left borders
     // left and right borders are
@@ -682,8 +682,7 @@ rotate0_CD:
     ldr r3, =currentBlock2
     ldrb r1, [r3]
     strb r1, [r0, #1]
-    ldr r3, =currentBlock3
-    ldrb r1, [r3]
+    mov r1, #255
     strb r1, [r0, #2]
     ldr r3, =currentBlock4
     ldrb r1, [r3]
@@ -694,8 +693,7 @@ rotate0_CD:
     ldr r3, =currentBlock1
     ldrb r1, [r3]
     strb r1, [r0]
-    ldr r3, =currentBlock2
-    ldrb r1, [r3]
+    mov r1, #255
     strb r1, [r0, #1]
     ldr r3, =currentBlock3
     ldrb r1, [r3]
@@ -706,28 +704,28 @@ rotate0_CD:
 
     // step6. update image files
     // and image x, y
-    ldr r3, =i_block_B
+    ldr r3, =s_block_green_B
     ldr r2, =currentBlockImage
     str r3, [r2]
-    ldr r3, =i_block_black_B
+    ldr r3, =s_block_g_b_B
     ldr r2, =currentBlockImageBlack
     str r3, [r2]
-    mov r3, #32
+    mov r3, #64
     ldr r2, =currentBlockSizeX
     strb r3, [r2]
-    mov r3, #128
+    mov r3, #96
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
 
     // step7. update x offset
     ldr r0, =currentBlockLeftOffset
     ldrb r1, [r0]
-    add r1, #1
-    strb r1, [r0]
+    // no change
+    //strb r1, [r0]
 
     // step8. update block width
     ldr r0, =currentBlockWidth
-    mov r1, #1
+    mov r1, #2
     strb r1, [r0]
 
     // step9. update block state
@@ -748,12 +746,12 @@ noMove_CD:
 
 
 //----------------------------//
-.globl rotate0_DA
+.globl rotate1_DA
 // moves I Block from vertical
 // state to initial
 // that is, it moves the I
 // Block from state C to D
-rotate0_DA:
+rotate1_DA:
     push {lr}
 
     // step1. check rotation
@@ -761,8 +759,7 @@ rotate0_DA:
     ldr r0, =gameState
     ldr r2, =currentBlock1
     ldrb r2, [r2]
-    add r2, #10
-    sub r2, #1
+    add r2, #1
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -775,11 +772,11 @@ rotate0_DA:
     cmp r1, #1
     bge noMove_DA
     // check second coordinate
-    /* does not move
     ldr r0, =gameState
     ldr r2, =currentBlock2
     ldrb r2, [r2]
     sub r2, #10
+    add r2, #2
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -791,8 +788,8 @@ rotate0_DA:
     ldrb r1, [r0, r2]
     cmp r1, #1
     bge noMove_DA
-    */
     // check third coordinate
+    /*
     ldr r0, =gameState
     ldr r2, =currentBlock3
     ldrb r2, [r2]
@@ -818,7 +815,7 @@ rotate0_DA:
     ldrb r1, [r0, r2]
     cmp r1, #1
     bge noMove_DA
-
+    */
     // block can move
 
     // delete block on screen
@@ -854,26 +851,23 @@ rotate0_DA:
     // step3. update block coordinates
     ldr r0, =currentBlock1
     ldrb r2, [r0]
-    add r2, #10
-    sub r2, #1
+    add r2, #1
     strb r2, [r0]
     // update second coordinate
     ldr r0, =currentBlock2
     ldrb r2, [r0]
-    // no change
-    //sub r2, #10
-    //strb r2, [r0]
+    sub r2, #10
+    add r2, #2
+    strb r2, [r0]
     // update third coordinate
     ldr r0, =currentBlock3
     ldrb r2, [r0]
-    sub r2, #10
-    add r2, #1
+    sub r2, #1
     strb r2, [r0]
     // update fourth coordinate
     ldr r0, =currentBlock4
     ldrb r2, [r0]
-    sub r2, #20
-    add r2, #2
+    sub r2, #10
     strb r2, [r0]
 
     // step4. update game state with
@@ -902,8 +896,7 @@ rotate0_DA:
     ldr r0, =currentBorders
     // bottom borders are all
     // coordinates
-    ldr r3, =currentBlock1
-    ldrb r1, [r3]
+    mov r1, #255
     strb r1, [r0]
     ldr r3, =currentBlock2
     ldrb r1, [r3]
@@ -919,54 +912,54 @@ rotate0_DA:
 
     // left borders
     ldr r0, =currentLeftBorders
-    // left border just first
-    // coordinate
     ldr r3, =currentBlock1
     ldrb r1, [r3]
     strb r1, [r0]
-    // no more left borders
     mov r1, #255
     strb r1, [r0, #1]
+    ldr r3, =currentBlock3
+    ldrb r1, [r3]
     strb r1, [r0, #2]
+    mov r1, #255
     strb r1, [r0, #3]
 
     // right borders
     ldr r0, =currentRightBorders
-    // right border just last
-    // coordinate
-    ldr r3, =currentBlock4
+    ldr r3, =currentBlock2
     ldrb r1, [r3]
     strb r1, [r0]
-    // no more right borders
     mov r1, #255
     strb r1, [r0, #1]
+    ldr r3, =currentBlock4
+    ldrb r1, [r3]
     strb r1, [r0, #2]
+    mov r1, #255
     strb r1, [r0, #3]
 
     // step6. update image files
     // and image x, y
-    ldr r3, =i_block
+    ldr r3, =s_block_green
     ldr r2, =currentBlockImage
     str r3, [r2]
-    ldr r3, =i_block_black
+    ldr r3, =s_block_green_black
     ldr r2, =currentBlockImageBlack
     str r3, [r2]
-    mov r3, #128
+    mov r3, #96
     ldr r2, =currentBlockSizeX
     strb r3, [r2]
-    mov r3, #32
+    mov r3, #64
     ldr r5, =currentBlockSizeY
     strb r3, [r5]
 
     // step7. update x offset
     ldr r0, =currentBlockLeftOffset
     ldrb r1, [r0]
-    sub r1, #1
-    strb r1, [r0]
+    // no change
+    //strb r1, [r0]
 
     // step8. update block width
     ldr r0, =currentBlockWidth
-    mov r1, #4
+    mov r1, #3
     strb r1, [r0]
 
     // step9. update block state
