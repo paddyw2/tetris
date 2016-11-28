@@ -1,7 +1,7 @@
 .section .text
 
-  
-    
+
+
 .globl drawString
 drawString:
     mov r1, lr
@@ -12,14 +12,14 @@ drawString:
     // r6=y
     // r10=color
     mov r8, #0
-ds_drawStrLoop: 
+ds_drawStrLoop:
     cmp r8, r7
     beq ds_endDrawLoop
-    ldrb r0, [r3] 
-    bl DrawChar  
+    ldrb r0, [r3]
+    bl DrawChar
     add r3, #1
     add r8, #1
-    add r9, #10
+    add r9, #20
     b ds_drawStrLoop
 ds_endDrawLoop:
     pop {r1}
@@ -53,7 +53,7 @@ charLoop$:
     mov     px,     startx         // init the X coordinate
 
     mov     mask,   #0x01       // set the bitmask to 1 in the LSB
-    
+
     ldrb    row,    [chAdr], #1 // load the row byte, post increment chAdr
 
 rowLoop$:
@@ -66,13 +66,13 @@ rowLoop$:
     bl      DrawPixel           // draw red pixel at (px, py)
 
 noPixel$:
-    add     px,     #1         // increment x coordinate by 1
+    add     px,     #2         // increment x coordinate by 1
     lsl     mask,   #1          // shift bitmask left by 1
 
     tst     mask,   #0x100      // test if the bitmask has shifted 8 times (test 9th bit)
     beq     rowLoop$
 
-    add     py,     #1         // increment y coordinate by 1
+    add     py,     #2        // increment y coordinate by 1
 
     tst     chAdr,  #0xF
     bne     charLoop$           // loop back to charLoop$, unless address evenly divisibly by 16 (ie: at the next char)

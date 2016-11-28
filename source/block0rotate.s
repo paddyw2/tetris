@@ -22,8 +22,12 @@ rotate0_AB:
     ldr r0, =gameState
     ldr r2, =currentBlock1
     ldrb r2, [r2]
+    mov r1, r2
     sub r2, #10
     add r2, #2
+    bl checkIfDifferentLine
+    cmp r3, #0
+    beq noMove_AB
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -59,7 +63,11 @@ rotate0_AB:
     ldr r0, =gameState
     ldr r2, =currentBlock3
     ldrb r2, [r2]
+    mov r1, r2
     add r2, #10
+    bl checkIfDifferentLine
+    cmp r3, #0
+    beq noMove_AB
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -76,8 +84,12 @@ rotate0_AB:
     ldr r0, =gameState
     ldr r2, =currentBlock4
     ldrb r2, [r2]
+    mov r1, r2
     sub r2, #1
     add r2, #20
+    bl checkIfTwentyDiff
+    cmp r3, #0
+    beq noMove_AB
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -253,7 +265,7 @@ rotate0_AB:
     ldr r0, =currentBlockRotation
     mov r1, #1
     strb r1, [r0]
-    
+
     // draw new block on screen
     ldr r0, =currentBlock1
     ldrb r1, [r0]
@@ -275,14 +287,17 @@ finishTester:
 // Block from state B to C
 rotate0_BC:
     push {lr}
-    mov r12, #400
     // step1. check rotation
     // possible
     ldr r0, =gameState
     ldr r2, =currentBlock1
     ldrb r2, [r2]
+    mov r1, r2
     add r2, #20
     sub r2, #2
+    bl checkIfTwentyDiff
+    cmp r3, #0
+    beq noMove_BC
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -298,8 +313,12 @@ rotate0_BC:
     ldr r0, =gameState
     ldr r2, =currentBlock2
     ldrb r2, [r2]
+    mov r1, r2
     add r2, #10
     sub r2, #1
+    bl checkIfDifferentLine
+    cmp r3, #0
+    beq noMove_BC
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -329,8 +348,12 @@ rotate0_BC:
     ldr r0, =gameState
     ldr r2, =currentBlock4
     ldrb r2, [r2]
+    mov r1, r2
     sub r2, #10
     add r2, #1
+    bl checkIfDifferentLine
+    cmp r3, #0
+    beq noMove_BC
     cmp r2, #199
     bgt noMove_BC
     cmp r2, #0
@@ -498,7 +521,7 @@ rotate0_BC:
     ldr r0, =currentBlockRotation
     mov r1, #2
     strb r1, [r0]
-    
+
     // draw new block on screen
     ldr r0, =currentBlock1
     ldrb r1, [r0]
@@ -525,8 +548,12 @@ rotate0_CD:
     ldr r0, =gameState
     ldr r2, =currentBlock1
     ldrb r2, [r2]
+    mov r1, r2
     sub r2, #20
     add r2, #1
+    bl checkIfTwentyDiff
+    cmp r3, #0
+    beq noMove_CD
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -542,7 +569,11 @@ rotate0_CD:
     ldr r0, =gameState
     ldr r2, =currentBlock2
     ldrb r2, [r2]
+    mov r1, r2
     sub r2, #10
+    bl checkIfDifferentLine
+    cmp r3, #0
+    beq noMove_CD
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -572,8 +603,12 @@ rotate0_CD:
     ldr r0, =gameState
     ldr r2, =currentBlock4
     ldrb r2, [r2]
+    mov r1, r2
     add r2, #10
     sub r2, #2
+    bl checkIfDifferentLine
+    cmp r3, #0
+    beq noMove_CD
     cmp r2, #199
     bgt noMove_CD
     cmp r2, #0
@@ -734,7 +769,7 @@ rotate0_CD:
     ldr r0, =currentBlockRotation
     mov r1, #3
     strb r1, [r0]
-    
+
     // draw new block on screen
     ldr r0, =currentBlock1
     ldrb r1, [r0]
@@ -761,8 +796,12 @@ rotate0_DA:
     ldr r0, =gameState
     ldr r2, =currentBlock1
     ldrb r2, [r2]
+    mov r1, r2
     add r2, #10
     sub r2, #1
+    bl checkIfDifferentLine
+    cmp r3, #0
+    beq noMove_DA
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -796,8 +835,12 @@ rotate0_DA:
     ldr r0, =gameState
     ldr r2, =currentBlock3
     ldrb r2, [r2]
+    mov r1, r2
     sub r2, #10
     add r2, #1
+    bl checkIfDifferentLine
+    cmp r3, #0
+    beq noMove_DA
     cmp r2, #199
     bgt noMove_DA
     cmp r2, #0
@@ -809,8 +852,12 @@ rotate0_DA:
     ldr r0, =gameState
     ldr r2, =currentBlock4
     ldrb r2, [r2]
+    mov r1, r2
     sub r2, #20
     add r2, #2
+    bl checkIfTwentyDiff
+    cmp r3, #0
+    beq noMove_DA
     cmp r2, #199
     bgt noMove_DA
     cmp r2, #0
@@ -973,7 +1020,7 @@ rotate0_DA:
     ldr r0, =currentBlockRotation
     mov r1, #0
     strb r1, [r0]
-    
+
     // draw new block on screen
     ldr r0, =currentBlock1
     ldrb r1, [r0]

@@ -60,7 +60,11 @@ rotate1_AB:
     ldr r0, =gameState
     ldr r2, =currentBlock3
     ldrb r2, [r2]
+    mov r1, r2
     add r2, #2
+    bl checkIfDifferentLine
+    cmp r3, #0
+    bne noMove_AB
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -77,8 +81,12 @@ rotate1_AB:
     ldr r0, =gameState
     ldr r2, =currentBlock4
     ldrb r2, [r2]
+    mov r1, r2
     add r2, #10
     add r2, #1
+    bl checkIfDifferentLine
+    cmp r3, #0
+    beq noMove_AB
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -250,7 +258,7 @@ rotate1_AB:
     ldr r0, =currentBlockRotation
     mov r1, #1
     strb r1, [r0]
-    
+
     // draw new block on screen
     ldr r0, =currentBlock1
     ldrb r1, [r0]
@@ -312,8 +320,12 @@ rotate1_BC:
     ldr r0, =gameState
     ldr r2, =currentBlock3
     ldrb r2, [r2]
+    mov r1, r2
     add r2, #10
     sub r2, #2
+    bl checkIfDifferentLine
+    cmp r3, #0
+    beq noMove_BC
     cmp r2, #199
     bgt noMove_BC
     cmp r2, #0
@@ -325,7 +337,11 @@ rotate1_BC:
     ldr r0, =gameState
     ldr r2, =currentBlock4
     ldrb r2, [r2]
+    mov r1, r2
     sub r2, #1
+    bl checkIfDifferentLine
+    cmp r3, #0
+    bne noMove_BC
     cmp r2, #199
     bgt noMove_BC
     cmp r2, #0
@@ -494,7 +510,7 @@ rotate1_BC:
     ldr r0, =currentBlockRotation
     mov r1, #2
     strb r1, [r0]
-    
+
     // draw new block on screen
     ldr r0, =currentBlock1
     ldrb r1, [r0]
@@ -522,8 +538,12 @@ rotate1_CD:
     ldr r0, =gameState
     ldr r2, =currentBlock1
     ldrb r2, [r2]
+    mov r1, r2
     sub r2, #10
     sub r2, #1
+    bl checkIfDifferentLine
+    cmp r3, #0
+    beq noMove_CD
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -539,7 +559,11 @@ rotate1_CD:
     ldr r0, =gameState
     ldr r2, =currentBlock2
     ldrb r2, [r2]
+    mov r1, r2
     sub r2, #2
+    bl checkIfDifferentLine
+    cmp r3, #0
+    bne noMove_CD
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -732,7 +756,7 @@ rotate1_CD:
     ldr r0, =currentBlockRotation
     mov r1, #3
     strb r1, [r0]
-    
+
     // draw new block on screen
     ldr r0, =currentBlock1
     ldrb r1, [r0]
@@ -759,7 +783,11 @@ rotate1_DA:
     ldr r0, =gameState
     ldr r2, =currentBlock1
     ldrb r2, [r2]
+    mov r1, r2
     add r2, #1
+    bl checkIfDifferentLine
+    cmp r3, #0
+    bne noMove_DA
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -775,8 +803,12 @@ rotate1_DA:
     ldr r0, =gameState
     ldr r2, =currentBlock2
     ldrb r2, [r2]
+    mov r1, r2
     sub r2, #10
     add r2, #2
+    bl checkIfDifferentLine
+    cmp r3, #0
+    beq noMove_DA
     // check value is not
     // out of bounds
     cmp r2, #199
@@ -966,7 +998,7 @@ rotate1_DA:
     ldr r0, =currentBlockRotation
     mov r1, #0
     strb r1, [r0]
-    
+
     // draw new block on screen
     ldr r0, =currentBlock1
     ldrb r1, [r0]

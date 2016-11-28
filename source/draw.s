@@ -30,8 +30,8 @@ clearScreen:
 drawBlock:
     push {lr}
     /*
-    r1 = starting y
     r0 = starting x
+    r1 = starting y
     r2 = color
     r3 = x
     r4 = y
@@ -70,6 +70,9 @@ cs_totalEnd:
     mov pc, lr
 
 //---------------------//
+
+
+
 
 
 
@@ -218,18 +221,18 @@ getThirdDigit:
     strb r1, [r0, #2]
     // clear score area
     /*
-    r1 = starting y
     r0 = starting x
+    r1 = starting y
     r2 = color
     r3 = x
     r4 = y
     */
-    @mov r0, #100
-    @mov r1, #75
-    @mov r2, #0
-    @mov r3, #200
-    @mov r4, #200
-    @bl drawBlock
+    mov r0, #800
+    mov r1, #75
+    mov r2, #0x0
+    mov r3, #900
+    mov r4, #50
+    bl drawBlock
 
     ldr r0, =currentScoreAscii
     cmp r4, #48
@@ -252,8 +255,8 @@ writeScore:
 // r9=startx
 // r6=y
 // r10=color
-    mov r9, #100
-    mov r6, #800
+    ldr r9, =812
+    mov r6, #80
     mov r10, #0xff
     bl drawString
 

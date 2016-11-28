@@ -158,9 +158,9 @@ startGame:
 
 .section .data
 state1:
-    .include "images/state1.txt"
+    .include "images/mainmenu/menustate1.txt"
 state2:
-    .include "images/state2.txt"
+    .include "images/mainmenu/menustate2.txt"
 
 currentChoice:
     .byte 0

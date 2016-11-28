@@ -33,10 +33,13 @@ StartGame:
     // start
     bl clearScreen
     bl setSeed
-    b InsertNewBlock
+    @b InsertNewBlock
     // draw main menu and wait
     // for user to choose an option
     bl runStartMenu
+    bl drawGameArea
+    bl drawCurrentScore
+    @b InsertNewBlock
 
 //---------------------------//
 .globl InsertNewBlock
@@ -528,9 +531,8 @@ setSeed:
 insertRandomBlock:
     push {lr}
 
-    mov r1, #7
+    mov r1, #6
     bl xorShift
-    mov r1, #5
 
     cmp r1, #0
     beq block0
@@ -546,12 +548,11 @@ insertRandomBlock:
     beq block5
     cmp r1, #6
     beq block6
-    cmp r1, #7
-    beq block7
+
 
 
 block0:
-    bl insertNewSRBeam
+    bl insertNewOBeam
     b finishRandInsert
 block1:
     bl insertNewLOBeam
@@ -570,9 +571,6 @@ block5:
     b finishRandInsert
 block6:
     bl insertNewIBeam
-    b finishRandInsert
-block7:
-    bl insertNewOBeam
     b finishRandInsert
 
 
@@ -849,10 +847,13 @@ game_block:     .include "images/s_block.txt"
 // Large Images
 .globl start_screen
 start_screen:   .include "images/empty.txt"//"images/start_screen_blank.txt"
+
 .globl game_area
-game_area: .include "images/empty.txt" //"images/tetris_game_area.txt"
+game_area: .include "images/tetris_game_area.txt" //"images/tetris_game_area.txt"
+
 .globl game_over_screen
 game_over_screen:   .include "images/empty.txt"//"images/game_over.txt"
+
 // I Block
 .globl i_block
 i_block:        .include "images/i_block.txt"
@@ -870,30 +871,72 @@ s_block_green_black:  .include "images/s_block_green_black.txt"
 .globl s_block_green_B
 s_block_green_B:        .include "images/s_block_green_B.txt"
 .globl s_block_g_b_B
-s_block_g_b_B:  .include "images/s_block_g_b_B2.txt"
+s_block_g_b_B:  .include "images/green_tester1.txt"
 // Red Block
-
 .globl s_block_red
 s_block_red:    .include "images/s_block_saviour.txt"
 .globl s_block_red_black
 s_block_red_black: .include "images/s_block_red_black.txt"
+.globl s_block_red_B
+s_block_red_B:    .include "images/s_block_r_B.txt"
+.globl s_block_red_black_B
+s_block_red_black_B: .include "images/red_tester8.txt"
+// O Block
 .globl o_block_yellow
 o_block_yellow: .include "images/o_block_yellow.txt"
 .globl o_block_yellow_black
 o_block_yellow_black: .include "images/o_block_yellow_black.txt"
+// W Block
 .globl w_block
 w_block: .include "images/w_block.txt"
 .globl w_block_black
 w_block_black: .include "images/w_block_black.txt"
+.globl w_block_B
+w_block_B: .include "images/w_block_B.txt"
+.globl w_block_black_B
+w_block_black_B: .include "images/w_tester7.txt"
+.globl w_block_C
+w_block_C: .include "images/w_block_C.txt"
+.globl w_block_black_C
+w_block_black_C: .include "images/w_tester8.txt"
+.globl w_block_D
+w_block_D: .include "images/w_block_D.txt"
+.globl w_block_black_D
+w_block_black_D: .include "images/w_tester9.txt"
+// L Block Blue
 .globl l_block_blue
 l_block_blue: .include "images/l_block_blue.txt"
 .globl l_block_blue_black
 l_block_blue_black: .include "images/l_block_blue_black.txt"
+.globl l_block_blue_B
+l_block_blue_B: .include "images/l_block_blue_B.txt"
+.globl l_block_blue_black_B
+l_block_blue_black_B: .include "images/l_block_blue_black_B.txt"
+.globl l_block_blue_C
+l_block_blue_C: .include "images/l_block_blue_C.txt"
+.globl l_block_blue_black_C
+l_block_blue_black_C: .include "images/l_block_blue_black_C.txt"
+.globl l_block_blue_D
+l_block_blue_D: .include "images/l_block_blue_D.txt"
+.globl l_block_blue_black_D
+l_block_blue_black_D: .include "images/l_block_blue_black_D.txt"
+// L Block Orange
 .globl l_block_orange
 l_block_orange: .include "images/l_block_orange.txt"
 .globl l_block_orange_black
 l_block_orange_black: .include "images/l_block_orange_black2.txt"
-
+.globl l_block_orange_B
+l_block_orange_B: .include "images/l_block_orange_B.txt"
+.globl l_block_orange_black_B
+l_block_orange_black_B: .include "images/l_block_orange_black_B.txt"
+.globl l_block_orange_C
+l_block_orange_C: .include "images/l_block_orange_C2.txt"
+.globl l_block_orange_black_C
+l_block_orange_black_C: .include "images/l_block_orange_black_C.txt"
+.globl l_block_orange_D
+l_block_orange_D: .include "images/l_block_orange_D2.txt"
+.globl l_block_orange_black_D
+l_block_orange_black_D: .include "images/l_block_orange_black_D.txt"
 
 
 // game state has 1 values for blocks, and 0 for
