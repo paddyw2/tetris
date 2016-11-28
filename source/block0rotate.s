@@ -105,10 +105,7 @@ rotate0_AB:
 
     // block can move
 
-    // delete block on screen
-    ldr r0, =currentBlock1
-    ldrb r1, [r0]
-    bl eraseCurrentBlock
+
 
     // step2. clear game state
     ldr r0, =gameState
@@ -134,6 +131,8 @@ rotate0_AB:
     ldrb r2, [r2]
     mov r1, #0
     strb r1, [r0, r2]
+
+    bl drawSquareBlock
 
     // step3. update block coordinates
     ldr r0, =currentBlock1
@@ -266,10 +265,7 @@ rotate0_AB:
     mov r1, #1
     strb r1, [r0]
 
-    // draw new block on screen
-    ldr r0, =currentBlock1
-    ldrb r1, [r0]
-    bl drawCurrentBlock
+    bl drawSquareBlock
 noMove_AB:
 
 finishTester:
@@ -364,11 +360,7 @@ rotate0_BC:
 
     // block can move
 
-    mov r12, #500
-    // delete block on screen
-    ldr r0, =currentBlock1
-    ldrb r1, [r0]
-    bl eraseCurrentBlock
+
 
     // step2. clear game state
     ldr r0, =gameState
@@ -394,6 +386,8 @@ rotate0_BC:
     ldrb r2, [r2]
     mov r1, #0
     strb r1, [r0, r2]
+
+    bl drawSquareBlock
 
     // step3. update block coordinates
     ldr r0, =currentBlock1
@@ -522,10 +516,7 @@ rotate0_BC:
     mov r1, #2
     strb r1, [r0]
 
-    // draw new block on screen
-    ldr r0, =currentBlock1
-    ldrb r1, [r0]
-    bl drawCurrentBlock
+    bl drawSquareBlock
 
 noMove_BC:
     pop {lr}
@@ -619,10 +610,7 @@ rotate0_CD:
 
     // block can move
 
-    // delete block on screen
-    ldr r0, =currentBlock1
-    ldrb r1, [r0]
-    bl eraseCurrentBlock
+
 
     // step2. clear game state
     ldr r0, =gameState
@@ -648,6 +636,9 @@ rotate0_CD:
     ldrb r2, [r2]
     mov r1, #0
     strb r1, [r0, r2]
+
+
+    bl drawSquareBlock
 
     // step3. update block coordinates
     ldr r0, =currentBlock1
@@ -770,10 +761,7 @@ rotate0_CD:
     mov r1, #3
     strb r1, [r0]
 
-    // draw new block on screen
-    ldr r0, =currentBlock1
-    ldrb r1, [r0]
-    bl drawCurrentBlock
+    bl drawSquareBlock
 
 noMove_CD:
     pop {lr}
@@ -868,10 +856,6 @@ rotate0_DA:
 
     // block can move
 
-    // delete block on screen
-    ldr r0, =currentBlock1
-    ldrb r1, [r0]
-    bl eraseCurrentBlock
 
     // step2. clear game state
     ldr r0, =gameState
@@ -897,6 +881,8 @@ rotate0_DA:
     ldrb r2, [r2]
     mov r1, #0
     strb r1, [r0, r2]
+
+    bl drawSquareBlock
 
     // step3. update block coordinates
     ldr r0, =currentBlock1
@@ -1021,10 +1007,7 @@ rotate0_DA:
     mov r1, #0
     strb r1, [r0]
 
-    // draw new block on screen
-    ldr r0, =currentBlock1
-    ldrb r1, [r0]
-    bl drawCurrentBlock
+    bl drawSquareBlock
 
 noMove_DA:
     pop {lr}

@@ -146,21 +146,29 @@ executeChosenOption:
 
 quitGame:
     // go to game over screen
-    b quitProgram
+    b clearAndExit
 startGame:
     // clear state, and start game
-    bl resetGameState
     bl clearScreen
     bl drawGameArea
+    bl resetGameState
+    bl restoreCurrentGame
     bl InsertNewBlock
 
 //-----------------------------//
 
+clearAndExit:
+  bl clearScreen
+  b haltLoop$
+
+haltLoop$:
+  b haltLoop$
+
 .section .data
 state1:
-    .include "images/mainmenu/menustate1.txt"
+    .include "images/state1.txt"
 state2:
-    .include "images/mainmenu/menustate2.txt"
+    .include "images/state2.txt"
 
 currentChoice:
     .byte 0

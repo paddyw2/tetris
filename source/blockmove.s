@@ -74,7 +74,7 @@ moveCurrentBlockLeft:
     ldrb r1, [r0]
     cmp r1, #0
     beq noMove
-    // if move possible 
+    // if move possible
 
     // now check if move legal
     // first check that the block can
@@ -118,11 +118,11 @@ fourthLeft:
     cmp r1, #1
     bge noMove
 
-finishLeftCheck: 
+finishLeftCheck:
 
-    // else move legal 
+    // else move legal
 
-    
+
     // clear game state
     mov r1, #0
     ldr r2, =currentBlock1
@@ -133,10 +133,6 @@ finishLeftCheck:
     // send currentBlock1 value
     // to erase subroutine as
     // parameter in r1
-    mov r1, r2
-
-    bl eraseCurrentBlock
-
 
     mov r1, #0
     ldr r2, =currentBlock2
@@ -153,6 +149,8 @@ finishLeftCheck:
     ldrb r2, [r2]
     ldr r0, =gameState
     strb r1, [r0, r2]
+
+    bl drawSquareBlock
 
     // update with new offset
     ldr r0, =currentBlockLeftOffset
@@ -171,8 +169,6 @@ finishLeftCheck:
     strb r2, [r3]
     ldr r0, =gameState
     strb r1, [r0, r2]
-    mov r1, r2
-    bl drawCurrentBlock
 
 
     ldr r1, =currentBlockType
@@ -197,6 +193,8 @@ finishLeftCheck:
     strb r2, [r3]
     ldr r0, =gameState
     strb r1, [r0, r2]
+
+    bl drawSquareBlock
 
     // update border tiles
 
@@ -260,7 +258,7 @@ moveCurrentBlockRight:
     add r1, r0
     cmp r1, #10
     bge r_noMove
-    // if move possible 
+    // if move possible
 
     // now check if move legal
     // first check that the block can
@@ -304,7 +302,7 @@ fourthRight:
     cmp r1, #1
     bge r_noMove
 
-finishRightCheck: 
+finishRightCheck:
     // else legal move
 
     // clear game state
@@ -317,10 +315,6 @@ finishRightCheck:
     // send currentBlock1 value
     // to erase subroutine as
     // parameter in r1
-    mov r1, r2
-
-    bl eraseCurrentBlock
-
 
     mov r1, #0
     ldr r2, =currentBlock2
@@ -337,6 +331,8 @@ finishRightCheck:
     ldrb r2, [r2]
     ldr r0, =gameState
     strb r1, [r0, r2]
+
+    bl drawSquareBlock
 
     // update with new offset
     ldr r0, =currentBlockLeftOffset
@@ -356,7 +352,7 @@ finishRightCheck:
     ldr r0, =gameState
     strb r1, [r0, r2]
     mov r1, r2
-    bl drawCurrentBlock
+
 
 
     ldr r1, =currentBlockType
@@ -381,6 +377,8 @@ finishRightCheck:
     strb r2, [r3]
     ldr r0, =gameState
     strb r1, [r0, r2]
+
+    bl drawSquareBlock
 
     // update border tiles
 
@@ -419,11 +417,9 @@ r_finishInc:
     add r6, #1
     add r0, #1
     b r_incBordersLoop
-r_finishIncBorderLoop:    
+r_finishIncBorderLoop:
 
 r_noMove:
     pop {r6}
     pop {lr}
     mov pc, lr
-
-

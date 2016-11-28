@@ -45,6 +45,12 @@ WaitAndCheck:
     cmp r0, #0
     beq FinishWaitCheck
 noButtonInput:
+    mov r1, #1
+    lsl r1, #3
+    tst r9, r1
+    beq continueCheck
+    bl runMainMenu
+continueCheck:
     // wait 1000 microseconds
     mov r1, #1000
     bl Wait
@@ -57,7 +63,7 @@ FinishWaitCheck:
     pop {r6, r9}
     pop {lr}
     mov pc, lr
-    
+
 
 
 .globl Set_Lines
@@ -118,7 +124,7 @@ Init_GPIO:
       mov r2, r5                                          // get  output code from r5
       orr r1, r2, lsl r7                                  // set output code
       str r1, [r0]                                        // store
-    
+
       pop {r4-r9}
       pop {lr}
       mov pc, lr

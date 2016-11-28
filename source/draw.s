@@ -230,8 +230,8 @@ getThirdDigit:
     mov r0, #800
     mov r1, #75
     mov r2, #0x0
-    mov r3, #900
-    mov r4, #50
+    ldr r3, =950
+    mov r4, #75
     bl drawBlock
 
     ldr r0, =currentScoreAscii
@@ -255,9 +255,9 @@ writeScore:
 // r9=startx
 // r6=y
 // r10=color
-    ldr r9, =812
-    mov r6, #80
-    mov r10, #0xff
+    ldr r9, =850
+    ldr r6, =100
+    ldr r10, =0xffffff
     bl drawString
 
     pop {r4, r5, r7}

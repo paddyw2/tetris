@@ -5,6 +5,31 @@ TETRIS - Main File
 Creators: Patrick Withams and Michael Tretiak
 Date: 20/11/16
 
+Purpose: Design a playable classic tetris game in ARM
+assembly language.
+
+Description: Game starts with a menu where the user can
+either start the game or quit, which clears and puts the
+Pi into an infinite loop.
+
+When the game starts, the blocks spawn at random coordinates
+at the top of the screen, falling down slowly. If the user
+presses down, the button falls with no delay. If the user
+presses left or right, the block moves left or right. Lastly,
+if the user presses up, then the block rotates as per the
+tetris super rotation specification.
+
+The game ends when either no more blocks can spawn, or the
+user reaches the score of 150. An appropriate message is
+displayed and upon further user input the user is returned
+to the initial main menu.
+
+If during the game the user presses the start button, a
+in game menu is displayed that allows the user to either
+restart the game or quit and return to the main menu. If
+start is repressed then the in game menu is closed and the
+current game is continued.
+
 */
 
 .section    .init
@@ -37,8 +62,6 @@ StartGame:
     // draw main menu and wait
     // for user to choose an option
     bl runStartMenu
-    bl drawGameArea
-    bl drawCurrentScore
     @b InsertNewBlock
 
 //---------------------------//
@@ -53,12 +76,7 @@ InsertNewBlock:
     mov r1, #1
     bl updateScore
 
-    // load current block array
-    // position
-    ldr r0, =currentBlock1
-    ldrb r1, [r0]
-    // draws intial block position
-    bl drawCurrentBlock
+    bl drawSquareBlock
 
     // moves current block down
     // until it cannot move further
@@ -104,7 +122,7 @@ moveBlockLoop:
     // parameter in r1
     mov r1, r2
 
-    bl eraseCurrentBlock
+    //bl eraseCurrentBlock
 
 
     mov r1, #0
@@ -123,12 +141,12 @@ moveBlockLoop:
     ldr r0, =gameState
     strb r1, [r0, r2]
 
+    bl drawSquareBlock
 
     // update state with new
     // block position
     ldr r1, =currentBlockType
     ldrb r1, [r1]
-    mov r1, #1
     ldr r3, =currentBlock1
     ldrb r2, [r3]
     add r2, #10
@@ -136,7 +154,7 @@ moveBlockLoop:
     ldr r0, =gameState
     strb r1, [r0, r2]
     mov r1, r2
-    bl drawCurrentBlock
+
 
     ldr r1, =currentBlockType
     ldrb r1, [r1]
@@ -160,6 +178,8 @@ moveBlockLoop:
     strb r2, [r3]
     ldr r0, =gameState
     strb r1, [r0, r2]
+
+    bl drawSquareBlock
 
     mov r6, #0
     ldr r0, =currentBorders
@@ -314,7 +334,7 @@ GameIsOver:
     // insert game over code here
     // commented out for debugging
     // draw image at 0,0
-    b quitProgram
+    b playerLost
 FinishCheckGameOver:
     pop {r3}
     mov pc, r3
@@ -622,6 +642,25 @@ drawGameArea:
 
 //---------------------------//
 // sets up game over screen
+drawWonScreen:
+    push {lr}
+    push {r4, r5}
+    ldr r4, =game_won
+    mov r1, #0
+    mov r0, #0
+    mov r2, #1024
+    mov r3, #768
+
+    bl drawImage
+    pop {r4, r5}
+    pop {lr}
+    mov pc, lr
+
+
+//---------------------------//
+
+//---------------------------//
+// sets up game over screen
 drawGameOverScreen:
     push {lr}
     push {r4, r5}
@@ -647,6 +686,9 @@ drawGameOverScreen:
 .globl resetGameState
 resetGameState:
     push {lr}
+    ldr r0, =currentScore
+    mov r2, #0
+    str r2, [r0]
     ldr r0, =gameState
     mov r3, #0
     mov r1, #200
@@ -706,8 +748,8 @@ clearLine:
     bl clearLineGameState
     // clear current line in visual
     // takes r1 as current line input
-    mov r1, r5
-    bl clearLineScreen
+    //mov r1, r5
+    bl restoreCurrentGame
 
     // for every line cleared, update
     // user score by 10
@@ -810,9 +852,14 @@ updateScore:
     ldr r0, =currentScore
     ldr r2, [r0]
     add r2, r1
+    cmp r2, #150
+    bge gameOver
     str r2, [r0]
     mov r1, r2
     bl drawCurrentScore
+    b scoreEnd
+gameOver:
+    b playerWon
 scoreEnd:
     pop {lr}
     mov pc, lr
@@ -826,11 +873,39 @@ scoreEnd:
 quitProgram:
 // if game is over
     bl resetGameState
-    bl clearScreen
-    //bl drawGameOverScreen
-    b haltLoop$
+    b runStartMenu
 
 //----------------------------------//
+
+//----------------------------------//
+.globl playerWon
+playerWon:
+// if game is over
+    bl drawWonScreen
+
+    b waitForInput
+
+//----------------------------------//
+
+//----------------------------------//
+.globl playerLost
+playerLost:
+// if game is over
+    bl drawGameOverScreen
+    b waitForInput
+
+//----------------------------------//
+
+waitForInput:
+    push {r9}
+    bl Read_Data
+    mov r9, r0
+getSNESInput:
+    bl Read_Data
+    cmp r0, r9
+    beq getSNESInput
+    pop {r9}
+    b runStartMenu
 
 
 
@@ -846,13 +921,16 @@ haltLoop$:
 game_block:     .include "images/s_block.txt"
 // Large Images
 .globl start_screen
-start_screen:   .include "images/empty.txt"//"images/start_screen_blank.txt"
+start_screen:   .include "images/start_screen_blank.txt"
 
 .globl game_area
-game_area: .include "images/tetris_game_area.txt" //"images/tetris_game_area.txt"
+game_area: .include "images/tetris_game_area.txt"
 
 .globl game_over_screen
-game_over_screen:   .include "images/empty.txt"//"images/game_over.txt"
+game_over_screen:   .include "images/game_over.txt"
+
+.globl game_won
+game_won:   .include "images/game_won.txt"
 
 // I Block
 .globl i_block

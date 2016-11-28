@@ -82,6 +82,7 @@ insertNewIBeam:
     add r1, r8
     strb r1, [r0]
 
+
     // update border tiles
     //
     // main borders
@@ -216,6 +217,11 @@ insertNewSBeam:
     ldr r3, =currentBlockLeftOffset
     strb r8, [r3]
 
+    // update block type
+    ldr r0, =currentBlockType
+    mov r1, #2
+    strb r1, [r0]
+
 
     ldr r0, =currentBlock1
     mov r1, #1
@@ -280,7 +286,8 @@ insertNewSBeam:
     // update game state
     // with block at initial
     // position
-    mov r1, #2
+    ldr r1, =currentBlockType
+    ldrb r1, [r1]
     ldr r2, =currentBlock1
     ldrb r2, [r2]
     ldr r0, =gameState
@@ -319,11 +326,6 @@ insertNewSBeam:
     // update block width
     mov r1, #3
     ldr r0, =currentBlockWidth
-    strb r1, [r0]
-
-    // update block type
-    ldr r0, =currentBlockType
-    mov r1, #2
     strb r1, [r0]
 
     // update block rotation

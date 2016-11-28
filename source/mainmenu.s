@@ -9,13 +9,20 @@
 // activated
 runMainMenu:
     push {lr}
+    push {r8, r9}
     // draw state1 image
     bl menuState1
+    mov r8, #1000
+    lsl r8, #8
+    mov r1, r8
+    bl Wait
 startUserInputLoop:
+
     // read snes input data
     bl Read_Data
     // button data in r0
     // setup mask
+    mov r9, r0
     mov r1, #1
     // isolate button a
     lsl r1, #8
@@ -34,13 +41,20 @@ checkUp:
 checkDown:
     lsl r1, #1
     tst r0, r1
-    beq getNextInput
+    beq checkStart
     bl menuState2
+    b getNextInput
 checkStart:
     mov r1, #1
     lsl r1, #3
-    beq restoreCurrentGame 
-
+    tst r9, r1
+    bne restoreState
+    b getNextInput
+restoreState:
+    bl restoreCurrentGame
+    pop {r8, r9}
+    pop {lr}
+    mov pc, lr
 getNextInput:
     b startUserInputLoop
 
@@ -100,10 +114,10 @@ drawState:
     push {lr}
     push {r4}
     mov r4, r1
-    mov r0, #320
+    ldr r0, =415
     mov r1, #352
-    ldr r2, =306
-    ldr r3, =79
+    ldr r2, =257
+    ldr r3, =150
     bl drawImage
     pop {r4}
     pop {lr}
@@ -125,16 +139,21 @@ quitGame:
     // go to game over screen
     b quitProgram
 startGame:
+    @mov r8, #1000
+    @lsl r8, #8
+    @mov r1, r8
+    @bl Wait
     // clear state, and start game
     bl resetGameState
-    bl clearScreen
-    bl drawGameArea
+    bl restoreCurrentGame
+    bl drawCurrentScore
     bl InsertNewBlock
 
 //-----------------------------//
 
 
 //-----------------------------//
+.globl restoreCurrentGame
 restoreCurrentGame:
     push {lr}
     // loop through game state
@@ -146,13 +165,14 @@ restoreCurrentGame:
     // ...
     // using each color blocks
     // may need to redraw game
-    // area too 
+    // area too
+    mov r12, #400
     ldr r0, =gameState
     mov r1, #0
 restoreLoop:
     cmp r1, #200
     beq finishRestore
-    ldr r2, [r0, r1]
+    ldrb r2, [r0, r1]
     cmp r2, #0
     beq drawBlack
     cmp r2, #1
@@ -168,7 +188,7 @@ restoreLoop:
     cmp r2, #6
     beq drawBlue
     cmp r2, #7
-    beq drawOrange 
+    beq drawOrange
     b finishRestore
 drawBlack:
     ldr r3, =blackSquare
@@ -214,12 +234,18 @@ finishRestore:
 
 
 
+
+
+
 //--------------------------//
+.globl drawSquare
 drawSquare:
     // draws chosen square
     // image to gamestate
     // offset location
     push {lr}
+
+    mov r12, #144
     push {r4-r9}
     mov r9, r0
     mov r8, r1
@@ -227,9 +253,9 @@ drawSquare:
     // offset in r1
     mov r5, r1
     mov r6, #0
-modLoop: 
+modLoop:
     cmp r5, #10
-    blt finishMod 
+    blt finishMod
     sub r5, #10
     add r6, #1
     b modLoop
@@ -253,18 +279,19 @@ finishMod:
     mov r0, r9
     mov r1, r8
     pop {r4-r9}
+
     pop {lr}
     mov pc, lr
-    
+
 //--------------------------//
 
 
 //--------------------------//
 .section .data
 menustate1:
-    .include "images/mainmenu/menustate1.txt"
+    .include "images/pause_menu_state3.txt"
 menustate2:
-    .include "images/mainmenu/menustate2.txt"
+    .include "images/pause_menu_state4.txt"
 // block squares
 blackSquare:
     .include "images/squares/blackSquare.txt"
